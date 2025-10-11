@@ -16,12 +16,12 @@ function MapComponent({ locations, selectedLocation, onSelectLocation }) {
 
   useEffect(() => {
     if (selectedLocation) {
-      setViewState({
-        ...viewState,
+      setViewState((prev) => ({
+        ...prev,
         longitude: selectedLocation.coordinates.coordinates[0],
         latitude: selectedLocation.coordinates.coordinates[1],
         zoom: 14
-      });
+      }));
       setPopupInfo(selectedLocation);
     }
   }, [selectedLocation]);
