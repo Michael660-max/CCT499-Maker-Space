@@ -1,0 +1,22 @@
+{
+  "name": "cct499-maker-space",
+  "version": "1.0.0",
+  "description": "MERN Stack application with Mapbox GL integration",
+  "scripts": {
+    "install-all": "npm install --prefix backend && npm install --prefix client",
+    "backend": "npm start --prefix backend",
+    "frontend": "npm start --prefix client",
+    "dev-backend": "npm run dev --prefix backend",
+    "build": "npm run build --prefix client"
+  },
+  "keywords": [
+    "mern",
+    "mapbox",
+    "mongodb",
+    "express",
+    "react",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC"
+}

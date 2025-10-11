@@ -1,0 +1,47 @@
+[
+  {
+    "name": "University of Toronto - St. George Campus",
+    "description": "Main campus of the University of Toronto in downtown Toronto",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [-79.3957, 43.6629]
+    },
+    "category": "general"
+  },
+  {
+    "name": "Myhal Centre for Engineering",
+    "description": "State-of-the-art engineering building with maker spaces and design studios",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [-79.3977, 43.6603]
+    },
+    "category": "makerspace"
+  },
+  {
+    "name": "Robarts Library",
+    "description": "Largest library at the University of Toronto",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [-79.3995, 43.6646]
+    },
+    "category": "general"
+  },
+  {
+    "name": "Gerstein Science Information Centre",
+    "description": "Science and engineering library with computer labs",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [-79.3976, 43.6607]
+    },
+    "category": "lab"
+  },
+  {
+    "name": "Bahen Centre for Information Technology",
+    "description": "Computer science building with labs and study spaces",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [-79.3971, 43.6596]
+    },
+    "category": "lab"
+  }
+]
