@@ -91,178 +91,171 @@ const MapboxBuildings = () => {
     );
   }, []);
 
-  // Geocode address to coordinates using Mapbox API
-  const geocodeAddress = useCallback(async (address, postalCode, name) => {
-    const cacheKey = `geocode:${address}-${postalCode}`;
+  // Setup makerspace layers using static GeoJSON
+  const setupMakerspaceLayer = useCallback(() => {
+    // Add source pointing to static GeoJSON file
+    mapRef.current.addSource("makerspaces", {
+      type: "geojson",
+      data: "/makerspaces.geojson", // Static file served by your app
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50,
+    });
 
-    // Check cache first
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (parsed && Array.isArray(parsed.center)) {
-          return parsed.center; // [lng, lat]
-        }
-      } catch (e) {
-        // Cache corrupted, continue to geocode
-      }
-    }
+    // Cluster circles
+    mapRef.current.addLayer({
+      id: "clusters",
+      source: "makerspaces",
+      filter: ["has", "point_count"],
+      type: "circle",
+      paint: {
+        "circle-color": [
+          "step",
+          ["get", "point_count"],
+          "#FF6B6B",
+          10,
+          "#FF4757",
+          20,
+          "#FF3742",
+        ],
+        "circle-radius": ["step", ["get", "point_count"], 15, 10, 20, 20, 25],
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#fff",
+      },
+    });
 
-    // Build query string
-    let query = address;
-    if (postalCode) query += `, ${postalCode}`;
-    query += ", Ontario, Canada";
+    // Cluster count labels
+    mapRef.current.addLayer({
+      id: "cluster-count",
+      source: "makerspaces",
+      filter: ["has", "point_count"],
+      type: "symbol",
+      layout: {
+        "text-field": "{point_count_abbreviated}",
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        "text-size": 12,
+      },
+      paint: {
+        "text-color": "#ffffff",
+      },
+    });
 
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          query
-        )}.json?` +
-          `limit=1&proximity=-79.3832,43.6532&access_token=${mapboxgl.accessToken}`
-      );
+    // Individual points
+    mapRef.current.addLayer({
+      id: "unclustered-point",
+      source: "makerspaces",
+      filter: ["!", ["has", "point_count"]],
+      type: "circle",
+      paint: {
+        "circle-color": "#FF6B6B",
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          4,
+          14,
+          6,
+          18,
+          8,
+        ],
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#fff",
+      },
+    });
 
-      if (!response.ok) throw new Error(`Geocoding failed: ${response.status}`);
+    // Click handlers
+    mapRef.current.on("click", "clusters", (e) => {
+      const features = mapRef.current.queryRenderedFeatures(e.point, {
+        layers: ["clusters"],
+      });
 
-      const data = await response.json();
+      const clusterId = features[0].properties.cluster_id;
+      mapRef.current
+        .getSource("makerspaces")
+        .getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) return;
 
-      if (data.features && data.features.length > 0) {
-        const coordinates = data.features[0].center; // [lng, lat]
-
-        // Cache the result
-        localStorage.setItem(
-          cacheKey,
-          JSON.stringify({
-            center: coordinates,
-            address: address,
-            timestamp: new Date().toISOString(),
-          })
-        );
-
-        return coordinates;
-      } else {
-        console.warn(`No results for: ${name} (${address})`);
-        return null;
-      }
-    } catch (error) {
-      console.error(`Geocoding error for ${name}:`, error);
-      return null;
-    }
-  }, []);
-
-  // Add individual marker to map using DOM elements
-  const addMarkerToMap = useCallback((makerspace, coordinates) => {
-    // Create custom marker element
-    const el = document.createElement("div");
-    el.className = "makerspace-marker";
-    el.style.backgroundColor = "#FF6B6B";
-    el.style.width = "12px";
-    el.style.height = "12px";
-    el.style.borderRadius = "50%";
-    el.style.border = "2px solid white";
-    el.style.cursor = "pointer";
-    el.style.boxShadow = "0 2px 4px rgba(0,0,0,0.3)";
-
-    // Create popup content with proper data from JSON
-    const popupContent = `
-      <div style="padding: 10px; max-width: 280px;">
-        <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333;">${
-          makerspace.r
-        }</h3>
-        ${
-          makerspace["General Category"]
-            ? `<p style="margin: 4px 0; color: #666; font-size: 12px; background: #f0f0f0; padding: 2px 6px; border-radius: 3px; display: inline-block;"><strong>${makerspace["General Category"]}</strong></p>`
-            : ""
-        }
-        <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666;"><strong>📍 Address:</strong> ${
-          makerspace.Address
-        }</p>
-        ${
-          makerspace["Phone Number"]
-            ? `<p style="margin: 4px 0; font-size: 12px; color: #888;"><strong>📞 Phone:</strong> ${makerspace["Phone Number"]}</p>`
-            : ""
-        }
-        ${
-          makerspace["Email Address"]
-            ? `<p style="margin: 4px 0; font-size: 12px; color: #888;"><strong>✉️ Email:</strong> ${makerspace["Email Address"]}</p>`
-            : ""
-        }
-        ${
-          makerspace["Primary Access Models"]
-            ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>🚪 Access:</strong> ${makerspace["Primary Access Models"]}</p>`
-            : ""
-        }
-        ${
-          makerspace["Skills Required"]
-            ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>🎯 Skills:</strong> ${makerspace["Skills Required"]}</p>`
-            : ""
-        }
-        ${
-          makerspace.Link
-            ? `<p style="margin: 8px 0 4px 0;"><a href="${makerspace.Link}" target="_blank" style="color: #FF6B6B; text-decoration: none; font-weight: 500; padding: 4px 8px; background: #fff2f2; border-radius: 4px; display: inline-block;">🔗 View Details</a></p>`
-            : ""
-        }
-        ${
-          makerspace.Notes
-            ? `<p style="margin: 8px 0 0 0; color: #555; font-size: 11px; line-height: 1.4; font-style: italic;">${makerspace.Notes}</p>`
-            : ""
-        }
-      </div>
-    `;
-
-    // Add marker to map
-    new mapboxgl.Marker({ element: el })
-      .setLngLat(coordinates)
-      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupContent))
-      .addTo(mapRef.current);
-  }, []);
-
-  // Load makerspace markers with improved data handling
-  const loadMakerspaceMarkers = useCallback(async () => {
-    try {
-      const response = await fetch("/gta_makerspace.json");
-      const makerspaces = await response.json();
-
-      // Filter out empty entries that have names and addresses
-      const validMakerspaces = makerspaces.filter(
-        (m) => m.r && m.r.trim() !== "" && m.Address && m.Address.trim() !== ""
-      );
-
-      // Process in parallel for faster loading (but respect rate limits)
-      const batchSize = 5; // Process 5 at a time to avoid overwhelming the API
-
-      for (let i = 0; i < validMakerspaces.length; i += batchSize) {
-        const batch = validMakerspaces.slice(i, i + batchSize);
-
-        // Process batch in parallel
-        const geocodePromises = batch.map(async (makerspace, index) => {
-          try {
-            const coordinates = await geocodeAddress(
-              makerspace.Address,
-              makerspace["Postal Code"],
-              makerspace.r
-            );
-
-            if (coordinates) {
-              addMarkerToMap(makerspace, coordinates);
-            }
-          } catch (error) {
-            console.warn(`Failed to geocode ${makerspace.r}:`, error);
-          }
+          mapRef.current.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom + 1,
+          });
         });
+    });
 
-        // Wait for batch to complete
-        await Promise.all(geocodePromises);
+    mapRef.current.on("click", "unclustered-point", (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const props = e.features[0].properties;
 
-        // Small delay only between batches (not between individual markers)
-        if (i + batchSize < validMakerspaces.length) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-      }
+      const popupContent = `
+        <div style="padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; line-height: 1.3;">${
+            props.name
+          }</h3>
+          ${
+            props.category
+              ? `<div style="margin: 6px 0; background: #FF6B6B; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block;">${props.category}</div>`
+              : ""
+          }
+          <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;"><strong>📍 Address:</strong><br>${
+            props.address
+          }</p>
+          ${
+            props.phone
+              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>📞 Phone:</strong> ${props.phone}</p>`
+              : ""
+          }
+          ${
+            props.email
+              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>✉️ Email:</strong> ${props.email}</p>`
+              : ""
+          }
+          ${
+            props.accessModels
+              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🔑 Access:</strong> ${props.accessModels}</p>`
+              : ""
+          }
+          ${
+            props.skills
+              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🛠️ Skills:</strong> ${props.skills}</p>`
+              : ""
+          }
+          ${
+            props.website
+              ? `<p style="margin: 8px 0 4px 0;"><a href="${props.website}" target="_blank" style="color: #FF6B6B; text-decoration: none; font-weight: 500; font-size: 13px;">🔗 Visit Website</a></p>`
+              : ""
+          }
+          ${
+            props.notes
+              ? `<p style="margin: 8px 0 0 0; font-size: 11px; color: #777; font-style: italic; border-top: 1px solid #eee; padding-top: 6px;">${props.notes}</p>`
+              : ""
+          }
+        </div>
+      `;
 
-    } catch (error) {
-      console.error("Error loading makerspace data:", error);
-    }
-  }, [geocodeAddress, addMarkerToMap]);
+      new mapboxgl.Popup({
+        offset: 15,
+        closeButton: true,
+        closeOnClick: false,
+      })
+        .setLngLat(coordinates)
+        .setHTML(popupContent)
+        .addTo(mapRef.current);
+    });
+
+    // Cursor changes
+    ["clusters", "unclustered-point"].forEach((layer) => {
+      mapRef.current.on("mouseenter", layer, () => {
+        mapRef.current.getCanvas().style.cursor = "pointer";
+      });
+
+      mapRef.current.on("mouseleave", layer, () => {
+        mapRef.current.getCanvas().style.cursor = "";
+      });
+    });
+
+    console.log("✅ Makerspace layers setup complete - using static GeoJSON");
+  }, []);
 
   useEffect(() => {
     // Make sure to set your Mapbox access token in the .env file
@@ -272,7 +265,7 @@ const MapboxBuildings = () => {
       mapRef.current = new mapboxgl.Map({
         style: "mapbox://styles/mapbox/standard",
         center: [-79.3832, 43.6532], // Toronto location
-        zoom: 15.5,
+        zoom: 11, // Start zoomed out to see more makerspaces
         minZoom: 6,
         maxZoom: 18,
         pitch: 45,
@@ -295,15 +288,15 @@ const MapboxBuildings = () => {
         // Add optimized 3D buildings layer
         add3DBuildingsLayer();
 
-        // Load and add markers after the map is fully loaded
-        loadMakerspaceMarkers();
+        // Setup makerspace layers using static GeoJSON
+        setupMakerspaceLayer();
       });
     } catch (error) {
       console.error("❌ Error initializing Mapbox:", error.message);
     }
 
     return () => mapRef.current?.remove();
-  }, [removePerformanceLabels, add3DBuildingsLayer, loadMakerspaceMarkers]);
+  }, [removePerformanceLabels, add3DBuildingsLayer, setupMakerspaceLayer]);
 
   return (
     <div

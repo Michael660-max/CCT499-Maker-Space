@@ -1,0 +1,2471 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.643641, 43.587561]
+      },
+      "properties": {
+        "id": 0,
+        "name": "Hazel McCallion Central Library",
+        "address": "301 Burnhamthorpe Road West",
+        "postalCode": "L5B 3Y3\n",
+        "category": "Library",
+        "accessModels": "Multiple:, Appointment Based, Walk In",
+        "skills": "Training Offered",
+        "phone": "905-615-3500",
+        "email": "maker@mississauga.ca",
+        "website": "https://www.mississauga.ca/library/locations/hazel-mccallion-central-library/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.603117, 43.621082]
+      },
+      "properties": {
+        "id": 1,
+        "name": "Burnhamthorpe Library",
+        "address": "3650 Dixie Road",
+        "postalCode": " L4Y 4H5",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "905-615-3200",
+        "email": "Burnhamthorpe.Library@mississauga.ca",
+        "website": "https://www.mississauga.ca/library/locations/burnhamthorpe-library/",
+        "notes": "Burnhamthrope Library is a library that offers a wide range of services and resources to the Mississauga community, focusing on accessibility and inclusivity for all patrons. Free public access; library card required for borrowing and some services. "
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.710191, 43.623759]
+      },
+      "properties": {
+        "id": 2,
+        "name": "Courtneypark Library",
+        "address": "730 Courtneypark Drive West",
+        "postalCode": "L5W 1L9",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "905-615-4745",
+        "email": "maker@mississauga.ca",
+        "website": "https://www.mississauga.ca/library/locations/courtneypark-library/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.638538, 43.723546]
+      },
+      "properties": {
+        "id": 3,
+        "name": "Malton Library",
+        "address": "3540 Morning Star Drive",
+        "postalCode": "L4T 1Y2",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "905-615-4640",
+        "email": "merley.wheaton@mississauga.ca",
+        "website": "https://www.mississauga.ca/library/locations/malton-library/",
+        "notes": "public library that serves the diverse and vibrant nearby communities. It offers a wide range of services and resources, focusing on accessibility and inclusivity for all patrons. "
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.756341, 43.585518]
+      },
+      "properties": {
+        "id": 4,
+        "name": "Meadowvale Library",
+        "address": "6655 Glen Erin Drive",
+        "postalCode": "L5N 3L4",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "905-615-4710",
+        "email": "maker@mississauga.ca",
+        "website": "https://www.mississauga.ca/library/locations/meadowvale-library/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.380111, 43.653674]
+      },
+      "properties": {
+        "id": 5,
+        "name": "Design With",
+        "address": "220 Yonge St, Toronto",
+        "postalCode": "M5B 2H1",
+        "category": "Pop-up",
+        "accessModels": "Multiple:",
+        "skills": "Training Offered",
+        "phone": "Website inquiry",
+        "email": "Linkedin, instagram",
+        "website": "https://www.designwith.ca/history",
+        "notes": "- Most technologies and workshops offered fall under the boutique category (sewing, mending, etc.)\n- Collaberates with other organizations/schools/makerspaces to hold workshops or to make innovate or interesting products in other makerspace locations. \n- Access mose includes classes, (free) workshops, and appointments"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.722135, 43.725836]
+      },
+      "properties": {
+        "id": 6,
+        "name": "Brampton Makerspaces at Chinguacousy",
+        "address": "9050 Bramalea Rd",
+        "postalCode": "L6S 6G7",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "905-793-4636",
+        "email": "Website Inquiry https://www.bramptonlibrary.ca/index.php/ask-a-question",
+        "website": "https://www.bramptonlibrary.ca/index.php/library-services/makerspace-brampton",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.757593, 43.687641]
+      },
+      "properties": {
+        "id": 7,
+        "name": "Brampton Makerspaces Four Corners",
+        "address": "65 Queen Street East",
+        "postalCode": "L6W 3L6",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "905-793-4636",
+        "email": "Website Inquiry https://www.bramptonlibrary.ca/index.php/ask-a-question",
+        "website": "https://www.bramptonlibrary.ca/index.php/library-services/makerspace-brampton",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.761236, 43.758032]
+      },
+      "properties": {
+        "id": 8,
+        "name": "Brampton Makerspaces Springdale branches",
+        "address": "10705 Bramalea Road",
+        "postalCode": "L6R 0C1",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "905-793-4636",
+        "email": "Website Inquiry https://www.bramptonlibrary.ca/index.php/ask-a-question",
+        "website": "",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.397483, 43.649975]
+      },
+      "properties": {
+        "id": 9,
+        "name": "TTL Makerspace ",
+        "address": "192 Spadina Ave",
+        "postalCode": "M5T 2G7",
+        "category": "Business",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Offered",
+        "phone": "(647) 715-4767",
+        "email": "support@ttlmakerspace.com",
+        "website": "https://makerspace.cobot.me/ & https://ttlmakerspace.com/ ",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.426103, 43.661369]
+      },
+      "properties": {
+        "id": 10,
+        "name": "Site 3 CoLaboratory",
+        "address": "718R Ossington Ave",
+        "postalCode": "M6G 3T7",
+        "category": "Business",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Offered",
+        "phone": "no phone number",
+        "email": "info@site3.ca",
+        "website": "https://www.site3.ca/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.458333, 43.674365]
+      },
+      "properties": {
+        "id": 11,
+        "name": "HackLab.to",
+        "address": "1677 St Clair Ave W",
+        "postalCode": "M6N 1H9",
+        "category": "Community Centre",
+        "accessModels": "Multiple:",
+        "skills": "Training Offered",
+        "phone": "Twitter",
+        "email": "contact@hacklab.to",
+        "website": "https://hacklab.to/about/",
+        "notes": "open to newcomers on tuesday"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.417571, 43.646865]
+      },
+      "properties": {
+        "id": 12,
+        "name": "Paperhouse Studio",
+        "address": "180 Shaw St unit 102",
+        "postalCode": "M6J 2W5",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "(416) 546-7589",
+        "email": "info@paperhousestudio.com",
+        "website": "https://paperhousestudio.com/",
+        "notes": "experimental arts studio and collective rooted in paper as the medium"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.484414, 43.649064]
+      },
+      "properties": {
+        "id": 13,
+        "name": "Maker Kids",
+        "address": "2451 Bloor St W",
+        "postalCode": "M6S 1P7",
+        "category": "Community Centre",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Offered",
+        "phone": "(647) 247-1678",
+        "email": "bw@makerkids.com",
+        "website": "https://makerkids.com/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.375605, 43.707385]
+      },
+      "properties": {
+        "id": 14,
+        "name": "Maker Kids",
+        "address": "1661 Bayview Ave",
+        "postalCode": "M4G 3C1",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "(416) 486-6257",
+        "email": "leaside@makerkids.com",
+        "website": "https://makerkids.com/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.397483, 43.649975]
+      },
+      "properties": {
+        "id": 15,
+        "name": "Toronto Tool Library",
+        "address": "192 Spadina Ave. Unit 001b",
+        "postalCode": "M5T 2C2",
+        "category": "Business",
+        "accessModels": "Multiple:",
+        "skills": "Training Offered",
+        "phone": "(437) 419-0773",
+        "email": "support@torontotoollibrary.com",
+        "website": "https://torontotoollibrary.com/",
+        "notes": "There are many more tools available on the website such as different companies, size, and variation.\nThis is actually not a makerspace, The Toronto Tool Library is just a place where you can rent out equipment and tool. They have a seperate makerspce where you can use these equipment in their makerspce which is the TTL makerspace.  "
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.445199, 43.655508]
+      },
+      "properties": {
+        "id": 16,
+        "name": "MAKO Design + Invent",
+        "address": "213 Sterling Rd Suite 101",
+        "postalCode": "M6R 2B2",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(416) 855-1137",
+        "email": "Website inquiry",
+        "website": "https://www.makodesign.com/",
+        "notes": "The website advertises end-to-end product development services, but does not list the specific technology available. However, since they are a product development firm with no specific field of expertise, one can assume that they have a vast amount of tools that can aid with any project, design, or idea. They also provide patent referrals."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.389084, 43.660386]
+      },
+      "properties": {
+        "id": 17,
+        "name": "prototyping spaces at the Schwartz-Reisman Innovation Campus - West Tower FOUR",
+        "address": "108 College Street, to open in fall",
+        "postalCode": "M5G 0C6",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "",
+        "email": "entrepreneurship.artsci@utoronto.ca",
+        "website": "https://www.entrepreneurship.artsci.utoronto.ca/prototyping-makerspace#prototype-labs-accordion-4",
+        "notes": "As this makerspace isn't open yet, there isn't much extra info."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.377148, 43.658481]
+      },
+      "properties": {
+        "id": 18,
+        "name": "RCC 194 TMU Maker Space",
+        "address": "80 Gould St",
+        "postalCode": "M5B 2M7",
+        "category": "University/College",
+        "accessModels": "Walk In, Class/Workshop Only",
+        "skills": "Training Offered",
+        "phone": "(416) 979-5000 (general line)",
+        "email": "rta@torontomu.ca (general, email gets forwarded to specific staff to best help)",
+        "website": "https://www.torontomu.ca/rta/facilitiesequipment/facilities-makerspace/",
+        "notes": "The makerspace was difficult to locate, and only accessible with a TMU student ID. It is meant for students in the New Media Program, classes will be hosted there, though other TMU students are welcome to visit. It is open 24/7 but there are specific day hours where staff will be available to teach and assist (Monday to Friday 8AM-4:30PM)."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.397483, 43.649975]
+      },
+      "properties": {
+        "id": 20,
+        "name": "STEAM Labs",
+        "address": "192 Spadina Ave #001",
+        "postalCode": "M5T 2C2",
+        "category": "Business",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "1-647-490-4659",
+        "email": "info@steamlabs.ca",
+        "website": "https://steamlabs.ca/",
+        "notes": "The non-for-profit organization focuses on helping people to understand and think critically of leading-edge science and technology for them to be able to employ the tools in their lives in addition to being knowledgeable and proactive participants in the discussions we must have as a society ensuring they are deployed with fairness, accountability, trust and ethics. As such, it provides educators with teaching kits which contain written instructions, videos, and applications (on a variety of different topics including but not limited to artificial intelligence and internet of things) as well as classes/workshops/pop-ups for students of different ages where they teach them how to make use of technologies such as micro:bit."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.394212, 43.667795]
+      },
+      "properties": {
+        "id": 21,
+        "name": "ROM Makerspace",
+        "address": "100 Queen’s Park, Toronto",
+        "postalCode": "M5S 2C6",
+        "category": "Museum",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416.586.8000",
+        "email": "romlearning@rom.on.ca",
+        "website": "https://www.rom.on.ca/en/learn/makerspace",
+        "notes": "First, the main purpose of ROM Makerspace is to support education, research and cultural preservation. It provides resources and tools for creating and experimenting with new technologies and engaging the community in museum-related projects. Second, it provides a better experience for the ROM museum, where visitors can also interact with and learn about history while visiting."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.4233, 43.860199]
+      },
+      "properties": {
+        "id": 22,
+        "name": "GTA Woodworks",
+        "address": "123 Hillsview Dr",
+        "postalCode": "L4C 1T3",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "",
+        "email": "Websity inquiry",
+        "website": "https://www.ylab.ca/",
+        "notes": "owned or lended to us by members, so we regularly add new gear."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.445865, 43.745494]
+      },
+      "properties": {
+        "id": 23,
+        "name": "GTA Woodworks",
+        "address": "15 Kainona Ave, Toronto, ON ",
+        "postalCode": "M3H 3H4",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-706-7711",
+        "email": "jeff@GTAWoodWorks.com",
+        "website": "https://www.gtawoodworks.com/",
+        "notes": "A mix of appointments to use the provided tools and get help from the owner and classes that teach different parts of wood working."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.293482, 43.785204]
+      },
+      "properties": {
+        "id": 24,
+        "name": "TPL Digital Innovation Hub Agincourt",
+        "address": "155 Bonis Avenue, Main floor",
+        "postalCode": "M1T 3W6",
+        "category": "Library",
+        "accessModels": "",
+        "skills": "",
+        "phone": "416-396-3717",
+        "email": "aginnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/using-the-library/computer-services/innovation-spaces/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.269246, 43.708078]
+      },
+      "properties": {
+        "id": 25,
+        "name": "TPL Digital Innovation Hub Albert Campbell",
+        "address": "496 Birchmount Road, Second floor",
+        "postalCode": "M1K 1N8",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "416-396-8958",
+        "email": "acdinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/albertcampbell/",
+        "notes": "To use equipment, talk to staff at a Digital Innovation Hub.\n                • A valid Toronto Public Library card is required.\n                • You will need to complete and sign an equipment loan form before you can check out equipment. Customers under the age of 18 need to have the form signed by their parent or guardian in person.\n                • Equipment can be checked out for up to two hours and renewed only if available.\nFull replacement cost is charged for lost or damaged equipment."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.584272, 43.739826]
+      },
+      "properties": {
+        "id": 26,
+        "name": "TPL Digital Innovation Hub Albion",
+        "address": "1515 Albion Road, Main floor",
+        "postalCode": "M9V 1B2",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "416-394-5184",
+        "email": "abinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/albion/, https://www.torontopubliclibrary.ca/using-the-library/computer-services/innovation-spaces/",
+        "notes": "To use equipment, talk to staff at a Digital Innovation Hub.\n                • A valid Toronto Public Library card is required.\n                • You will need to complete and sign an equipment loan form before you can check out equipment. Customers under the age of 18 need to have the form signed by their parent or guardian in person.\n                • Equipment can be checked out for up to two hours and renewed only if available.\nFull replacement cost is charged for lost or damaged equipment."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.482061, 43.728937]
+      },
+      "properties": {
+        "id": 27,
+        "name": "TPL Digital Innovation Hub Downsview",
+        "address": "2793 Keele Street, Main floor",
+        "postalCode": "M3M 2G3",
+        "category": "",
+        "accessModels": "Walk In",
+        "skills": "",
+        "phone": "416-395-5657",
+        "email": "doinnovationhub@tpl.ca",
+        "website": "",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.400392, 43.639293]
+      },
+      "properties": {
+        "id": 28,
+        "name": "TPL Digital Innovation Hub Fort York",
+        "address": "190 Fort York Boulevard, Second floor",
+        "postalCode": "M5V 0E7",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "416-393-6203",
+        "email": "foinnovationhub@tpl.ca",
+        "website": "https://www.ocadu.ca/services/studios/experimental-fabrication-studio",
+        "notes": "TPL Digital Innovation Hub offers various 3D printers like Ultimaker, Original Prusa, Tevo, and Prusa MK3S+, as well as Canon HD and DSLR cameras, dynamic and condenser microphones, vinyl printers/cutters, and MIDI keyboards."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.4141, 43.768204]
+      },
+      "properties": {
+        "id": 29,
+        "name": "TPL Digital Innovation Hub North York Central Library",
+        "address": "5120 Yonge Street, Second floor",
+        "postalCode": "M2N 5N9",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "416-395-5646",
+        "email": "clinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/northyorkcentral/, https://www.torontopubliclibrary.ca/using-the-library/computer-services/innovation-spaces/digital-innovation-hubs.jsp",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.541124, 43.683429]
+      },
+      "properties": {
+        "id": 30,
+        "name": "TPL Digital Innovation Hub Richview",
+        "address": "1806 Islington Avenue, Second floor",
+        "postalCode": "M9P 3N3",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "416-394-5151",
+        "email": "riinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/richview/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.256916, 43.772485]
+      },
+      "properties": {
+        "id": 31,
+        "name": "TPL Digital Innovation Hub Scarborough Civic Centre",
+        "address": "156 Borough Drive, Main floor",
+        "postalCode": "M1P 4N7",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "416-396-3623",
+        "email": "scinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/scarborough/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.386673, 43.671888]
+      },
+      "properties": {
+        "id": 32,
+        "name": "TPL Digital Innovation Hub Toronto Reference Library",
+        "address": "789 Yonge Street, Main floor",
+        "postalCode": "M4W 2G8",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "416-393-7007",
+        "email": "trlinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/using-the-library/computer-services/innovation-spaces/",
+        "notes": "They have kits you can borrow and take home:\n- Arduino Kits\n- Audio Recording Kits\n- Raspberry Pi Kits"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.507425, 43.75895]
+      },
+      "properties": {
+        "id": 33,
+        "name": "TPL Digital Innovation Hub York Woods",
+        "address": "1785 Finch Avenue West, Main floor",
+        "postalCode": "M3N 1M6",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "416-395-5981",
+        "email": "ywinnovationhub@tpl.ca",
+        "website": "https://www.torontopubliclibrary.ca/using-the-library/computer-services/innovation-spaces/digital-innovation-hubs.jsp",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.432505, 43.660701]
+      },
+      "properties": {
+        "id": 34,
+        "name": "The Maker Bean",
+        "address": "1052 Bloor St. West",
+        "postalCode": "M6H 1M3",
+        "category": "Community Centre",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "647-346-2326",
+        "email": "info@themakerbean.com",
+        "website": "https://themakerbean.com/",
+        "notes": "Local coffee & tea, snacks and food, together with 3D printing, laser cutting and workshop"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.432014, 43.67011]
+      },
+      "properties": {
+        "id": 35,
+        "name": "Inter/Access",
+        "address": "950 Dupont St., Unit 1.",
+        "postalCode": "M6H 1Z2",
+        "category": "Museum",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "416.532.0597",
+        "email": "Website staff specific emails",
+        "website": "https://interaccess.org/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.342281, 43.665737]
+      },
+      "properties": {
+        "id": 36,
+        "name": "Sprouts Makerspace",
+        "address": "388 Carlaw Ave. Unit 101A",
+        "postalCode": "M4M 2T4",
+        "category": "Community Centre",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "None",
+        "phone": "416-840-9718",
+        "email": "info@sproutsmakerspace.ca",
+        "website": "https://www.sproutsmakerspace.ca/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.334861, 43.670052]
+      },
+      "properties": {
+        "id": 37,
+        "name": "Riverdale Collegiate Institute Makerspace",
+        "address": "1094 Gerrard St E",
+        "postalCode": "M4M 2A1",
+        "category": "Public School",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "(416) 393-9820",
+        "email": "Riverdale@tdsb.on.ca",
+        "website": "https://schoolweb.tdsb.on.ca/riverdale/Subject-Areas/Library-Learning-Commons/Incubator-maker-zone",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.472833, 43.661428]
+      },
+      "properties": {
+        "id": 38,
+        "name": "High Park Alternative Junior School Maker Cart",
+        "address": "265 Annette St",
+        "postalCode": "M6P 1R3",
+        "category": "Public School",
+        "accessModels": "Multiple:",
+        "skills": "Training Offered",
+        "phone": "(416) 393-9050",
+        "email": "HPAS Parent Facebook Group EmailHighPark@tdsb.on.ca",
+        "website": "https://schoolweb.tdsb.on.ca/highparkalt/Parents/Maker-Cart",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.287269, 43.716594]
+      },
+      "properties": {
+        "id": 39,
+        "name": "SATEC @ W A Porter Collegiate Institute",
+        "address": "40 Fairfax Cres, Scarborough",
+        "postalCode": "M1L 1Z9",
+        "category": "Public School",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Required",
+        "phone": "(416) 396-3365",
+        "email": "SATEC@tdsb.on.ca",
+        "website": "https://schoolweb.tdsb.on.ca/satec/Departments/Technology/TDJ-Technological-Design",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.408518, 43.662838]
+      },
+      "properties": {
+        "id": 40,
+        "name": "Central Technical School",
+        "address": "725 Bathurst St",
+        "postalCode": "M5S 2R5",
+        "category": "Public School",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "(416) 393-0060",
+        "email": "centraltechnicalschool@tdsb.on.ca",
+        "website": "https://schoolweb.tdsb.on.ca/centraltechnicalschool/Programs/Specialized-Programs/Art-Program-Specialized",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.352131, 43.670465]
+      },
+      "properties": {
+        "id": 41,
+        "name": "Quest Alternative Senior School",
+        "address": "25 Bain Ave",
+        "postalCode": "M4K 1E5",
+        "category": "Public School",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "(416) 393-9430",
+        "email": "Quest@tdsb.on.ca",
+        "website": "https://www.tdsb.on.ca/Find-your/Schools/schno/5330",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.451047, 44.053979]
+      },
+      "properties": {
+        "id": 42,
+        "name": "NewMakeIt",
+        "address": "621 Timothy Street",
+        "postalCode": "L3Y 1R3",
+        "category": "Community Centre",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "(289) 841-1270",
+        "email": "info@yorkregionmakers.com",
+        "website": "https://www.newmakeit.com/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.27256, 43.350274]
+      },
+      "properties": {
+        "id": 43,
+        "name": "NewMakeIt: The Maker's Mark",
+        "address": "16655 Yonge St Unit 19 & 20",
+        "postalCode": "L3X 1V9",
+        "category": "Business",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "(289) 841-1270",
+        "email": "info@themakersmark.ca",
+        "website": "https://www.newmakeit.com/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.314026, 43.711718]
+      },
+      "properties": {
+        "id": 44,
+        "name": "RE:style studio",
+        "address": "19 WATERMAN AVE, ENTRANCE + PARKING ON CRANFIELD RD.",
+        "postalCode": "M4B 1Y2",
+        "category": "",
+        "accessModels": "Appointment Based",
+        "skills": "",
+        "phone": "647.794.4662",
+        "email": "info@restylestudiotoronto.com",
+        "website": "https://www.restylestudiotoronto.com/about-v",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.229285, 43.884171]
+      },
+      "properties": {
+        "id": 45,
+        "name": "Markham Public Library Cornell Library Kids Makerspace",
+        "address": "3201 Bur Oak Avenue",
+        "postalCode": "L6B 0T2",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "(905) 513-7977 ext. 3460",
+        "email": "mplchats@markham.library.on.ca",
+        "website": "https://markhampubliclibrary.ca/makerspace/",
+        "notes": "Only in-library use, you cannot book online."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.267817, 43.852072]
+      },
+      "properties": {
+        "id": 46,
+        "name": "Markham Public Library Aaniin Library Makerspace",
+        "address": "5665 14th Avenue",
+        "postalCode": "L3S 3K5",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 513-7977 ext. 4470",
+        "email": "mplchats@markham.library.on.ca",
+        "website": "https://markhampubliclibrary.ca/makerspace/",
+        "notes": "Customers under 13 years of age will need to be accompanied by a Makerspace-certified adult to use Makerspace equipment."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.335454, 43.894782]
+      },
+      "properties": {
+        "id": 47,
+        "name": "Markham Public Library Angus Glen Library Makerspace",
+        "address": "3990 Major Mackenzie Drive East",
+        "postalCode": "L6C 1P8",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 513-7977 ext. 4471",
+        "email": "atse@markham.library.on.ca; mplchats@markham.library.on.ca",
+        "website": "https://markham.bibliocommons.com/events/6511e8c3c0db8d2800d22bee; https://markhampubliclibrary.ca/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.267817, 43.852072]
+      },
+      "properties": {
+        "id": 48,
+        "name": "Markham Public Library Aaniin Library Creation Studio",
+        "address": "5665 14th Ave",
+        "postalCode": "L3S 3K5",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 513-7977 ext. 7100",
+        "email": "mplchats@markham.library.on.ca",
+        "website": "https://markhampubliclibrary.ca/faq/makerspace；https://markhampubliclibrary.ca/locations/al/; https://markhampubliclibrary.ca/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.335454, 43.894782]
+      },
+      "properties": {
+        "id": 49,
+        "name": "Markham Public Library Angus Glen Creation Studio",
+        "address": "3990 Major Mackenzie Drive East",
+        "postalCode": "L6C 1P8",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "(905) 513-7977 ext. 7100",
+        "email": "mplchats@markham.library.on.ca",
+        "website": "https://markhampubliclibrary.ca/booksoundbooth/",
+        "notes": "Customers under 13 years of age will need to be accompanied by an adult to use the sound booth."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.258546, 43.873391]
+      },
+      "properties": {
+        "id": 50,
+        "name": "Markham Public Library Markham Village Makerspace",
+        "address": "6031 Highway 7",
+        "postalCode": "L3P 3A7",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 513-7977 ext. 4271",
+        "email": "mplchats@markham.library.on.ca",
+        "website": "https://markhampubliclibrary.ca/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.400076, 43.820174]
+      },
+      "properties": {
+        "id": 51,
+        "name": "Markham Public Library Thornhill Community Centre Makerspace",
+        "address": "7755 Bayview Avenue",
+        "postalCode": "L3T 4P1",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 513-7977 ext. 3521",
+        "email": "mplchats@markham.library.on.ca; DigitalSpecialist@markham.library.on.ca",
+        "website": "https://markhampubliclibrary.ca/makerspace",
+        "notes": "Note: Customers under 13 years of age will need to be accompanied by a Makerspace-certified adult to use Makerspace equipment."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.401726, 43.82121]
+      },
+      "properties": {
+        "id": 52,
+        "name": "Markham Public Library Thornhill Community Centre Digital Media Stations",
+        "address": "7756 Bayview Avenue",
+        "postalCode": "L3T 4P1",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 513-7977 ext. 3522",
+        "email": "mplchats@markham.library.on.ca",
+        "website": "https://my.matterport.com/show/?m=yoFa48rDir1&qs=1 and https://markhampubliclibrary.ca/makerspace/",
+        "notes": "Customers under 13 years of age will need to be accompanied by an adult."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.227095, 43.785249]
+      },
+      "properties": {
+        "id": 53,
+        "name": "Centennial College Progress Makerspace",
+        "address": "941 Progress Avenue, Room L2-06 - Learning Centre",
+        "postalCode": "M1G 3T8",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Bookable, Appointment Based",
+        "skills": "Training Required",
+        "phone": "416-289-5000, ext. 55400",
+        "email": "mogunleye@centennialcollege.ca or makerspace@centennialcollege.ca library@centennialcollege.ca",
+        "website": "https://library.centennialcollege.ca/spaces-technology/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.349426, 43.684464]
+      },
+      "properties": {
+        "id": 54,
+        "name": "Centennial College Story Arts Centre Makerspace",
+        "address": "951 Carlaw Avenue, Room 190",
+        "postalCode": "M4K 3M2",
+        "category": "University/College",
+        "accessModels": "Multiple:, Walk In, Class/Workshop Bookable",
+        "skills": "Training Required",
+        "phone": "416-289-5000, ext. 58607",
+        "email": "mogunleye@centennialcollege.ca or makerspace@centennialcollege.ca library@centennialcollege.ca",
+        "website": "https://library.centennialcollege.ca/spaces-technology/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.186291, 43.783891]
+      },
+      "properties": {
+        "id": 55,
+        "name": "UTSC Library Makerspace",
+        "address": "1265 Military Trail, AC256",
+        "postalCode": "M1C 1A4",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Only, Appointment Based",
+        "skills": "Training Required",
+        "phone": "416-287-7500",
+        "email": "makerspace.utsc@utoronto.ca",
+        "website": "https://utsc.library.utoronto.ca/makerspace",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.438754, 43.870397]
+      },
+      "properties": {
+        "id": 56,
+        "name": "Richmond Hill Public Library",
+        "address": "1 Atkinson Street",
+        "postalCode": "L4C 0H5",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "905-884-9288",
+        "email": "info@rhpl.ca",
+        "website": "https://www.rhpl.ca/library-services/makerspace",
+        "notes": "Live Chat"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.244584, 43.967308]
+      },
+      "properties": {
+        "id": 57,
+        "name": "Whitchurch-Stouffville Public Library Makerspace",
+        "address": "2 Park Drive",
+        "postalCode": "L4A 4K1",
+        "category": "Library",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "905-642-7323",
+        "email": "info@wsplibrary.ca",
+        "website": "https://www.wsplibrary.ca/services/makerspace/",
+        "notes": "Most materials are provided awith varying cost, and most tools are accessible by walk-in with few exceptions such as the recording studio that requries an booking"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-78.865067, 43.894861]
+      },
+      "properties": {
+        "id": 58,
+        "name": "McLaughlin Branch Oshawa Public Library Makerspace",
+        "address": "65 Bagot St",
+        "postalCode": "L1H 1N2",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "(905) 579-6111 ext. 5200",
+        "email": "Website inquiry",
+        "website": "https://oshawalibrary.ca/technology/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.459018, 44.053334]
+      },
+      "properties": {
+        "id": 59,
+        "name": "Maker Hub Newmarket Public Library",
+        "address": "438 Park Ave.",
+        "postalCode": "L3Y 1W1",
+        "category": "Library",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "None",
+        "phone": "905-953-5110 Ext. 4735",
+        "email": "Website inquiry",
+        "website": "https://www.newmarketpl.ca/en/services/maker-hub.aspx",
+        "notes": "Website inquiry under Contact Us: Community Engagement"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.925603, 43.64825]
+      },
+      "properties": {
+        "id": 60,
+        "name": "Georgetown Branch of the Halton Hills Public Library Makerspace",
+        "address": "9 Church Street",
+        "postalCode": "L7G 2A3",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "905-873-2681",
+        "email": "askus@haltonhills.ca",
+        "website": "https://www.hhpl.ca/en/visit/creativity-centre.aspx",
+        "notes": "The Georgetown Branch of the Halton Hills Public Library offers a makerspace for scanning, editing, and converting photos and videos, as well as hardware and software that you can use for your creative photo, audio and video projects."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.790016, 43.33591]
+      },
+      "properties": {
+        "id": 61,
+        "name": "Central Branch Burlington Public Library",
+        "address": "2331 New Street",
+        "postalCode": "L7R 1J4",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "905.639.3611",
+        "email": "E newsletter",
+        "website": "https://www.bpl.on.ca/services/makerspace",
+        "notes": "MakerSpace is a small-scale do-it-yourself workshop where you can create designs and use equipment to complete your projects. Unless noted, the MakerSpace at Central Branch, 3rd floor, is open:\nMon, Fri, Sat: 10am-4:30pm; Saturday closed 1-2pm\nTue, Wed, Thu: 10am-8:30pm\nSun: Closed"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.566825, 43.698421]
+      },
+      "properties": {
+        "id": 62,
+        "name": "Prototype design labs",
+        "address": "22 enterprise road",
+        "postalCode": "m9w 1c3",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "416-842-0275",
+        "email": "info@pdlab.ca",
+        "website": "https://pdlab.ca/#",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.359269, 43.761107]
+      },
+      "properties": {
+        "id": 63,
+        "name": "Neuronic Works",
+        "address": "210 Lesmill Rd",
+        "postalCode": "M3B 2T5",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "844-546-1575, 416-546-1575",
+        "email": "info@neuronicworks.com",
+        "website": "https://neuronicworks.com/prototyping/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.60684, 43.729167]
+      },
+      "properties": {
+        "id": 64,
+        "name": "Humber Prototype Lab",
+        "address": "205 Humber College Blvd., Barrett Centre For Technology Innovation",
+        "postalCode": "M9W 5L7",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "416.675.3111",
+        "email": "askbarrettcti@humber.ca, enquiry@humber.ca",
+        "website": "http://munro.humber.ca/~mdrk0011/",
+        "notes": "Staff on site to assist with plugging files into the machines. \nFor students and members of the Humber community"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.377681, 43.65851]
+      },
+      "properties": {
+        "id": 65,
+        "name": "TMU Digital Fabrication Lab",
+        "address": "325 Church St. ARC-116",
+        "postalCode": "M5B 2M2",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "416-979-5000 ext. 556483",
+        "email": "jordan.so@torontomu.ca arch.office@torontomu.ca",
+        "website": "https://www.torontomu.ca/architectural-science/studios-facilities/digital-fab-lab/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.281159, 43.685793]
+      },
+      "properties": {
+        "id": 66,
+        "name": "Forge Labs Inc. Toronto",
+        "address": "Online delivery",
+        "postalCode": "N/A",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "877-329-9131",
+        "email": "sales@forgelabs.com",
+        "website": "https://forgelabs.ca/3d-printing-toronto/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-77.430912, 44.155438]
+      },
+      "properties": {
+        "id": 67,
+        "name": "Loyalist College The FailSafe",
+        "address": "376 Wallbridge-Loyalist Road, Belleville, ON​",
+        "postalCode": "K8N 5B9",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "613-921-0784, 613-969-1913, ext. 2100",
+        "email": "hbrown@loyalistcollege.com, info@loyalistcollege.com",
+        "website": "(This link is no longer avaliable) https://loyalistcollege.com/news/loyalist-college-opens-the-failsafe-to-support-tech-based-innovation-on-campus/ ",
+        "notes": " No membership, all students, staff, and faculty of Loyalist College can use the facility.\nThe facility provide 3D print material like PLA and PTEG to students at no charge currently.  For our laser cutter, we don’t provide any material.\nOpen Hour: Sept- April: Mon-Fri 8 a.m. – 7 p.m., and Sat 10 a.m.-6pm. \nMay – Aug: Mon-Fri 8 a.m. - 4 p.m. \nThe facility is bookable students, staff, and faculty, not the general public. \nMachine/Computers/Software included in the facility:\nBambu Labs 3D printers : X1 Carbon (3), A1-Mini (2), P1S (2)\nDremel 40-watt Laser Cutter\nMeta Quest Pro VR units (2)\nSmall and Large Audio Booths  (Large one has 4K webcam and pull-down green screen\nAlienware eSports PCs (10)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.459135, 43.66704]
+      },
+      "properties": {
+        "id": 68,
+        "name": "Ultimate Workshop",
+        "address": "22 Cariboo Ave, Toronto, ON M6P 3T6",
+        "postalCode": "M6P 3T6",
+        "category": "Community Centre",
+        "accessModels": "By Invite Only",
+        "skills": "None",
+        "phone": "(647) 880-7467",
+        "email": "info@ultimateworkshop.ca",
+        "website": "https://www.theultimateworkshops.com/",
+        "notes": "Excluisve Welcome Kit, VIP access or perks, One- on-one coaching and membership"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.403619, 43.665286]
+      },
+      "properties": {
+        "id": 69,
+        "name": "Queer Computer Club",
+        "address": "720 Spadina Avenue, Unit 403",
+        "postalCode": "M5S 2T9",
+        "category": "Community Centre",
+        "accessModels": "By Invite Only",
+        "skills": "None",
+        "phone": "Discord",
+        "email": "directors@queercomputerclub.ca",
+        "website": "https://queercomputerclub.ca/",
+        "notes": "Don't have to be a queer, it is because -- emphasize our focus on making a space for LGBT+ people, everyone is welcome.\nThe business hours of the building are: Monday to Friday: 6:30 a.m. - 9:30 p.m. Saturday and Sunday: 8:00 a.m. - 8:00 p.m.\nOutside of these hours, access to the building requires a keyfob for the front door and to operate the elevator. Members are given a fob so they can access the space at any time.\n"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.417571, 43.646865]
+      },
+      "properties": {
+        "id": 70,
+        "name": "3 Delta Studio",
+        "address": "180 Shaw Street, Unit 207, Artscape Youngplace",
+        "postalCode": "M6J 2W5",
+        "category": "Community Centre",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "",
+        "email": "info@3deltastudio.ca",
+        "website": "https://3deltastudio.ca/",
+        "notes": "Please note that studio won't offer short-term studio rental until further notice."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.083764, 43.837614]
+      },
+      "properties": {
+        "id": 71,
+        "name": "Pickering Public Library Technology & Maker Space",
+        "address": "1 The Esplanade S, Pickering, ON",
+        "postalCode": "L1V 6K7",
+        "category": "Library",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "(905) 831-6265 (press 1 to speak to a staff agent)",
+        "email": "help@pickeringlibrary.ca",
+        "website": "https://pickeringlibrary.ca/makerspace/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.738562, 43.435872]
+      },
+      "properties": {
+        "id": 72,
+        "name": "Creation Zone Oakville Public Library",
+        "address": " 1415 Third Line, Oakville, ON L6M 3G2",
+        "postalCode": "L6M 3G2\n",
+        "category": "Library",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "(905) 815-2039",
+        "email": "oplreference@oakville.ca \n",
+        "website": "https://opl.ca/Programs-and-Events/Creation-Zone",
+        "notes": "there are drop in availabilites and to book the equipment a library card is neccessary. some materials are free and some need to be purchased or brought in by the individual"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.86074, 43.873789]
+      },
+      "properties": {
+        "id": 73,
+        "name": "Cory Trépanier Creativity Studio (CTCS) Caledon East branch Caledon Public Library",
+        "address": "6215 Old Church Road",
+        "postalCode": "L7C 1J7",
+        "category": "Library",
+        "accessModels": "Multiple:",
+        "skills": "Training Required",
+        "phone": "(905) 584 1456",
+        "email": "ceast@caledon.library.on.ca",
+        "website": "https://caledon.library.on.ca/maker/",
+        "notes": "3D printers, lasers, and vinyl cutters may require instruction or training. The library offers classes and one-on-one meetings with maker professionals to assist users get started with these tools. You need a library card to use the maker space and equipment. "
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.833415, 43.743739]
+      },
+      "properties": {
+        "id": 74,
+        "name": "Margaret Dunn Valleywood (MDV) Collaboration Studio Caledon Public Library",
+        "address": "20 Snelcrest Drive",
+        "postalCode": "L7C 1B5",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "None",
+        "phone": "(905) 843 0457",
+        "email": "dunn@caledon.library.on.ca",
+        "website": "https://caledon.library.on.ca/maker/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.501874, 43.772119]
+      },
+      "properties": {
+        "id": 75,
+        "name": "AMPD Pan-Faculty Makerspace YorkU",
+        "address": "86 Fine Arts Rd, GCFA 164A",
+        "postalCode": "M3J 1P3",
+        "category": "University/College",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "(416) 736-2100",
+        "email": "jturola@yorku.ca",
+        "website": "https://makerspace.ampd.yorku.ca/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.517433, 43.93159]
+      },
+      "properties": {
+        "id": 76,
+        "name": "Make-It Lab King Township Public Library",
+        "address": "1970 King Rd.",
+        "postalCode": "L7B 1K9",
+        "category": "Library",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "905-833-5101",
+        "email": "makeitlab@kinglibrary.ca",
+        "website": "https://www.kinglibrary.ca/Make-It-Lab",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-78.942352, 44.106889]
+      },
+      "properties": {
+        "id": 77,
+        "name": "The Scugog Library Makerspace",
+        "address": "231 Water St, Port Perry, ON",
+        "postalCode": "L9L 1A8",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "905-985-7686 ex. 101",
+        "email": "Directly message on website, no email provided",
+        "website": "https://www.scugoglibrary.ca/makerspace/",
+        "notes": "All customers 14 and over must have a completed waiver before accessing Makerspace services. Those under 18 must have a parent or legal guardian sign on their behalf. Children under 14 must be accompanied by a parent/guardian while in the Makerspace."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-78.862944, 43.901017]
+      },
+      "properties": {
+        "id": 78,
+        "name": "Mary Street Community School maker space",
+        "address": "110 Mary Street, Oshawa, ON",
+        "postalCode": "L1G 7S2",
+        "category": "Public School",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Required",
+        "phone": "905-433-8910",
+        "email": "MaryStreetCommunitySchool@ddsb.ca",
+        "website": "https://marystreet.ddsb.ca/en/students/activities.aspx",
+        "notes": "Not open for general public"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.600262, 43.661882]
+      },
+      "properties": {
+        "id": 79,
+        "name": "InnovaStem",
+        "address": "2680 Matheson Blvd E. Suite 102 ",
+        "postalCode": "L4W 0A5",
+        "category": "Business",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "416- 840-6311",
+        "email": "Website inquiry",
+        "website": "https://innovastem.ca/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.020972, 43.851436]
+      },
+      "properties": {
+        "id": 80,
+        "name": "Makerspace @ McLean Ajax Library",
+        "address": "55 Harwood Ave.",
+        "postalCode": "L1T 4M5",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "905-683-4000 ext. 8838",
+        "email": "christofer.zorn@ajaxlibrary.ca & libraryinfo@ajaxlibrary.ca",
+        "website": "https://ajaxlibrary.ca/Makerspace",
+        "notes": "Primarily walk-in, with scheduled workshops and meetings available.\nOpen to the public, including individuals, groups, and school groups.\nSkills Required: None; a willingness to learn is encouraged, with limited guidance provided for task completion.\nRequires a free Ajax library card (quick process) and a signed waiver for equipment usage.\nEquipment use is free, but users are charged for materials (can bring their own).\nPurpose: To foster a community of creators and learners by providing the tools and space for hands-on projects and skill development.\n\nMonday to Friday | 9:00 a.m. to 9:00 p.m.\nSaturday | 9:00 a.m. to 5:00 p.m.\nSunday | 11:00 a.m. to 5:00 p.m."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.777598, 43.351722]
+      },
+      "properties": {
+        "id": 81,
+        "name": "Makwendam Public School",
+        "address": "565 Woodview Road",
+        "postalCode": "L7N 2Z9",
+        "category": "Public School",
+        "accessModels": "",
+        "skills": "",
+        "phone": "905-632-1766",
+        "email": "mkwps@hdsb.ca",
+        "website": "https://mkw.hdsb.ca/about-makwendam#h.p_8hvEL5tI1QwU",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.650964, 43.472951]
+      },
+      "properties": {
+        "id": 82,
+        "name": "Maple Grove Public School",
+        "address": "288 Maple Grove Drive",
+        "postalCode": "L6J 4V5",
+        "category": "Public School",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "905-844-9322",
+        "email": "magps@hdsb.ca",
+        "website": "https://mag.hdsb.ca/for-students/get-involved",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.268195, 43.875737]
+      },
+      "properties": {
+        "id": 83,
+        "name": "Elementary james Robinson Public School SPARC!",
+        "address": "90 Robinson St.",
+        "postalCode": "L3P 1N9",
+        "category": "Public School",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "(905) 294-3484 , (647) 795-7638",
+        "email": "james.robinson.ps@yrdsb.ca",
+        "website": "http://www.yrdsb.ca/schools/jamesrobinson.ps/info/Pages/SPARC!-Universally-Accessible-Learning-Commons.aspx",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.348989, 43.795785]
+      },
+      "properties": {
+        "id": 84,
+        "name": "Seneca Sandbox - Newnham Full-Serve Studios",
+        "address": "1750 Finch Ave. East, Toronto",
+        "postalCode": "M2J 2X5",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-764-9819 outreach manager",
+        "email": "jennifer.peters@senecapolytechnic.ca, sandbox@senecapolytechnic.ca",
+        "website": "https://library.senecapolytechnic.ca/sandbox/",
+        "notes": "Only available fot Seneca students, there are 3 rooms that can be booked online, each room serves a different purpose                                              Digital Media Appointments        9:00am – 5:00pm\nNewnham Full-Serve Studios        9:30am – 4:30pm\nSeneca@York Full-Serve Studios        9:30am – 4:30pm\nKing Self-Serve Studios        9:30am – 4:30pm\nSIA (Markham) Self-Serve Studios        9:30am – 4:30pm"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.498856, 43.771279]
+      },
+      "properties": {
+        "id": 85,
+        "name": "Seneca Sandbox - Seneca@York Full-Serve Studios",
+        "address": "70 The Pond Road",
+        "postalCode": "M3J 3M6\n",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-764-9822",
+        "email": "julio.palacios@senecapolytechnic.ca, sandbox@senecapolytechnic.ca",
+        "website": "https://library.senecapolytechnic.ca/sandbox/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.519121, 43.955271]
+      },
+      "properties": {
+        "id": 86,
+        "name": "Seneca Sandbox -  King Self-Serve Studios",
+        "address": "13990 Dufferin Street",
+        "postalCode": "L7B 1B3",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-764-9829",
+        "email": "mohamad.tafish@senecapolytechnic.ca, sandbox@senecapolytechnic.ca",
+        "website": "https://seneca.libcal.com/reserve/kingselfserve",
+        "notes": "Digital Media Appointments\t9:00am – 5:00pm\nNewnham Full-Serve Studios\t9:30am – 4:30pm\nSeneca@York Full-Serve Studios\t9:30am – 4:30pm\nKing Self-Serve Studios\t9:30am – 4:30pm\nSIA (Markham) Self-Serve Studios\t9:30am – 4:30pm"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.367258, 43.850223]
+      },
+      "properties": {
+        "id": 87,
+        "name": "Seneca Sandbox - SIA (Markham) Self-Serve Studios",
+        "address": "8 The Seneca Way",
+        "postalCode": "L3R 5Y1",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "437-312-0584",
+        "email": "philip.wasley@senecapolytechnic.ca, sandbox@senecapolytechnic.ca",
+        "website": "https://seneca.libcal.com/reserve/siaselfserve",
+        "notes": "Digital Media Appointments\t9:00am – 5:00pm\nNewnham Full-Serve Studios\t9:30am – 4:30pm\nSeneca@York Full-Serve Studios\t9:30am – 4:30pm\nKing Self-Serve Studios\t9:30am – 4:30pm\nSIA (Markham) Self-Serve Studios\t9:30am – 4:30pm"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.584154, 45.456403]
+      },
+      "properties": {
+        "id": 88,
+        "name": "Seneca Polytechnic - Virtual Digital Media Appointments",
+        "address": "Online",
+        "postalCode": "Online",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "LiveChat",
+        "email": "sandbox@senecapolytechnic.ca, theservicehub@senecacollege.ca",
+        "website": "https://theservicehub.senecapolytechnic.ca/s/article/Sandbox-Studio-Digital-Media-Appointments-DMAs",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.377078, 43.852509]
+      },
+      "properties": {
+        "id": 89,
+        "name": "Makerwiz",
+        "address": "120 East Beaver Creek Road, Suite 200",
+        "postalCode": "L4B 4V1",
+        "category": "Business",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "289-637-1333",
+        "email": "info@makerwiz.com",
+        "website": "https://makerwiz.com/",
+        "notes": "Plenty of workshops, sessions, camps, trainings, and competitions. Also offers a 3d printing service online that'll deliver to your address."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.490892, 44.104742]
+      },
+      "properties": {
+        "id": 90,
+        "name": "Makerspace East Gwillimbury Public Library Holland Landing Branch",
+        "address": "19513 Yonge Street\nHolland Landing ",
+        "postalCode": "L9N 1P2",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 836-6492",
+        "email": "Website inquiry",
+        "website": "https://www.egpl.ca/services/makerspace",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.310151, 44.140495]
+      },
+      "properties": {
+        "id": 91,
+        "name": "Makerspace East Gwillimbury Public Library Mount Albert Branch",
+        "address": "19300 Centre Street\nMount Albert",
+        "postalCode": "L0G 1M0",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "(905) 473-2472",
+        "email": "Website inquiry",
+        "website": "https://www.egpl.ca/services/makerspace",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.596044, 43.817564]
+      },
+      "properties": {
+        "id": 92,
+        "name": "MAKE IT! space Vaughan Public Pierre Berton Resource Library",
+        "address": "4921 Rutherford Road\nWoodbridge",
+        "postalCode": "L4H 3C2",
+        "category": "Library",
+        "accessModels": "Multiple:",
+        "skills": "Training Offered",
+        "phone": "905-653-7323",
+        "email": "Website inquiry https://www.vaughanpl.info/blogs/shareit/help/",
+        "website": "https://www.vaughanpl.info/shareit/welcome-to-the-make-it-space/ https://www.vaughanpl.info/blogs/shareit/ https://www.vaughanpl.info/blogs/shareit/make-it/",
+        "notes": "The Vaughan Public Library's Makerspaces have specialized equipment, including a button maker, a Carvey tabletop carving machine, and a direct-to-garment printer. There are instruments such as the Oculus Rift (currently unavailable) and different 3D modeling software for digital design. The Recording Studio is outfitted with high-performance audio interfaces and various musical instruments."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.452177, 43.803427]
+      },
+      "properties": {
+        "id": 93,
+        "name": "LEARN IT! space Vaughan Public Bathurst Clark Resource Library",
+        "address": "900 Clark Avenue West, Thornhill",
+        "postalCode": "L4J 8C1",
+        "category": "Library",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "905-653-7323",
+        "email": "Website inquiry https://www.vaughanpl.info/blogs/shareit/help/",
+        "website": "https://www.vaughanpl.info/shareit/welcome-to-the-make-it-space/ https://www.vaughanpl.info/blogs/shareit/make-it/ ",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.510434, 43.855538]
+      },
+      "properties": {
+        "id": 94,
+        "name": "CREATE IT! space Vaughan Public Civic Centre Resource Library",
+        "address": "2191 Major Mackenzie Drive West, Maple",
+        "postalCode": "L6A 3Y8",
+        "category": "Library",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "905-653-7323",
+        "email": "Website inquiry https://www.vaughanpl.info/blogs/shareit/help/",
+        "website": "https://www.vaughanpl.info/shareit/welcome-to-the-make-it-space/ https://www.vaughanpl.info/blogs/shareit/create-it/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.473399, 43.817825]
+      },
+      "properties": {
+        "id": 95,
+        "name": "Delano Academy's STE(A)M factory Thornhill Campus",
+        "address": "200 Racco Parkway",
+        "postalCode": "L4J 8X9",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "905. 237. 7315",
+        "email": "admin@delanoacademy.com",
+        "website": "https://www.delanoacademy.com/s-t-e-a-m",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.624996, 43.776044]
+      },
+      "properties": {
+        "id": 96,
+        "name": "Proto 3000",
+        "address": "6260 Highway 7 Unit 8",
+        "postalCode": "L4H 4G3",
+        "category": "Business",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "905-738-1779",
+        "email": "info@proto3000.com",
+        "website": "https://proto3000.com/",
+        "notes": "The organization focuses on providing end-to-end advanced manufacturing solutions that leverage design, additive manufacturing, and metrology to reduce product design cycles, enhance prototyping capabilities, improve production efficiency, and maximize supply-chain flexibility. It differs from other types of makerspaces as it does not allow people to directly access the technology (unless they purchase it)."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.348989, 43.795785]
+      },
+      "properties": {
+        "id": 97,
+        "name": "HELIX Seneca",
+        "address": "1750 Finch Avenue East",
+        "postalCode": "M2J 2X5",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "416.491.5050",
+        "email": "helix@senecapolytechnic.ca",
+        "website": "https://www.senecapolytechnic.ca/innovation/helix/helix-programs-and-initiatives.html",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.466464, 43.997203]
+      },
+      "properties": {
+        "id": 98,
+        "name": "Creative Studio Aurora Public Library",
+        "address": "15145 Yonge St",
+        "postalCode": "L4G 1M1",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "(905) 727-9494",
+        "email": "Website inquiry https://aurorapl.ca/contact-us/",
+        "website": "https://aurorapl.ca/creative-studio/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.443851, 44.209001]
+      },
+      "properties": {
+        "id": 99,
+        "name": "Georgina Public Library Makerspace",
+        "address": "261 Garrett Styles Dr, Georgina",
+        "postalCode": "L4P 3E9",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "905-989-3000",
+        "email": "Website inquiry https://www.georginalibrary.ca//Modules/email/emailattachment.aspx?CV2=peI1o0l5lA5HHVS1X4weKhfpUQeQuAleQuAl&ref=https://www.georginalibrary.ca/en/service/maker-space.aspx#&lang=en",
+        "website": "https://www.georginalibrary.ca/en/service/maker-space.aspx",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-78.782039, 43.913194]
+      },
+      "properties": {
+        "id": 100,
+        "name": "Maker's Space & Studio Clarington Library, Museums & Archives Courtice Library",
+        "address": "2950 Courtice Rd",
+        "postalCode": "L1E 2L8",
+        "category": "Library",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "905-623-7322 x2735",
+        "email": "makerspace@cplma.ca",
+        "website": "https://www.cplma.ca/learning-technology/makers-space-studio/",
+        "notes": "Users should understand that the space is designed for learners of all ages and skill levels. Users will need to go over the instructions and tuition before access the technology. Appointment need to be made before accessing technology. Users will also need to hold a library membership "
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.334118, 43.81924]
+      },
+      "properties": {
+        "id": 101,
+        "name": "ventureLAB",
+        "address": "3600 Steeles Ave. E\nRoom E171",
+        "postalCode": "L3R 9Z7",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "905-248-2727",
+        "email": "hello@venturelab.ca",
+        "website": "https://www.venturelab.ca/",
+        "notes": "provides services at no-charge to qualified small and medium-sized enterprises"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-78.863598, 43.898033]
+      },
+      "properties": {
+        "id": 102,
+        "name": "STEAM-3D Maker Lab at Ontario Tech University",
+        "address": "11 Simcoe St N. Oshawa, ON",
+        "postalCode": "L1G 4R7",
+        "category": "Community Centre",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "N/A",
+        "email": "steam3d@ontariotechu.net",
+        "website": "https://janettehughes.ca/lab/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.38114, 43.657692]
+      },
+      "properties": {
+        "id": 103,
+        "name": "Isaac Olowolafe Jr. Digital Media Experience Lab TMU",
+        "address": "341 Yonge St, SLC 308",
+        "postalCode": "M5B 1S1",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "416-979-5000 ext. 553524",
+        "email": "dme@torontomu.ca",
+        "website": "https://library.torontomu.ca/dmelab/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.388703, 43.649407]
+      },
+      "properties": {
+        "id": 104,
+        "name": "Experimental Fabrication Studio (XFab) OCAD",
+        "address": "Lower Level of 205 Richmond Street West.",
+        "postalCode": "M5V 1V3",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Offered",
+        "phone": "416.977.6000",
+        "email": "oritza@ocadu.ca",
+        "website": "https://www.ocadu.ca/services/studios/experimental-fabrication-studio",
+        "notes": "OCAD’s Experimental Fabrication Studio (XFab) provides Speed 100 and Trotec laser cutters (max cut size 24x12 inches, 1/8 inch acrylic thickness), BotFactory for PCB printing, Bantam Tools Desktop CNC Milling Machine (4th axis compatible), and woodshop tools like drill presses, saws, routers, and sanders."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.391308, 43.653084]
+      },
+      "properties": {
+        "id": 105,
+        "name": "Rapid Prototyping Centre OCAD",
+        "address": "100 McCaul St Room 112 ",
+        "postalCode": "M5T 2W7",
+        "category": "University/College",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "416.977.6000 ext. 2114 ",
+        "email": "rpstudio@ocadu.ca",
+        "website": "https://www.ocadu.ca/services/studios/rapid-prototyping-centre",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.391308, 43.653084]
+      },
+      "properties": {
+        "id": 106,
+        "name": "OCAD 667 STUDIO / Printmaking & Publications",
+        "address": "100 McCaul Street",
+        "postalCode": "M5T 2W7",
+        "category": "",
+        "accessModels": "",
+        "skills": "",
+        "phone": "416.977.6000 ext. 268",
+        "email": "esteenbergen@ocadu.ca",
+        "website": "https://www.stencil.wiki/atlas/667-studio https://www.ocadu.ca/services/studios/printmaking",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.391308, 43.653084]
+      },
+      "properties": {
+        "id": 107,
+        "name": "Material Innovation Centre (MIC) OCAD",
+        "address": "100 McCaul St Room 530",
+        "postalCode": "M5T 2W7",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Required",
+        "phone": "416.977.6000",
+        "email": "kmcouat@ocadu.ca ",
+        "website": "https://www.ocadu.ca/academics/faculty-of-design/material-innovation-centre",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.513598, 43.596236]
+      },
+      "properties": {
+        "id": 108,
+        "name": "Idea Lab Humber College - Lakeshore Campus",
+        "address": "17 Colonel Samuel Smith Park Dr, G Building 3rd floor",
+        "postalCode": "M8V 4B6",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-675-5079 ",
+        "email": "idealab@humber.ca",
+        "website": "https://library.humber.ca/idealab",
+        "notes": "They offer many workshops to help students learn new skills and achieve their projects."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.60684, 43.729167]
+      },
+      "properties": {
+        "id": 109,
+        "name": "Idea Lab Humber College",
+        "address": "205 Humber College Blvd, Etobicoke, 3rd floor",
+        "postalCode": "M9W 5L7",
+        "category": "University/College",
+        "accessModels": "",
+        "skills": "",
+        "phone": "416-675-5079 ",
+        "email": "idealab@humber.ca",
+        "website": "https://library.humber.ca/idealab",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.60684, 43.729167]
+      },
+      "properties": {
+        "id": 110,
+        "name": "Barrett Centre for Technology Innovation Solution Lab",
+        "address": "205 Humber College Blvd, Etobicoke, 3rd floor",
+        "postalCode": "M9W 5L7",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "416-675-6622, ext. 5332",
+        "email": "askbarrettcti@humber.ca",
+        "website": "https://humber.ca/barrett-centre-for-technology-innovation/impact/space/labs-and-rooms.html",
+        "notes": "many small makerspaces"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.60684, 43.729167]
+      },
+      "properties": {
+        "id": 111,
+        "name": "Barrett Centre for Technology Innovation Electronics Room",
+        "address": "205 Humber College Blvd, Etobicoke, 3rd floor",
+        "postalCode": "M9W 5L7",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "None",
+        "phone": "416-675-6622, ext. 5332",
+        "email": "askbarrettcti@humber.ca",
+        "website": "https://humber.ca/barrett-centre-for-technology-innovation/impact/space/labs-and-rooms.html",
+        "notes": "many small makerspaces"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.368984, 43.644495]
+      },
+      "properties": {
+        "id": 112,
+        "name": "Maker Lab at George Brown College School of Design",
+        "address": "3 Lower Jarvis St.",
+        "postalCode": "M5E 3Y5",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "416.415.5000 ext. 2137 / 416-415-2000",
+        "email": "design@georgebrown.ca / josephzettler27@gmail.com / ask.george@georgebrown.ca ",
+        "website": "https://www.georgebrown.ca/arts-design-information-technology/design/learning-environment",
+        "notes": "Only accessible by current students/staff/faculty"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.398256, 43.660974]
+      },
+      "properties": {
+        "id": 113,
+        "name": "Student Machine Shop",
+        "address": "McLennan Physical Laboratories, 60 St George St",
+        "postalCode": "M5S 1A7",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Required",
+        "phone": "416-978-3533",
+        "email": "woitalla@physics.utoronto.ca or studentworkshop@physics.utoronto.ca",
+        "website": "https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/precision-fabrication-services/student-workshop/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.397922, 43.661912]
+      },
+      "properties": {
+        "id": 114,
+        "name": "Machine Shop - Dept of Chemistry",
+        "address": "80 St George Street, Room 53",
+        "postalCode": "M5S 3H6",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Required",
+        "phone": "(416) 978-3584",
+        "email": "machshop@chem.utoronto.ca",
+        "website": "https://www.chemistry.utoronto.ca/technical-services/machine-shop",
+        "notes": "Presented as a contracted service, no outside access"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.400721, 43.659646]
+      },
+      "properties": {
+        "id": 115,
+        "name": "Daniels Digital Fabrication Lab & Model Workshop",
+        "address": "1 Spadina Crescent",
+        "postalCode": "M5S 2J5",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-978-5038",
+        "email": "undergraduate@daniels.utoronto.ca",
+        "website": "https://www.daniels.utoronto.ca/resources/technology",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.394017, 43.659794]
+      },
+      "properties": {
+        "id": 116,
+        "name": "Machine Shop - Dept of Mechanical & Industrial Eng",
+        "address": "5 King's College Road, Room MC78",
+        "postalCode": "M5S 3G8",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Required",
+        "phone": "416-978-6008 & 416-946-3358 ",
+        "email": "ryan@mie.utoronto.ca",
+        "website": "https://www.mie.utoronto.ca/student-life-services/machine-shop/",
+        "notes": "Student Machine Shop Access (only UoT engineering students):\nAvailable for U of T academic projects and student clubs.\nStudents must complete a two-day basic machining course at George Brown College and pass U of T’s Site-Specific Training.\n\nProfessional Services:\nProvides design consultation, precision machining, and prototype assembly for faculty and student research.\n\nRates: $67.50/hour for MIE faculty and students, $77.50/hour for other U of T departments, and $5/hour for 3D printing (plus material costs).\n\nThe makerspace (student machine shop & professional services) serves the U of T community only, excluding work for corporations, alumni, or private individuals."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.394117, 43.662218]
+      },
+      "properties": {
+        "id": 117,
+        "name": "MADLab",
+        "address": "9 King’s College Circle, Room B112",
+        "postalCode": "M5S 1A5",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Bookable",
+        "skills": "Training Offered",
+        "phone": "",
+        "email": "mad.lab@utoronto.ca",
+        "website": "https://mobile.utoronto.ca/",
+        "notes": "Workshops provided, walk-in is an option but appointments are recommended "
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.663369, 43.548122]
+      },
+      "properties": {
+        "id": 118,
+        "name": "ICUBE UTM",
+        "address": "3359 Mississauga Road, Room L1240 & L1212",
+        "postalCode": "L5L 1C6",
+        "category": "University/College",
+        "accessModels": "Class/Workshop Only",
+        "skills": "Training Offered",
+        "phone": "",
+        "email": "icube.utm@utoronto.ca",
+        "website": "https://icubeutm.ca/contact/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.396626, 43.660701]
+      },
+      "properties": {
+        "id": 119,
+        "name": "Myhal Centre Fabrication Facility MYFab",
+        "address": "55 St George St, Room MY435",
+        "postalCode": "M5S 0C9",
+        "category": "University/College",
+        "accessModels": "Walk In",
+        "skills": "Training Required",
+        "phone": "",
+        "email": "myhal.maker@utoronto.ca",
+        "website": "https://www.engineering.utoronto.ca/myhal-centre-for-engineering-innovation-entrepreneurship/https://www.engineering.utoronto.ca/myhal-centre-for-engineering-innovation-entrepreneurship/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.394585, 43.660933]
+      },
+      "properties": {
+        "id": 120,
+        "name": "UofT MedPrint",
+        "address": "1 King's College Cir",
+        "postalCode": "M5S 1A8",
+        "category": "University/College",
+        "accessModels": "Multiple:",
+        "skills": "None",
+        "phone": "(416) 946-3235",
+        "email": "info@uoftmedprint.com",
+        "website": "https://uoftmedprint.wordpress.com/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.399533, 43.664459]
+      },
+      "properties": {
+        "id": 121,
+        "name": "3D Printing in the Robarts Digital Studio",
+        "address": "130 St George St, Toronto, First Floor Digital Studio",
+        "postalCode": "M5S 1A5",
+        "category": "University/College",
+        "accessModels": "Appointment Based",
+        "skills": "Training Offered",
+        "phone": "416-978-8450 (Immediate help number)",
+        "email": "Website inquiry https://onesearch.library.utoronto.ca/question-form",
+        "website": "https://onesearch.library.utoronto.ca/faq/3d-printing-robarts-digital-studio",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.756341, 43.585518]
+      },
+      "properties": {
+        "id": 122,
+        "name": "Meadowvale Library",
+        "address": "6655 Glen Erin Drive",
+        "postalCode": "L5N 3L4",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": " (905) 615-4710",
+        "email": "merley.wheaton@mississauga.ca",
+        "website": "https://www.mississauga.ca/recreation-and-sports/locations/burnhamthorpe-community-centre/",
+        "notes": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-79.603117, 43.621082]
+      },
+      "properties": {
+        "id": 123,
+        "name": "Burnhamthorpe Library",
+        "address": "3650 Dixie Road #101",
+        "postalCode": " L4Y 4H5",
+        "category": "Library",
+        "accessModels": "Walk In",
+        "skills": "Training Offered",
+        "phone": "905-615-3200",
+        "email": "Burnhamthorpe.Library@mississauga.ca",
+        "website": "https://www.mississauga.ca/library/locations/burnhamthorpe-library/",
+        "notes": ""
+      }
+    }
+  ],
+  "metadata": {
+    "generated": "2025-10-13T20:51:42.801Z",
+    "totalMakerspaces": 124,
+    "successfullyGeocoded": 123,
+    "failed": 1
+  }
+}
