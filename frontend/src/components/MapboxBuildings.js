@@ -97,54 +97,12 @@ const MapboxBuildings = () => {
     mapRef.current.addSource("makerspaces", {
       type: "geojson",
       data: "/makerspaces.geojson", // Static file served by your app
-      cluster: true,
-      clusterMaxZoom: 14,
-      clusterRadius: 50,
     });
 
-    // Cluster circles
+    // Individual makerspace points
     mapRef.current.addLayer({
-      id: "clusters",
+      id: "makerspace-points",
       source: "makerspaces",
-      filter: ["has", "point_count"],
-      type: "circle",
-      paint: {
-        "circle-color": [
-          "step",
-          ["get", "point_count"],
-          "#FF6B6B",
-          10,
-          "#FF4757",
-          20,
-          "#FF3742",
-        ],
-        "circle-radius": ["step", ["get", "point_count"], 15, 10, 20, 20, 25],
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#fff",
-      },
-    });
-
-    // Cluster count labels
-    mapRef.current.addLayer({
-      id: "cluster-count",
-      source: "makerspaces",
-      filter: ["has", "point_count"],
-      type: "symbol",
-      layout: {
-        "text-field": "{point_count_abbreviated}",
-        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 12,
-      },
-      paint: {
-        "text-color": "#ffffff",
-      },
-    });
-
-    // Individual points
-    mapRef.current.addLayer({
-      id: "unclustered-point",
-      source: "makerspaces",
-      filter: ["!", ["has", "point_count"]],
       type: "circle",
       paint: {
         "circle-color": "#FF6B6B",
@@ -153,42 +111,28 @@ const MapboxBuildings = () => {
           ["linear"],
           ["zoom"],
           10,
-          4,
-          14,
           6,
-          18,
+          12,
+          6,
+          16,
           8,
+          20,
+          10,
         ],
         "circle-stroke-width": 2,
         "circle-stroke-color": "#fff",
+        "circle-opacity": 1.0,
+        "circle-stroke-opacity": 1,
       },
     });
 
-    // Click handlers
-    mapRef.current.on("click", "clusters", (e) => {
-      const features = mapRef.current.queryRenderedFeatures(e.point, {
-        layers: ["clusters"],
-      });
-
-      const clusterId = features[0].properties.cluster_id;
-      mapRef.current
-        .getSource("makerspaces")
-        .getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return;
-
-          mapRef.current.easeTo({
-            center: features[0].geometry.coordinates,
-            zoom: zoom + 1,
-          });
-        });
-    });
-
-    mapRef.current.on("click", "unclustered-point", (e) => {
+    // Click handler for individual points
+    mapRef.current.on("click", "makerspace-points", (e) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
       const props = e.features[0].properties;
 
       const popupContent = `
-        <div style="padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="border-width: 4px; padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
           <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; line-height: 1.3;">${
             props.name
           }</h3>
@@ -244,14 +188,12 @@ const MapboxBuildings = () => {
     });
 
     // Cursor changes
-    ["clusters", "unclustered-point"].forEach((layer) => {
-      mapRef.current.on("mouseenter", layer, () => {
-        mapRef.current.getCanvas().style.cursor = "pointer";
-      });
+    mapRef.current.on("mouseenter", "makerspace-points", () => {
+      mapRef.current.getCanvas().style.cursor = "pointer";
+    });
 
-      mapRef.current.on("mouseleave", layer, () => {
-        mapRef.current.getCanvas().style.cursor = "";
-      });
+    mapRef.current.on("mouseleave", "makerspace-points", () => {
+      mapRef.current.getCanvas().style.cursor = "";
     });
 
     console.log("✅ Makerspace layers setup complete - using static GeoJSON");
