@@ -196,7 +196,7 @@ const MapboxBuildings = () => {
       mapRef.current.getCanvas().style.cursor = "";
     });
 
-    console.log("✅ Makerspace layers setup complete - using static GeoJSON");
+    console.log("Makerspace layers setup complete - using static GeoJSON");
   }, []);
 
   useEffect(() => {

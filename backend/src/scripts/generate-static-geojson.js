@@ -13,11 +13,11 @@ const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 // Debug: Check if token is loaded
 if (!MAPBOX_TOKEN) {
   console.error(
-    "❌ MAPBOX_TOKEN not found! Make sure REACT_APP_MAPBOX_ACCESS_TOKEN is set in frontend/.env"
+    "MAPBOX_TOKEN not found! Make sure REACT_APP_MAPBOX_ACCESS_TOKEN is set in frontend/.env"
   );
   process.exit(1);
 } else {
-  console.log(`✅ Mapbox token loaded: ${MAPBOX_TOKEN.substring(0, 20)}...`);
+  console.log(`Mapbox token loaded: ${MAPBOX_TOKEN.substring(0, 20)}...`);
 }
 const RATE_LIMIT_MS = 200; // 5 requests per second
 
@@ -78,22 +78,22 @@ async function geocodeAddress(address, postalCode, name) {
 
     if (data.features && data.features.length > 0) {
       const [lng, lat] = data.features[0].center;
-      console.log(`✅ Geocoded ${name}: ${lat}, ${lng}`);
+      console.log(`Geocoded ${name}: ${lat}, ${lng}`);
       return [lng, lat]; // GeoJSON format: [longitude, latitude]
     } else {
-      console.warn(`❌ No results for: ${name} (${query})`);
+      console.warn(`No results for: ${name} (${query})`);
       return null;
     }
   } catch (error) {
     if (error.response) {
       console.error(
-        `❌ Geocoding error for ${name} (${error.response.status}): ${
+        `Geocoding error for ${name} (${error.response.status}): ${
           error.response.data?.message || error.message
         }`
       );
-      console.error(`   Query was: "${query}"`);
+      console.error(`Query was: "${query}"`);
     } else {
-      console.error(`❌ Geocoding error for ${name}:`, error.message);
+      console.error(`Geocoding error for ${name}:`, error.message);
     }
     return null;
   }
@@ -114,7 +114,7 @@ async function generateStaticGeoJSON() {
     );
 
     console.log(
-      `🚀 Starting geocoding for ${validMakerspaces.length} makerspaces...`
+      `Starting geocoding for ${validMakerspaces.length} makerspaces...`
     );
 
     const features = [];
@@ -125,7 +125,7 @@ async function generateStaticGeoJSON() {
     for (let i = 0; i < validMakerspaces.length; i++) {
       const makerspace = validMakerspaces[i];
       console.log(
-        `\n📍 Geocoding ${i + 1}/${validMakerspaces.length}: ${makerspace.r}`
+        `\n Geocoding ${i + 1}/${validMakerspaces.length}: ${makerspace.r}`
       );
 
       const coordinates = await geocodeAddress(
@@ -185,15 +185,15 @@ async function generateStaticGeoJSON() {
     const outputPath = "../../../frontend/public/makerspaces.geojson";
     fs.writeFileSync(outputPath, JSON.stringify(geojson, null, 2));
 
-    console.log(`\n🎉 Static GeoJSON generation complete!`);
-    console.log(`✅ Successfully geocoded: ${successCount}`);
-    console.log(`❌ Failed to geocode: ${failCount}`);
-    console.log(`📁 Output file: ${outputPath}`);
+    console.log(`\nStatic GeoJSON generation complete!`);
+    console.log(`Successfully geocoded: ${successCount}`);
+    console.log(`Failed to geocode: ${failCount}`);
+    console.log(`Output file: ${outputPath}`);
     console.log(
       `📊 File size: ${(fs.statSync(outputPath).size / 1024).toFixed(2)} KB`
     );
   } catch (error) {
-    console.error("❌ Error generating static GeoJSON:", error);
+    console.error("Error generating static GeoJSON:", error);
   }
 }
 
