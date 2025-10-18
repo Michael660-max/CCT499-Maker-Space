@@ -11,16 +11,13 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static GeoJSON file (with long/lat data)
-app.use(
-  "/static",
-  express.static(path.join(__dirname, "../../../frontend/public"))
-);
+app.use("/static", express.static(path.join(__dirname, "../frontend/public")));
 
 // Serve the static GeoJSON file
 app.get("/api/makerspaces.geojson", (req, res) => {
   const filePath = path.join(
     __dirname,
-    "../../frontend/public/makerspaces.geojson"
+    "../frontend/public/makerspaces.geojson"
   );
 
   // Set proper headers
@@ -44,4 +41,6 @@ app.get("/api", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Frontend: http://localhost:${PORT}`);
+  console.log(`API: http://localhost:${PORT}/api`);
 });
