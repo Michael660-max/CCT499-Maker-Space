@@ -1,10 +1,13 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import MakerspaceSearch from "./MakerspaceSearch";
 
 const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
+  const [allMakerspaces, setAllMakerspaces] = useState([]);
+  const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
 
   // Remove performance-heavy label layers to improve responsiveness
   const removePerformanceLabels = useCallback(() => {
@@ -93,13 +96,19 @@ const MapboxBuildings = () => {
 
   // Fetch points from Supabase and add to map
   const setupMakerspaceLayer = useCallback(async () => {
-    const REST_URL = process.env.REACT_APP_REST_URL;
-    const ANON = process.env.REACT_APP_ANON_KEY;
+    try {
+      const REST_URL = process.env.REACT_APP_REST_URL;
+      const ANON = process.env.REACT_APP_ANON_KEY;
 
-    function bboxParams(map) {
-      const [[w, s], [e, n]] = map.getBounds().toArray();
-      return `minx=${w}&miny=${s}&maxx=${e}&maxy=${n}`;
-    }
+      if (!REST_URL || !ANON) {
+        console.error('Missing environment variables for Supabase');
+        return;
+      }
+
+      function bboxParams(map) {
+        const [[w, s], [e, n]] = map.getBounds().toArray();
+        return `minx=${w}&miny=${s}&maxx=${e}&maxy=${n}`;
+      }
 
     async function fetchGeoJSON(map) {
       try {
@@ -123,8 +132,9 @@ const MapboxBuildings = () => {
       }
     }
 
-    // Initial load of data
+    // Initial load of data - fetch all data once
     const initialGeoJSON = await fetchGeoJSON(mapRef.current);
+    setAllMakerspaces(initialGeoJSON.features || []);
     
     // Add source for makerspace points (no clustering)
     mapRef.current.addSource('makerspaces', {
@@ -145,11 +155,7 @@ const MapboxBuildings = () => {
       }
     });
 
-    // Update data when map moves
-    mapRef.current.on('moveend', async () => {
-      const newGeoJSON = await fetchGeoJSON(mapRef.current);
-      mapRef.current.getSource('makerspaces').setData(newGeoJSON);
-    });
+    // Note: Removed moveend event to keep data persistent across zoom levels
 
     // Click handler for individual points
     mapRef.current.on("click", "makerspace-points", (e) => {
@@ -222,6 +228,30 @@ const MapboxBuildings = () => {
     });
 
     console.log("Makerspace layers setup complete - using Supabase PostGIS data");
+    } catch (error) {
+      console.error('Error setting up makerspace layer:', error);
+    }
+  }, []);
+
+  // Handle filtering from search component
+  const handleFilter = useCallback((filtered) => {
+    setFilteredMakerspaces(filtered);
+    
+    if (mapRef.current && mapRef.current.isStyleLoaded && mapRef.current.isStyleLoaded()) {
+      try {
+        const source = mapRef.current.getSource('makerspaces');
+        if (source) {
+          // Update map to show only filtered results
+          const filteredGeoJSON = {
+            type: 'FeatureCollection',
+            features: filtered
+          };
+          source.setData(filteredGeoJSON);
+        }
+      } catch (error) {
+        console.error('Error updating map data:', error);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -266,17 +296,23 @@ const MapboxBuildings = () => {
   }, [removePerformanceLabels, add3DBuildingsLayer, setupMakerspaceLayer]);
 
   return (
-    <div
-      ref={mapContainerRef}
-      style={{
-        width: "100vw",
-        height: "100vh",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: 1,
-      }}
-    />
+    <>
+      <div
+        ref={mapContainerRef}
+        style={{
+          width: "100vw",
+          height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 1,
+        }}
+      />
+      <MakerspaceSearch
+        makerspaces={allMakerspaces}
+        onFilter={handleFilter}
+      />
+    </>
   );
 };
 
