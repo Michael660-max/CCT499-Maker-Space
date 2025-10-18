@@ -91,39 +91,64 @@ const MapboxBuildings = () => {
     );
   }, []);
 
-  // Setup makerspace layers using static GeoJSON
-  const setupMakerspaceLayer = useCallback(() => {
-    // Add source pointing to static GeoJSON file
-    mapRef.current.addSource("makerspaces", {
-      type: "geojson",
-      data: "/makerspaces.geojson", // Static file served by your app
+  // Fetch points from Supabase and add to map
+  const setupMakerspaceLayer = useCallback(async () => {
+    const REST_URL = process.env.REACT_APP_REST_URL;
+    const ANON = process.env.REACT_APP_ANON_KEY;
+
+    function bboxParams(map) {
+      const [[w, s], [e, n]] = map.getBounds().toArray();
+      return `minx=${w}&miny=${s}&maxx=${e}&maxy=${n}`;
+    }
+
+    async function fetchGeoJSON(map) {
+      try {
+        const url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?${bboxParams(map)}`;
+        const res = await fetch(url, {
+          headers: { 
+            apikey: ANON, 
+            Authorization: `Bearer ${ANON}`,
+            'Content-Type': 'application/json'
+          },
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        return res.json(); // a FeatureCollection
+      } catch (error) {
+        console.error('Error fetching GeoJSON:', error);
+        return { type: 'FeatureCollection', features: [] };
+      }
+    }
+
+    // Initial load of data
+    const initialGeoJSON = await fetchGeoJSON(mapRef.current);
+    
+    // Add source for makerspace points (no clustering)
+    mapRef.current.addSource('makerspaces', {
+      type: 'geojson',
+      data: initialGeoJSON
     });
 
-    // Individual makerspace points
+    // Add individual points layer
     mapRef.current.addLayer({
-      id: "makerspace-points",
-      source: "makerspaces",
-      type: "circle",
+      id: 'makerspace-points',
+      type: 'circle',
+      source: 'makerspaces',
       paint: {
-        "circle-color": "#FF6B6B",
-        "circle-radius": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          10,
-          6,
-          12,
-          6,
-          16,
-          8,
-          20,
-          10,
-        ],
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#fff",
-        "circle-opacity": 1.0,
-        "circle-stroke-opacity": 1,
-      },
+        'circle-color': '#FF6B6B',
+        'circle-radius': 8,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#fff'
+      }
+    });
+
+    // Update data when map moves
+    mapRef.current.on('moveend', async () => {
+      const newGeoJSON = await fetchGeoJSON(mapRef.current);
+      mapRef.current.getSource('makerspaces').setData(newGeoJSON);
     });
 
     // Click handler for individual points
@@ -187,7 +212,7 @@ const MapboxBuildings = () => {
         .addTo(mapRef.current);
     });
 
-    // Cursor changes
+    // Cursor changes for individual points
     mapRef.current.on("mouseenter", "makerspace-points", () => {
       mapRef.current.getCanvas().style.cursor = "pointer";
     });
@@ -196,7 +221,7 @@ const MapboxBuildings = () => {
       mapRef.current.getCanvas().style.cursor = "";
     });
 
-    console.log("Makerspace layers setup complete - using static GeoJSON");
+    console.log("Makerspace layers setup complete - using Supabase PostGIS data");
   }, []);
 
   useEffect(() => {
@@ -234,7 +259,7 @@ const MapboxBuildings = () => {
         setupMakerspaceLayer();
       });
     } catch (error) {
-      console.error("❌ Error initializing Mapbox:", error.message);
+      console.error("Error initializing Mapbox:", error.message);
     }
 
     return () => mapRef.current?.remove();
