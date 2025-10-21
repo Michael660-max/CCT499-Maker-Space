@@ -94,6 +94,87 @@ const MapboxBuildings = () => {
     );
   }, []);
 
+  // Fly to a makerspace and show popup
+  const flyToMakerspace = useCallback((makerspace) => {
+    if (!mapRef.current || !makerspace.geometry) return;
+
+    const coordinates = makerspace.geometry.coordinates.slice();
+    const props = makerspace.properties;
+
+    // Fly to the makerspace location
+    mapRef.current.flyTo({
+      center: coordinates,
+      zoom: 20,
+      duration: 2000,
+      essential: true
+    });
+
+    // Wait for flyTo to complete, then show popup
+    setTimeout(() => {
+      const popupContent = `
+        <div style="border-width: 4px; padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; line-height: 1.3;">${
+            props.name
+          }</h3>
+          ${
+            props.category
+              ? `<div style="margin: 6px 0; background: #FF6B6B; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block;">${props.category}</div>`
+              : ""
+          }
+          <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;"><strong>📍 Address:</strong><br>${
+            props.address
+          }</p>
+          ${
+            props.phone
+              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>📞 Phone:</strong> ${props.phone}</p>`
+              : ""
+          }
+          ${
+            props.email
+              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>✉️ Email:</strong> ${props.email}</p>`
+              : ""
+          }
+          ${
+            props.accessModels
+              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🔑 Access:</strong> ${props.accessModels}</p>`
+              : ""
+          }
+          ${
+            props.skills
+              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🛠️ Skills:</strong> ${props.skills}</p>`
+              : ""
+          }
+          ${
+            props.website
+              ? `<p style="margin: 8px 0 4px 0;"><a href="${props.website}" target="_blank" style="color: #FF6B6B; text-decoration: none; font-weight: 500; font-size: 13px;">🔗 Visit Website</a></p>`
+              : ""
+          }
+          ${
+            props.notes
+              ? `<p style="margin: 8px 0 0 0; font-size: 11px; color: #777; font-style: italic; border-top: 1px solid #eee; padding-top: 6px;">${props.notes}</p>`
+              : ""
+          }
+        </div>
+      `;
+
+      // Remove any existing popups
+      const existingPopups = document.getElementsByClassName('mapboxgl-popup');
+      while (existingPopups[0]) {
+        existingPopups[0].remove();
+      }
+
+      // Create new popup
+      new mapboxgl.Popup({
+        offset: 15,
+        closeButton: true,
+        closeOnClick: false,
+      })
+        .setLngLat(coordinates)
+        .setHTML(popupContent)
+        .addTo(mapRef.current);
+    }, 2000);
+  }, []);
+
   // Fetch points from Supabase and add to map
   const setupMakerspaceLayer = useCallback(async () => {
     try {
@@ -154,8 +235,6 @@ const MapboxBuildings = () => {
         'circle-stroke-color': '#fff'
       }
     });
-
-    // Note: Removed moveend event to keep data persistent across zoom levels
 
     // Click handler for individual points
     mapRef.current.on("click", "makerspace-points", (e) => {
@@ -254,6 +333,11 @@ const MapboxBuildings = () => {
     }
   }, []);
 
+  // Handle suggestion selection from search component
+  const handleSuggestionSelect = useCallback((makerspace) => {
+    flyToMakerspace(makerspace);
+  }, [flyToMakerspace]);
+
   useEffect(() => {
     // Make sure to set your Mapbox access token in the .env file
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
@@ -311,6 +395,7 @@ const MapboxBuildings = () => {
       <MakerspaceSearch
         makerspaces={allMakerspaces}
         onFilter={handleFilter}
+        onSuggestionSelect={handleSuggestionSelect}
       />
     </>
   );
