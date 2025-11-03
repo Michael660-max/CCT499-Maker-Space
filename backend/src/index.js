@@ -1,45 +1,36 @@
 const express = require("express");
-const cors = require("cors");
-const path = require("path");
 require("dotenv").config();
+
+const { setupMiddleware } = require("./middleware");
+const apiRoutes = require("./routes/apiRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Setup middleware
+setupMiddleware(app);
 
-// Serve static GeoJSON file (with long/lat data)
-app.use(
-  "/static",
-  express.static(path.join(__dirname, "../../../frontend/public"))
-);
+// Routes
+app.use("/api", apiRoutes);
+app.use("/api/chat", chatRoutes);
 
-// Serve the static GeoJSON file
-app.get("/api/makerspaces.geojson", (req, res) => {
-  const filePath = path.join(
-    __dirname,
-    "../../frontend/public/makerspaces.geojson"
-  );
-
-  // Set proper headers
-  res.set({
-    "Content-Type": "application/geo+json",
-    "Cache-Control": "public, max-age=3600", // Cache for 1 hour
-  });
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error("Error serving GeoJSON:", err);
-      res.status(404).json({ error: "GeoJSON file not found" });
-    }
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: "healthy", 
+    timestamp: new Date().toISOString(),
+    port: PORT 
   });
 });
 
-// Routes
-app.get("/api", (req, res) => {
-  res.json({ message: "API is working!" });
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error("Server error:", error);
+  res.status(500).json({ 
+    error: "Internal server error",
+    message: 'Something went wrong'
+  });
 });
 
 app.listen(PORT, () => {

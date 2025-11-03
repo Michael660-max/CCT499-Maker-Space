@@ -111,7 +111,7 @@ const MakerspaceSearch = ({ onFilter, onSuggestionSelect, makerspaces = [] }) =>
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onKeyDown={handleInputKeyDown}
-          className="w-full pl-12 pr-12 py-4 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-xl focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-500"
+          className="w-full pl-12 pr-12 py-3 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-xl focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-500"
         />
         
         {/* Search Icon */}

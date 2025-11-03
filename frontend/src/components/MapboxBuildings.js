@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MakerspaceSearch from "./MakerspaceSearch";
+import MakerspaceChat from "./MakerspaceChat";
 
 const MapboxBuildings = () => {
   const mapContainerRef = useRef();
@@ -397,6 +398,7 @@ const MapboxBuildings = () => {
         onFilter={handleFilter}
         onSuggestionSelect={handleSuggestionSelect}
       />
+      <MakerspaceChat makerspaces={allMakerspaces} />
     </>
   );
 };
