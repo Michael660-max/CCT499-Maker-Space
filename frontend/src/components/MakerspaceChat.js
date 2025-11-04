@@ -39,28 +39,30 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
 
   // Format message content to handle markdown-like formatting
   const formatMessageContent = (content) => {
+    let formatted = content.trim().replace(/\r\n/g, '\n');
+
     // Convert **text** to bold (only for makerspace names and safety warnings)
-    let formatted = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
-    // Convert numbered lists (1. text) to proper HTML
-    formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<div class="numbered-item"><span class="number">$1.</span> $2</div>');
+    // Convert bullet points with various formats (•, -, *) to proper HTML
+    formatted = formatted.replace(/^[\s]*[•\-*]\s*(.+)$/gm, '<div class="bullet-item">• $1</div>');
     
-    // Convert bullet points (• text) to proper HTML with indentation
-    formatted = formatted.replace(/^•\s+(.+)$/gm, '<div class="bullet-item">• $1</div>');
-    
-    // Convert URLs to clickable links with display text
+    // Convert URLs to clickable links - let ChatGPT provide the URLs naturally
     formatted = formatted.replace(
-      /(https?:\/\/[^\s]+)/g, 
+      /(https?:\/\/[^\s<>]+)/g, 
       (url) => {
-        // Extract domain for display
-        const domain = url.replace(/https?:\/\//, '').replace(/\/.*/, '');
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700 underline">${domain}</a>`;
+        // Clean up the URL (remove trailing punctuation that might not be part of URL)
+        const cleanUrl = url.replace(/[.,;:!?]$/, '');
+        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700 underline break-all" style="word-break: break-all; overflow-wrap: break-word;">${cleanUrl}</a>`;
       }
     );
+
+    // Handle line breaks
+    formatted = formatted.replace(/\n\s*\n/g, '<br><br>');
     
-    // Convert line breaks to <br> tags
-    formatted = formatted.replace(/\n/g, '<br>');
-    
+    // Clean up any excessive <br> tags
+    formatted = formatted.replace(/(<br>\s*){3,}/g, '<br><br>');
+
     return formatted;
   };
 
@@ -162,6 +164,11 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
                 >
                   <div 
                     className="text-sm leading-relaxed formatted-content"
+                    style={{
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      maxWidth: '100%'
+                    }}
                     dangerouslySetInnerHTML={{ 
                       __html: message.type === 'bot' ? formatMessageContent(message.content) : message.content 
                     }}

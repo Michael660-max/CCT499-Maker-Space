@@ -26,13 +26,18 @@ const handleChatMessage = async (req, res) => {
     AVAILABLE TORONTO MAKERSPACES DATABASE:
     ${makerspaces || 'No makerspaces data available'}
 
-        RESPONSE STRUCTURE:
+    RESPONSE STRUCTURE:
     1. Start with **Recommended Locations** section
     2. Use numbered lists for main steps/categories
     3. Use bullet points for sub-items
     4. Only bold makerspace names and safety warnings
     5. Include practical trip planning advice
-    6. Verify all information against the database`;
+    6. Verify all information against the database
+
+    WEBSITE LINK FORMATTING:
+    - When mentioning websites, always format them as complete URLs starting with https://
+    - Links should always be the actual website link found online
+    - Never use shortened text like "visit their website" - always include the actual URL`;
 
     // Call OpenAI API directly
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
