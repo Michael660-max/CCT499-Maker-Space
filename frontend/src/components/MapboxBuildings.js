@@ -3,12 +3,17 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MakerspaceSearch from "./MakerspaceSearch";
 import MakerspaceChat from "./MakerspaceChat";
+import MakerspaceForms from "./MakerspaceForms";
+import ProfileDropdown from './ProfileDropdown';
+import { useAuth } from '../context/AuthContext';
 
 const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
   const [allMakerspaces, setAllMakerspaces] = useState([]);
   const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
+  const { user } = useAuth();
+
 
   // Remove performance-heavy label layers to improve responsiveness
   const removePerformanceLabels = useCallback(() => {
@@ -381,26 +386,39 @@ const MapboxBuildings = () => {
   }, [removePerformanceLabels, add3DBuildingsLayer, setupMakerspaceLayer]);
 
   return (
-    <>
-      <div
-        ref={mapContainerRef}
-        style={{
-          width: "100vw",
-          height: "100vh",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 1,
-        }}
-      />
-      <MakerspaceSearch
-        makerspaces={allMakerspaces}
-        onFilter={handleFilter}
-        onSuggestionSelect={handleSuggestionSelect}
-      />
-      <MakerspaceChat makerspaces={allMakerspaces} />
-    </>
-  );
+ <>
+   <div
+     ref={mapContainerRef}
+     style={{
+       width: "100vw",
+       height: "100vh",
+       position: "fixed",
+       top: 0,
+       left: 0,
+       zIndex: 1,
+     }}
+   />
+  
+   {/* Profile Dropdown */}
+  {user && (
+    <div className="fixed top-4 right-4 z-50">
+      <ProfileDropdown />
+    </div>
+  )}
+  
+  {user?.email === 'admin@gmail.com' && <MakerspaceForms />}
+
+  <MakerspaceSearch
+    makerspaces={allMakerspaces}
+    onFilter={handleFilter}
+     onSuggestionSelect={handleSuggestionSelect}
+   />
+   <MakerspaceChat makerspaces={allMakerspaces} />
+ </>
+);
+
+
 };
+
 
 export default MapboxBuildings;

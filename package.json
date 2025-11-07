@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Michael660-max/CCT499-Maker-Space/issues"
   },
-  "homepage": "https://github.com/Michael660-max/CCT499-Maker-Space#readme"
+  "homepage": "https://github.com/Michael660-max/CCT499-Maker-Space#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.79.0"
+  }
 }
