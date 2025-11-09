@@ -1,10 +1,13 @@
 import "./App.css";
 import MapboxBuildings from "./components/MapboxBuildings";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <div className="App">
-      <MapboxBuildings />
+      <ProtectedRoute>
+        <MapboxBuildings />
+      </ProtectedRoute>
     </div>
   );
 }
