@@ -17,6 +17,20 @@ app.use("/api", apiRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/auth", authRoutes);
 
+// Root endpoint
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Makerspace API Server", 
+    status: "running",
+    endpoints: {
+      health: "/health",
+      api: "/api",
+      chat: "/api/chat",
+      auth: "/api/auth"
+    }
+  });
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ 
