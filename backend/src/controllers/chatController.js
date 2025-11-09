@@ -1,10 +1,13 @@
+const { supabase } = require('../config/supabase');
+
+// Ask a question
 const handleChatMessage = async (req, res) => {
   try {
     const { message, makerspaces } = req.body;
 
     if (!message || !message.trim()) {
-      return res.status(400).json({ 
-        error: 'Message is required' 
+      return res.status(400).json({
+        error: "Message is required",
       });
     }
 
@@ -24,7 +27,7 @@ const handleChatMessage = async (req, res) => {
     - If asked about unrelated topics, redirect: "I'm specifically designed to help with makerspace and maker projects. Please ask me about building, crafting, or making something!"
 
     AVAILABLE TORONTO MAKERSPACES DATABASE:
-    ${makerspaces || 'No makerspaces data available'}
+    ${makerspaces || "No makerspaces data available"}
 
     RESPONSE STRUCTURE:
     1. Start with **Recommended Locations** section
@@ -59,7 +62,11 @@ const handleChatMessage = async (req, res) => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`OpenAI API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+      throw new Error(
+        `OpenAI API error: ${response.status} - ${
+          errorData.error?.message || "Unknown error"
+        }`
+      );
     }
 
     const data = await response.json();
@@ -70,13 +77,146 @@ const handleChatMessage = async (req, res) => {
       throw new Error("Invalid OpenAI response structure");
     }
   } catch (error) {
-    console.error('Chat API error:', error);
+    console.error("Chat API error:", error);
     res.status(500).json({
-      response: "I'm having trouble processing your request right now. Please try again later.",
+      response:
+        "I'm having trouble processing your request right now. Please try again later.",
     });
+  }
+};
+
+// Save a message
+const saveMessage = async (req, res) => {
+  try {
+    const { conversation_id, type, content } = req.body;
+    
+    console.log('Saving message:', { conversation_id, type, content }); // Debug log
+    
+    const { data, error } = await supabase
+      .from('chat_messages')
+      .insert({ 
+        conversation_id, 
+        type, 
+        content 
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Supabase save error:', error);
+      throw error;
+    }
+    
+    console.log('Message saved successfully:', data);
+    res.json(data);
+  } catch (error) {
+    console.error('Save message error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get conversation history
+const getConversation = async (req, res) => {
+  try {
+    const { conversation_id } = req.params;
+    
+    const { data, error } = await supabase
+      .from('chat_messages')
+      .select('*')
+      .eq('conversation_id', conversation_id)
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Create a new conversation OR get existing one
+const createConversation = async (req, res) => {
+  try {
+    const { user_id, title = 'Makerspace Chat' } = req.body;
+    
+    console.log('Getting or creating conversation for user:', user_id);
+    
+    // First, try to get existing conversation
+    const { data: existingConversation, error: selectError } = await supabase
+      .from('chat_conversations')
+      .select('*')
+      .eq('user_id', user_id)
+      .single();
+    
+    // If conversation exists, return it
+    if (!selectError && existingConversation) {
+      console.log('Found existing conversation:', existingConversation.id);
+      res.json(existingConversation);
+      return;
+    }
+    
+    // If no conversation exists (selectError will be present), create new one
+    console.log('No existing conversation found, creating new one...');
+    const { data, error } = await supabase
+      .from('chat_conversations')
+      .insert({ 
+        user_id, 
+        title 
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      // If insert fails due to unique constraint violation, try to get the conversation again
+      if (error.code === '23505') { // PostgreSQL unique constraint violation
+        console.log('Unique constraint violation, getting existing conversation...');
+        
+        const { data: retryConversation, error: retryError } = await supabase
+          .from('chat_conversations')
+          .select('*')
+          .eq('user_id', user_id)
+          .single();
+        
+        if (!retryError && retryConversation) {
+          console.log('Found conversation after constraint violation:', retryConversation.id);
+          res.json(retryConversation);
+          return;
+        }
+      }
+      
+      console.error('Create conversation error:', error);
+      throw error;
+    }
+    
+    console.log('Created new conversation:', data.id);
+    res.json(data);
+  } catch (error) {
+    console.error('Create conversation error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get user's conversations
+const getConversations = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    
+    const { data, error } = await supabase
+      .from('chat_conversations')
+      .select('*')
+      .eq('user_id', user_id)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 module.exports = {
   handleChatMessage,
+  saveMessage,
+  getConversation,
+  createConversation,
+  getConversations
 };

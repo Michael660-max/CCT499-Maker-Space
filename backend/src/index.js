@@ -4,6 +4,7 @@ require("dotenv").config();
 const { setupMiddleware } = require("./middleware");
 const apiRoutes = require("./routes/apiRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -14,6 +15,7 @@ setupMiddleware(app);
 // Routes
 app.use("/api", apiRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/auth", authRoutes);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
