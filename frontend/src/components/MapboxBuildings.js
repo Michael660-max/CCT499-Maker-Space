@@ -11,7 +11,6 @@ const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
   const [allMakerspaces, setAllMakerspaces] = useState([]);
-  const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
   const { user } = useAuth();
 
   // Remove performance-heavy label layers to improve responsiveness
@@ -323,8 +322,6 @@ const MapboxBuildings = () => {
 
   // Handle filtering from search component
   const handleFilter = useCallback((filtered) => {
-    setFilteredMakerspaces(filtered);
-
     if (
       mapRef.current &&
       mapRef.current.isStyleLoaded &&
