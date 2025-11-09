@@ -241,7 +241,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
               
                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
                  <div>
-                   <p className="font-medium text-gray-800">Email Notifications</p>
+                   <p className="font-medium text-gray-800 text-left">Email Notifications</p>
                    <p className="text-sm text-gray-600">Receive updates about new makerspaces and events</p>
                  </div>
                  <label className="relative inline-flex items-center cursor-pointer">
@@ -258,7 +258,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
 
                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
                  <div>
-                   <p className="font-medium text-gray-800">SMS Notifications</p>
+                   <p className="font-medium text-gray-800 text-left">SMS Notifications</p>
                    <p className="text-sm text-gray-600">Get text alerts about upcoming events</p>
                  </div>
                  <label className="relative inline-flex items-center cursor-pointer">
@@ -275,7 +275,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
 
                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
                  <div>
-                   <p className="font-medium text-gray-800">Newsletter</p>
+                   <p className="font-medium text-gray-800 text-left">Newsletter</p>
                    <p className="text-sm text-gray-600">Monthly updates from the maker community</p>
                  </div>
                  <label className="relative inline-flex items-center cursor-pointer">
