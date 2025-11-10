@@ -300,7 +300,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
           className={`fixed bottom-24 right-6 bg-white rounded-3xl shadow-2xl border border-gray-100 z-40 flex flex-col overflow-hidden transition-all duration-300 ${
             isExpanded
               ? "w-[750px] h-[80vh] max-w-[95vw]"
-              : "w-96 max-w-[90vw] h-[740px]"
+              : "w-96 max-w-[90vw] h-[80vh]"
           }`}
         >
           {/* Header */}
