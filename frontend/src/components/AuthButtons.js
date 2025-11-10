@@ -2,14 +2,10 @@ import React from "react";
 import { supabase } from "../lib/supabase";
 
 export default function AuthButtons() {
-
   const signIn = async (provider) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: {
-        // Redirect to current domain in production
-        redirectTo: window.location.origin
-      }
+      // Remove redirectTo entirely - let Supabase auto-detect
     });
     if (error) alert(error.message);
   };

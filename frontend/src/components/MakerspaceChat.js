@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { apiRequest } from "../config/api";
 
 const MakerspaceChat = ({ makerspaces = [] }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
   useEffect(() => {
     const loadConversationMessages = async (convId, token) => {
       try {
-        const response = await fetch(`http://localhost:8080/api/chat/conversation/${convId}`, {
+        const response = await apiRequest(`/api/chat/conversation/${convId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -82,7 +83,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
         
         console.log('Getting or creating conversation for user:', user.id);
         
-        const response = await fetch("http://localhost:8080/api/chat/conversations", {
+        const response = await apiRequest("/api/chat/conversations", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -183,7 +184,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
       } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const response = await fetch("http://localhost:8080/api/chat", {
+      const response = await apiRequest("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +212,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
         
         // Save user message
         try {
-          const userSaveResponse = await fetch("http://localhost:8080/api/chat/save", {
+          const userSaveResponse = await apiRequest("/api/chat/save", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -237,7 +238,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
 
         // Save bot response
         try {
-          const botSaveResponse = await fetch("http://localhost:8080/api/chat/save", {
+          const botSaveResponse = await apiRequest("/api/chat/save", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
