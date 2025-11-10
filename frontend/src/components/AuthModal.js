@@ -92,6 +92,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
+        redirectTo: window.location.origin,
         queryParams: {
           access_type: "offline",
           prompt: "consent",

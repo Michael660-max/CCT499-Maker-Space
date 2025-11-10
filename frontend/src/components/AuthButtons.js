@@ -6,7 +6,10 @@ export default function AuthButtons() {
   const signIn = async (provider) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      // Let Supabase handle the redirect automatically
+      options: {
+        // Redirect to current domain in production
+        redirectTo: window.location.origin
+      }
     });
     if (error) alert(error.message);
   };
