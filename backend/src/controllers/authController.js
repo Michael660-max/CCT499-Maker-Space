@@ -1,5 +1,38 @@
 const { supabase } = require('../config/supabase');
 
+// Handle OAuth callback
+const handleOAuthCallback = async (req, res) => {
+  try {
+    const { code, error, error_description } = req.query;
+    
+    // If there's an error from the OAuth provider
+    if (error) {
+      console.error('OAuth error:', error, error_description);
+      return res.redirect(`${process.env.FRONTEND_URL}?error=${encodeURIComponent(error_description || error)}`);
+    }
+    
+    // If no code, redirect with error
+    if (!code) {
+      return res.redirect(`${process.env.FRONTEND_URL}?error=${encodeURIComponent('No authorization code received')}`);
+    }
+    
+    // Exchange code for session
+    const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (exchangeError) {
+      console.error('Code exchange error:', exchangeError);
+      return res.redirect(`${process.env.FRONTEND_URL}?error=${encodeURIComponent('Authentication failed')}`);
+    }
+    
+    // Success - redirect to frontend with success
+    res.redirect(`${process.env.FRONTEND_URL}?auth=success&access_token=${data.session.access_token}`);
+    
+  } catch (error) {
+    console.error('OAuth callback error:', error);
+    res.redirect(`${process.env.FRONTEND_URL}?error=${encodeURIComponent('Authentication failed')}`);
+  }
+};
+
 // Verify token endpoint
 const verifyToken = async (req, res) => {
   try {
@@ -51,6 +84,7 @@ const getUserProfile = async (req, res) => {
 };
 
 module.exports = {
+  handleOAuthCallback,
   verifyToken,
   getUserProfile
 };

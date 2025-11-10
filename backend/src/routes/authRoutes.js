@@ -3,6 +3,9 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const authenticateToken = require('../middleware/auth');
 
+// GET /api/auth/callback - Handle OAuth callback
+router.get('/callback', authController.handleOAuthCallback);
+
 // POST /api/auth/verify - Verify JWT token
 router.post('/verify', authController.verifyToken);
 

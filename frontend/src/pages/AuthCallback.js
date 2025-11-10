@@ -6,7 +6,7 @@ export default function AuthCallback() {
     // Supabase processes the URL fragment automatically; just bounce home (or /app).
     const go = async () => {
       await supabase.auth.getSession(); // ensures session is cached
-      window.location.replace('/app');
+      window.location.replace('/');
     };
     go();
   }, []);
