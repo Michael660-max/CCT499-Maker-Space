@@ -10,6 +10,8 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
   const [message, setMessage] = useState({ type: "", text: "" });
   const [showVerificationNotice, setShowVerificationNotice] = useState(false);
 
+  const redirectTo = process.env.REACT_APP_AUTH_REDIRECT_URL;
+
   const handleEmailAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -36,6 +38,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
               is_new_user: true, // Mark as new user for phone verification
               account_setup_complete: false,
             },
+            emailRedirectTo: redirectTo,
           },
         });
 
@@ -92,6 +95,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
+        redirectTo,
         queryParams: {
           access_type: "offline",
           prompt: "consent",

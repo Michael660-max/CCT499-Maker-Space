@@ -2,10 +2,12 @@ import React from "react";
 import { supabase } from "../lib/supabase";
 
 export default function AuthButtons() {
+  const redirectTo = process.env.REACT_APP_AUTH_REDIRECT_URL;
+
   const signIn = async (provider) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      // Let Supabase handle the redirect automatically
+      options: { redirectTo },
     });
     if (error) alert(error.message);
   };
