@@ -3,9 +3,16 @@ import { supabase } from "../lib/supabase";
 
 export default function AuthButtons() {
   const signIn = async (provider) => {
+    const options = {};
+    
+    // Add redirectTo for production
+    if (process.env.NODE_ENV === 'production') {
+      options.redirectTo = 'https://makers.up.railway.app';
+    }
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      // Remove redirectTo entirely - let Supabase auto-detect
+      options,
     });
     if (error) alert(error.message);
   };
