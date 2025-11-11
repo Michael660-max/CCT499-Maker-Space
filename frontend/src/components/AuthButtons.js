@@ -3,16 +3,11 @@ import { supabase } from "../lib/supabase";
 
 export default function AuthButtons() {
   const signIn = async (provider) => {
-    const options = {};
-    
-    // Add redirectTo for production
-    if (process.env.NODE_ENV === 'production') {
-      options.redirectTo = 'https://makers.up.railway.app';
-    }
+    const redirectTo = `${window.location.origin}/auth/callback`; // works in dev and prod
     
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options,
+      options: { redirectTo }
     });
     if (error) alert(error.message);
   };

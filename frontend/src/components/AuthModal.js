@@ -89,21 +89,17 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
   const handleOAuth = async (provider) => {
     setMessage({ type: "", text: "" });
 
-    const options = {
-      queryParams: {
-        access_type: "offline",
-        prompt: "consent",
-      },
-    };
-    
-    // Add redirectTo for production
-    if (process.env.NODE_ENV === 'production') {
-      options.redirectTo = 'https://makers.up.railway.app';
-    }
+    const redirectTo = `${window.location.origin}/auth/callback`; // works in dev and prod
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options,
+      options: {
+        redirectTo,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
     });
 
     if (error) {
