@@ -12,11 +12,8 @@ function AuthCallback() {
       try {
         // Let Supabase process the auth tokens in the URL
         await supabase.auth.getSession();
+        window.location.replace('/');
         
-        // Small delay to ensure session is processed
-        setTimeout(() => {
-          window.location.replace('/');
-        }, 1000);
       } catch (error) {
         console.error('Auth callback error:', error);
         window.location.replace('/');
@@ -26,7 +23,7 @@ function AuthCallback() {
     handleAuthCallback();
   }, []);
 
-  return <p>Processing authentication...</p>;
+  return <p></p>;
 }
 
 function App() {

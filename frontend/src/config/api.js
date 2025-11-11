@@ -1,13 +1,12 @@
 // API configuration that switches between dev and production
 const getApiUrl = () => {
   // In production, use Railway backend URL
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://makerspace-backend-production.up.railway.app';
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:8080';
   } else {
       // In development, use localhost or environment variable
-    return process.env.REACT_APP_API_URL || 'http://localhost:8080';
+    return 'https://makerspace-backend-production.up.railway.app';
   }
-  
 };
 
 export const API_URL = getApiUrl();
