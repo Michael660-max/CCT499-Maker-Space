@@ -17,7 +17,6 @@ const MapboxBuildings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
 
-
   // Remove performance-heavy label layers to improve responsiveness
   const removePerformanceLabels = useCallback(() => {
     const labelsToRemove = [
@@ -115,7 +114,7 @@ const MapboxBuildings = () => {
       center: coordinates,
       zoom: 20,
       duration: 2000,
-      essential: true
+      essential: true,
     });
 
     // Wait for flyTo to complete, then show popup
@@ -143,7 +142,7 @@ const MapboxBuildings = () => {
       `;
 
       // Remove any existing popups
-      const existingPopups = document.getElementsByClassName('mapboxgl-popup');
+      const existingPopups = document.getElementsByClassName("mapboxgl-popup");
       while (existingPopups[0]) {
         existingPopups[0].remove();
       }
@@ -169,7 +168,7 @@ const MapboxBuildings = () => {
       const ANON = process.env.REACT_APP_ANON_KEY;
 
       if (!REST_URL || !ANON) {
-        console.error('Missing environment variables for Supabase');
+        console.error("Missing environment variables for Supabase");
         return;
       }
 
@@ -178,57 +177,59 @@ const MapboxBuildings = () => {
         return `minx=${w}&miny=${s}&maxx=${e}&maxy=${n}`;
       }
 
-    async function fetchGeoJSON(map) {
-      try {
-        const url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?${bboxParams(map)}`;
-        const res = await fetch(url, {
-          headers: { 
-            apikey: ANON, 
-            Authorization: `Bearer ${ANON}`,
-            'Content-Type': 'application/json'
-          },
-        });
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+      async function fetchGeoJSON(map) {
+        try {
+          const url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?${bboxParams(
+            map
+          )}`;
+          const res = await fetch(url, {
+            headers: {
+              apikey: ANON,
+              Authorization: `Bearer ${ANON}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+
+          return res.json(); // a FeatureCollection
+        } catch (error) {
+          console.error("Error fetching GeoJSON:", error);
+          return { type: "FeatureCollection", features: [] };
         }
-        
-        return res.json(); // a FeatureCollection
-      } catch (error) {
-        console.error('Error fetching GeoJSON:', error);
-        return { type: 'FeatureCollection', features: [] };
       }
-    }
 
-    // Initial load of data - fetch all data once
-    const initialGeoJSON = await fetchGeoJSON(mapRef.current);
-    setAllMakerspaces(initialGeoJSON.features || []);
-    
-    // Add source for makerspace points (no clustering)
-    mapRef.current.addSource('makerspaces', {
-      type: 'geojson',
-      data: initialGeoJSON
-    });
+      // Initial load of data - fetch all data once
+      const initialGeoJSON = await fetchGeoJSON(mapRef.current);
+      setAllMakerspaces(initialGeoJSON.features || []);
 
-    // Add individual points layer
-    mapRef.current.addLayer({
-      id: 'makerspace-points',
-      type: 'circle',
-      source: 'makerspaces',
-      paint: {
-        'circle-color': '#FF6B6B',
-        'circle-radius': 8,
-        'circle-stroke-width': 2,
-        'circle-stroke-color': '#fff'
-      }
-    });
+      // Add source for makerspace points (no clustering)
+      mapRef.current.addSource("makerspaces", {
+        type: "geojson",
+        data: initialGeoJSON,
+      });
 
-    // Click handler for individual points
-    mapRef.current.on("click", "makerspace-points", (e) => {
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      const props = e.features[0].properties;
+      // Add individual points layer
+      mapRef.current.addLayer({
+        id: "makerspace-points",
+        type: "circle",
+        source: "makerspaces",
+        paint: {
+          "circle-color": "#FF6B6B",
+          "circle-radius": 8,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#fff",
+        },
+      });
 
-      const popupContent = `
+      // Click handler for individual points
+      mapRef.current.on("click", "makerspace-points", (e) => {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const props = e.features[0].properties;
+
+        const popupContent = `
         <div style="border-width: 4px; padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
           <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; line-height: 1.3;">${
             props.name
@@ -262,46 +263,53 @@ const MapboxBuildings = () => {
         .addTo(mapRef.current);
     });
 
-    // Cursor changes for individual points
-    mapRef.current.on("mouseenter", "makerspace-points", () => {
-      mapRef.current.getCanvas().style.cursor = "pointer";
-    });
+      // Cursor changes for individual points
+      mapRef.current.on("mouseenter", "makerspace-points", () => {
+        mapRef.current.getCanvas().style.cursor = "pointer";
+      });
 
-    mapRef.current.on("mouseleave", "makerspace-points", () => {
-      mapRef.current.getCanvas().style.cursor = "";
-    });
+      mapRef.current.on("mouseleave", "makerspace-points", () => {
+        mapRef.current.getCanvas().style.cursor = "";
+      });
 
-    console.log("Makerspace layers setup complete - using Supabase PostGIS data");
+      console.log(
+        "Makerspace layers setup complete - using Supabase PostGIS data"
+      );
     } catch (error) {
-      console.error('Error setting up makerspace layer:', error);
+      console.error("Error setting up makerspace layer:", error);
     }
   }, []);
 
   // Handle filtering from search component
   const handleFilter = useCallback((filtered) => {
-    setFilteredMakerspaces(filtered);
-    
-    if (mapRef.current && mapRef.current.isStyleLoaded && mapRef.current.isStyleLoaded()) {
+    if (
+      mapRef.current &&
+      mapRef.current.isStyleLoaded &&
+      mapRef.current.isStyleLoaded()
+    ) {
       try {
-        const source = mapRef.current.getSource('makerspaces');
+        const source = mapRef.current.getSource("makerspaces");
         if (source) {
           // Update map to show only filtered results
           const filteredGeoJSON = {
-            type: 'FeatureCollection',
-            features: filtered
+            type: "FeatureCollection",
+            features: filtered,
           };
           source.setData(filteredGeoJSON);
         }
       } catch (error) {
-        console.error('Error updating map data:', error);
+        console.error("Error updating map data:", error);
       }
     }
   }, []);
 
   // Handle suggestion selection from search component
-  const handleSuggestionSelect = useCallback((makerspace) => {
-    flyToMakerspace(makerspace);
-  }, [flyToMakerspace]);
+  const handleSuggestionSelect = useCallback(
+    (makerspace) => {
+      flyToMakerspace(makerspace);
+    },
+    [flyToMakerspace]
+  );
 
   // Handler for 'see more' button
   useEffect(() => {
@@ -368,16 +376,16 @@ const MapboxBuildings = () => {
           left: 0,
           zIndex: 1,
         }}
-      />
-      
+      />      
+
       {/* Profile Dropdown */}
       {user && (
         <div className="fixed top-4 right-4 z-50">
           <ProfileDropdown />
         </div>
       )}
-      
-      {user?.email === 'admin@gmail.com' && <MakerspaceForms />}
+
+      {user?.email === "admin@gmail.com" && <MakerspaceForms />}
 
       <MakerspaceSearch
         makerspaces={allMakerspaces}
@@ -394,9 +402,6 @@ const MapboxBuildings = () => {
       />
     </>
   );
-
-
 };
-
 
 export default MapboxBuildings;

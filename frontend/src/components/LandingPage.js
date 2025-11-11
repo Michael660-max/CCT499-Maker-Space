@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import AuthModal from './AuthModal';
-
+import React, { useState } from "react";
+import AuthModal from "./AuthModal";
 
 const LandingPage = () => {
- const [showAuthModal, setShowAuthModal] = useState(false);
- const [authMode, setAuthMode] = useState('signin');
-
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState("signin");
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -19,21 +17,20 @@ const LandingPage = () => {
             </h1>
           </div>
 
-
           <div className="space-y-3">
             <button
               onClick={() => {
-                setAuthMode('signup');
+                setAuthMode("signup");
                 setShowAuthModal(true);
               }}
               className="w-full bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors duration-200"
             >
               Get Started - Sign Up Free
             </button>
-          
+
             <button
               onClick={() => {
-                setAuthMode('signin');
+                setAuthMode("signin");
                 setShowAuthModal(true);
               }}
               className="w-full border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200"
@@ -44,31 +41,25 @@ const LandingPage = () => {
         </div>
       </div>
 
-
       {/* Right side - Map Preview */}
       <div
         className="flex-1 relative hidden md:block"
         style={{
           backgroundImage: "url('/maps.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="absolute inset-0 bg-black/60"></div>
-            
-          
-       
-     </div>
+      </div>
 
-
-     <AuthModal
-       isOpen={showAuthModal}
-       onClose={() => setShowAuthModal(false)}
-       defaultMode={authMode}
-     />
-   </div>
- );
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        defaultMode={authMode}
+      />
+    </div>
+  );
 };
-
 
 export default LandingPage;

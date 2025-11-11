@@ -1,9 +1,10 @@
 const express = require("express");
 require("dotenv").config();
 
-const { setupMiddleware } = require("./middleware");
-const apiRoutes = require("./routes/apiRoutes");
-const chatRoutes = require("./routes/chatRoutes");
+const { setupMiddleware } = require("./src/middleware");
+const apiRoutes = require("./src/routes/apiRoutes");
+const chatRoutes = require("./src/routes/chatRoutes");
+const authRoutes = require("./src/routes/authRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -14,6 +15,21 @@ setupMiddleware(app);
 // Routes
 app.use("/api", apiRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/auth", authRoutes);
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Makerspace API Server", 
+    status: "running",
+    endpoints: {
+      health: "/health",
+      api: "/api",
+      chat: "/api/chat",
+      auth: "/api/auth"
+    }
+  });
+});
 
 // Health check endpoint
 app.get("/health", (req, res) => {
