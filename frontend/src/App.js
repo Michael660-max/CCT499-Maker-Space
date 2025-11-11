@@ -1,29 +1,51 @@
 import "./App.css";
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { supabase } from "./lib/supabase";
 import MapboxBuildings from "./components/MapboxBuildings";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from './components/ProtectedRoute';
+import MakerspaceFilter from "./components/MakerspaceFilters";
 
 // Auth callback component that waits for Supabase to process auth
 function AuthCallback() {
   React.useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Let Supabase process the auth tokens in the URL
         await supabase.auth.getSession();
         window.location.replace('/');
-        
       } catch (error) {
         console.error('Auth callback error:', error);
         window.location.replace('/');
       }
     };
-
     handleAuthCallback();
   }, []);
 
-  return <p></p>;
+  return <p>Processing authentication...</p>;
+}
+
+// Main map component with filter
+function MapWithFilter() {
+  const [makerspaces, setMakerspaces] = useState([]);
+  const mapRef = useRef(null);
+
+  const handleFilter = (filtered) => {
+    console.log("Filtered makerspaces:", filtered);
+  };
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+      <MakerspaceFilter 
+        makerspaces={makerspaces} 
+        mapRef={mapRef}
+        onFilter={handleFilter}
+      />
+      <MapboxBuildings 
+        ref={mapRef}
+        onMakerspaceLoad={setMakerspaces}
+      />
+    </div>
+  );
 }
 
 function App() {
@@ -31,15 +53,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Auth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
-          
-          {/* Main app */}
           <Route 
             path="*" 
             element={
               <ProtectedRoute>
-                <MapboxBuildings />
+                <MapWithFilter />
               </ProtectedRoute>
             } 
           />
