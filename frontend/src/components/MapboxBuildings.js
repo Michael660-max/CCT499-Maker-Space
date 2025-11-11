@@ -4,13 +4,17 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import MakerspaceSearch from "./MakerspaceSearch";
 import MakerspaceChat from "./MakerspaceChat";
 import MakerspaceForms from "./MakerspaceForms";
-import ProfileDropdown from "./ProfileDropdown";
-import { useAuth } from "../context/AuthContext";
+import ProfileDropdown from './ProfileDropdown';
+import MakerspaceModal from './MakerspaceModal';
+import { useAuth } from '../context/AuthContext';
 
 const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
   const [allMakerspaces, setAllMakerspaces] = useState([]);
+  const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
+  const [selectedMakerspace, setSelectedMakerspace] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
 
   // Remove performance-heavy label layers to improve responsiveness
@@ -125,39 +129,15 @@ const MapboxBuildings = () => {
               ? `<div style="margin: 6px 0; background: #FF6B6B; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block;">${props.category}</div>`
               : ""
           }
-          <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;"><strong>📍 Address:</strong><br>${
+          <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;"><strong>📍</strong> ${
             props.address
           }</p>
-          ${
-            props.phone
-              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>📞 Phone:</strong> ${props.phone}</p>`
-              : ""
-          }
-          ${
-            props.email
-              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>✉️ Email:</strong> ${props.email}</p>`
-              : ""
-          }
-          ${
-            props.accessModels
-              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🔑 Access:</strong> ${props.accessModels}</p>`
-              : ""
-          }
-          ${
-            props.skills
-              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🛠️ Skills:</strong> ${props.skills}</p>`
-              : ""
-          }
-          ${
-            props.website
-              ? `<p style="margin: 8px 0 4px 0;"><a href="${props.website}" target="_blank" style="color: #FF6B6B; text-decoration: none; font-weight: 500; font-size: 13px;">🔗 Visit Website</a></p>`
-              : ""
-          }
-          ${
-            props.notes
-              ? `<p style="margin: 8px 0 0 0; font-size: 11px; color: #777; font-style: italic; border-top: 1px solid #eee; padding-top: 6px;">${props.notes}</p>`
-              : ""
-          }
+          <button 
+            onclick='window.showMakerspaceDetails(${JSON.stringify(props).replace(/'/g, "\\'")})' 
+            style="width: 100%; margin-top: 8px; padding: 8px; background: #FF6B6B; color: white; border: none; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 500;"
+          >
+            View Full Details →
+          </button>
         </div>
       `;
 
@@ -172,6 +152,8 @@ const MapboxBuildings = () => {
         offset: 15,
         closeButton: true,
         closeOnClick: false,
+        className: 'custom-popup',
+        closeButtonClassName: 'custom-popup-close',
       })
         .setLngLat(coordinates)
         .setHTML(popupContent)
@@ -257,51 +239,29 @@ const MapboxBuildings = () => {
               ? `<div style="margin: 6px 0; background: #FF6B6B; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block;">${props.category}</div>`
               : ""
           }
-          <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;"><strong>📍 Address:</strong><br>${
+          <p style="margin: 8px 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;"><strong>📍</strong> ${
             props.address
           }</p>
-          ${
-            props.phone
-              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>📞 Phone:</strong> ${props.phone}</p>`
-              : ""
-          }
-          ${
-            props.email
-              ? `<p style="margin: 4px 0; font-size: 12px; color: #555;"><strong>✉️ Email:</strong> ${props.email}</p>`
-              : ""
-          }
-          ${
-            props.accessModels
-              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🔑 Access:</strong> ${props.accessModels}</p>`
-              : ""
-          }
-          ${
-            props.skills
-              ? `<p style="margin: 6px 0; font-size: 12px; color: #666;"><strong>🛠️ Skills:</strong> ${props.skills}</p>`
-              : ""
-          }
-          ${
-            props.website
-              ? `<p style="margin: 8px 0 4px 0;"><a href="${props.website}" target="_blank" style="color: #FF6B6B; text-decoration: none; font-weight: 500; font-size: 13px;">🔗 Visit Website</a></p>`
-              : ""
-          }
-          ${
-            props.notes
-              ? `<p style="margin: 8px 0 0 0; font-size: 11px; color: #777; font-style: italic; border-top: 1px solid #eee; padding-top: 6px;">${props.notes}</p>`
-              : ""
-          }
+          <button 
+            onclick='window.showMakerspaceDetails(${JSON.stringify(props).replace(/'/g, "\\'")})' 
+            style="width: 100%; margin-top: 8px; padding: 8px; background: #FF6B6B; color: white; border: none; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 500;"
+          >
+            View Full Details →
+          </button>
         </div>
       `;
 
-        new mapboxgl.Popup({
-          offset: 15,
-          closeButton: true,
-          closeOnClick: false,
-        })
-          .setLngLat(coordinates)
-          .setHTML(popupContent)
-          .addTo(mapRef.current);
-      });
+      new mapboxgl.Popup({
+        offset: 15,
+        closeButton: true,
+        closeOnClick: false,
+        className: 'custom-popup',
+        closeButtonClassName: 'custom-popup-close',
+      })
+        .setLngLat(coordinates)
+        .setHTML(popupContent)
+        .addTo(mapRef.current);
+    });
 
       // Cursor changes for individual points
       mapRef.current.on("mouseenter", "makerspace-points", () => {
@@ -350,6 +310,18 @@ const MapboxBuildings = () => {
     },
     [flyToMakerspace]
   );
+
+  // Handler for 'see more' button
+  useEffect(() => {
+    window.showMakerspaceDetails = (props) => {
+      setSelectedMakerspace(props);
+      setIsModalOpen(true);
+    };
+
+    return () => {
+      delete window.showMakerspaceDetails;
+    };
+  }, []);
 
   useEffect(() => {
     // Make sure to set your Mapbox access token in the .env file
@@ -404,7 +376,7 @@ const MapboxBuildings = () => {
           left: 0,
           zIndex: 1,
         }}
-      />
+      />      
 
       {/* Profile Dropdown */}
       {user && (
@@ -421,6 +393,13 @@ const MapboxBuildings = () => {
         onSuggestionSelect={handleSuggestionSelect}
       />
       <MakerspaceChat makerspaces={allMakerspaces} />
+      
+      {/* Detailed Modal */}
+      <MakerspaceModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        makerspace={selectedMakerspace}
+      />
     </>
   );
 };
