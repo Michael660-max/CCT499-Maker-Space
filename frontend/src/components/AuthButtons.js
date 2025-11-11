@@ -3,9 +3,11 @@ import { supabase } from "../lib/supabase";
 
 export default function AuthButtons() {
   const signIn = async (provider) => {
+    const redirectTo = `${window.location.origin}/auth/callback`; // works in dev and prod
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      // Remove redirectTo entirely - let Supabase auto-detect
+      options: { redirectTo }
     });
     if (error) alert(error.message);
   };

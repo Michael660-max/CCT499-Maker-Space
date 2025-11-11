@@ -89,9 +89,12 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
   const handleOAuth = async (provider) => {
     setMessage({ type: "", text: "" });
 
+    const redirectTo = `${window.location.origin}/auth/callback`; // works in dev and prod
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
+        redirectTo,
         queryParams: {
           access_type: "offline",
           prompt: "consent",
