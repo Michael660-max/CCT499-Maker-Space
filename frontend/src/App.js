@@ -1,15 +1,31 @@
 import "./App.css";
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { supabase } from "./lib/supabase";
 import MapboxBuildings from "./components/MapboxBuildings";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Simple auth callback component since we deleted the file
+// Auth callback component that waits for Supabase to process auth
 function AuthCallback() {
   React.useEffect(() => {
-    // Redirect to home after auth processing
-    window.location.replace('/');
+    const handleAuthCallback = async () => {
+      try {
+        // Let Supabase process the auth tokens in the URL
+        await supabase.auth.getSession();
+        
+        // Small delay to ensure session is processed
+        setTimeout(() => {
+          window.location.replace('/');
+        }, 1000);
+      } catch (error) {
+        console.error('Auth callback error:', error);
+        window.location.replace('/');
+      }
+    };
+
+    handleAuthCallback();
   }, []);
+
   return <p>Processing authentication...</p>;
 }
 
