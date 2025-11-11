@@ -47,6 +47,8 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
       try {
         console.log('Loading conversation messages for:', convId);
         console.log('Using API URL:', API_URL);
+        console.log('MakerspaceChat - Environment:', process.env.NODE_ENV);
+
         
         const response = await apiRequest(`/api/chat/conversation/${convId}`, {
           headers: {

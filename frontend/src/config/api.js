@@ -3,10 +3,11 @@ const getApiUrl = () => {
   // In production, use Railway backend URL
   if (process.env.NODE_ENV === 'production') {
     return 'https://makerspace-backend-production.up.railway.app';
+  } else {
+      // In development, use localhost or environment variable
+    return process.env.REACT_APP_API_URL || 'http://localhost:8080';
   }
   
-  // In development, use localhost or environment variable
-  return process.env.REACT_APP_API_URL || 'http://localhost:8080';
 };
 
 export const API_URL = getApiUrl();
