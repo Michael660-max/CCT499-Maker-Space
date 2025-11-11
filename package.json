@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Michael660-max/CCT499-Maker-Space#readme",
   "dependencies": {
-    "@supabase/supabase-js": "^2.79.0"
+    "@supabase/supabase-js": "^2.79.0",
+    "react-icons": "^5.5.0"
   }
 }
