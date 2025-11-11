@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
-import { apiRequest } from "../config/api";
+import { apiRequest, API_URL } from "../config/api";
 
 const MakerspaceChat = ({ makerspaces = [] }) => {
+  // Debug logging for production
+  useEffect(() => {
+    console.log('MakerspaceChat - Environment:', process.env.NODE_ENV);
+    console.log('MakerspaceChat - API URL:', API_URL);
+  }, []);
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([
@@ -40,11 +45,16 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
   useEffect(() => {
     const loadConversationMessages = async (convId, token) => {
       try {
+        console.log('Loading conversation messages for:', convId);
+        console.log('Using API URL:', API_URL);
+        
         const response = await apiRequest(`/api/chat/conversation/${convId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        console.log('Conversation messages response status:', response.status);
 
         if (response.ok) {
           const existingMessages = await response.json();
@@ -66,6 +76,8 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
             // Scroll to bottom after setting messages
             setTimeout(() => scrollToBottom(), 100);
           }
+        } else {
+          console.error('Failed to load conversation messages:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Failed to load conversation messages:', error);
@@ -82,6 +94,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
         const token = await supabase.auth.getSession();
         
         console.log('Getting or creating conversation for user:', user.id);
+        console.log('Using API URL:', API_URL);
         
         const response = await apiRequest("/api/chat/conversations", {
           method: "POST",
@@ -95,6 +108,8 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
           }),
         });
 
+        console.log('Get/create conversation response status:', response.status);
+
         if (response.ok) {
           const data = await response.json();
           setConversationId(data.id);
@@ -106,7 +121,8 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
           // Scroll to bottom after loading messages
           setTimeout(() => scrollToBottom(), 100);
         } else {
-          console.error('Failed to get/create conversation:', response.statusText);
+          const errorData = await response.text();
+          console.error('Failed to get/create conversation:', response.status, response.statusText, errorData);
           conversationInitialized.current = false; // Reset on failure
         }
       } catch (error) {
@@ -184,6 +200,10 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
       } = await supabase.auth.getSession();
       const token = session?.access_token;
 
+      console.log('Sending message to chat API');
+      console.log('Using API URL:', API_URL);
+      console.log('User token available:', !!token);
+
       const response = await apiRequest("/api/chat", {
         method: "POST",
         headers: {
@@ -196,7 +216,16 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
         }),
       });
 
+      console.log('Chat API response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Chat API error:', response.status, response.statusText, errorData);
+        throw new Error(`Chat API error: ${response.status} ${response.statusText}`);
+      }
+
       const data = await response.json();
+      console.log('Chat API response:', data);
 
       setMessages((prev) => [
         ...prev,
