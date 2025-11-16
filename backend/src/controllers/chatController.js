@@ -1,14 +1,79 @@
 const { supabase } = require('../config/supabase');
 
+// Fetch makerspaces from Supabase
+const fetchMakerspaces = async () => {
+  try {
+    const { data, error } = await supabase.rpc('makerspaces_scraped_geojson');
+    
+    if (error) {
+      console.error('Error fetching makerspaces:', error);
+      return null;
+    }
+    
+    if (!data || !data.features) {
+      return null;
+    }
+    
+    // Convert GeoJSON features to text format for AI
+    const makerspaceText = data.features
+      .map((space) => {
+        const props = space.properties;
+        return `
+        Name: ${props.name || "Unknown"}
+        Description: ${props.description || "No description available"}
+        Address: ${props.address || "No address listed"}
+        Email: ${props.email || "No email listed"}
+        Phone: ${props.phone_number || "No phone listed"}
+        Hours: ${props.hours_of_operation ? JSON.stringify(props.hours_of_operation) : "Contact for hours"}
+        Age Range: ${props.age || "Not specified"}
+        Cost: ${props.cost || "Contact for pricing"}
+        Equipment: ${props.equipment || "Various maker equipment"}
+        AI Services: ${props.ai ? "Yes" : "No"}
+        Sustainability Focus: ${props.sustainability ? "Yes" : "No"}
+        Guidance Available: ${props.guidance || "Contact for details"}
+        Training Required: ${props.training_required || "Contact for details"}
+        Difficulty Level: ${props.difficulty_level || "Various levels"}
+        Website: ${props.website || "No website listed"}
+        Additional Notes: ${props.notes || "No additional notes"}
+        ---`;
+      })
+      .join("\n");
+    
+    return makerspaceText;
+  } catch (error) {
+    console.error('Error in fetchMakerspaces:', error);
+    return null;
+  }
+};
+
 // Ask a question
 const handleChatMessage = async (req, res) => {
   try {
-    const { message, makerspaces } = req.body;
+    const { message, user_metadata } = req.body;
 
     if (!message || !message.trim()) {
       return res.status(400).json({
         error: "Message is required",
       });
+    }
+
+    // Fetch makerspaces from Supabase instead of receiving from frontend
+    console.log('Fetching makerspaces from Supabase...');
+    const makerspaces = await fetchMakerspaces();
+    
+    if (!makerspaces) {
+      console.warn('Failed to fetch makerspaces, proceeding without data');
+    } else {
+      console.log('Successfully fetched makerspaces data, length:', makerspaces.length);
+    }
+
+    // Build personalization context
+    let personalizationContext = '';
+    if (user_metadata?.custom_instructions) {
+      personalizationContext += `\n\nUSER'S CUSTOM INSTRUCTIONS:\n${user_metadata.custom_instructions}\n`;
+    }
+    if (user_metadata?.about_you) {
+      personalizationContext += `\nABOUT THE USER:\n${user_metadata.about_you}\n`;
     }
 
     // Build system prompt
@@ -28,6 +93,7 @@ const handleChatMessage = async (req, res) => {
 
     AVAILABLE TORONTO MAKERSPACES DATABASE:
     ${makerspaces || "No makerspaces data available"}
+    ${personalizationContext}
 
     RESPONSE STRUCTURE:
     1. Start with **Recommended Locations** section
@@ -90,8 +156,6 @@ const saveMessage = async (req, res) => {
   try {
     const { conversation_id, type, content } = req.body;
     
-    console.log('Saving message:', { conversation_id, type, content }); // Debug log
-    
     const { data, error } = await supabase
       .from('chat_messages')
       .insert({ 
@@ -107,7 +171,6 @@ const saveMessage = async (req, res) => {
       throw error;
     }
     
-    console.log('Message saved successfully:', data);
     res.json(data);
   } catch (error) {
     console.error('Save message error:', error);

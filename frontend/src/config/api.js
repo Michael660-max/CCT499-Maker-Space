@@ -6,12 +6,6 @@ const getApiUrl = () => {
     window.location.hostname.includes('makers.up.railway.app') ||
     process.env.NODE_ENV === 'production';
   
-  // Debug logging
-  console.log('Environment Detection:');
-  console.log('- window.location.hostname:', window.location.hostname);
-  console.log('- process.env.NODE_ENV:', process.env.NODE_ENV);
-  console.log('- isProduction:', isProduction);
-  
   if (isProduction) {
     console.log('Using Railway backend URL');
     return 'https://makerspace-backend-production.up.railway.app';

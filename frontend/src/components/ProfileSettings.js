@@ -16,10 +16,17 @@ export default function ProfileSettings({ isOpen, onClose }) {
 
   // Preferences form state
   const [preferences, setPreferences] = useState({
-    email_notifications: true,
-    sms_notifications: false,
-    newsletter: true,
-    public_profile: true,
+    email_notifications: user?.user_metadata?.preferences?.email_notifications ?? true,
+    sms_notifications: user?.user_metadata?.preferences?.sms_notifications ?? false,
+    newsletter: user?.user_metadata?.preferences?.newsletter ?? true,
+    public_profile: user?.user_metadata?.preferences?.public_profile ?? true,
+    chat_enabled: user?.user_metadata?.chat_enabled ?? true,
+  });
+
+  // Personalization form state
+  const [personalization, setPersonalization] = useState({
+    custom_instructions: user?.user_metadata?.custom_instructions || "",
+    about_you: user?.user_metadata?.about_you || "",
   });
 
   const handleProfileUpdate = async (e) => {
@@ -53,6 +60,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
       const { error } = await supabase.auth.updateUser({
         data: {
           preferences: preferences,
+          chat_enabled: preferences.chat_enabled,
         },
       });
 
@@ -60,6 +68,36 @@ export default function ProfileSettings({ isOpen, onClose }) {
       setMessage({
         type: "success",
         text: "Preferences updated successfully!",
+      });
+      
+      // Trigger page reload if chat was disabled/enabled to update UI
+      if (typeof window !== 'undefined') {
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: error.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePersonalizationUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage({ type: "", text: "" });
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          custom_instructions: personalization.custom_instructions,
+          about_you: personalization.about_you,
+        },
+      });
+
+      if (error) throw error;
+      setMessage({
+        type: "success",
+        text: "Personalization settings saved successfully!",
       });
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -128,7 +166,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
 
           {/* Tabs */}
           <div className="flex space-x-4 mt-4">
-            {["profile", "preferences", "security"].map((tab) => (
+            {["profile", "personalization", "preferences", "security"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -139,6 +177,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
                 }`}
               >
                 {tab === "profile" && "Profile"}
+                {tab === "personalization" && "Personalization"}
                 {tab === "preferences" && "Preferences"}
                 {tab === "security" && "Security"}
               </button>
@@ -245,9 +284,117 @@ export default function ProfileSettings({ isOpen, onClose }) {
             </form>
           )}
 
+          {activeTab === "personalization" && (
+            <form onSubmit={handlePersonalizationUpdate} className="space-y-6">
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+                  <p className="text-sm text-blue-800">
+                    💡 <strong>Tip:</strong> These settings help the AI chat assistant understand you better and provide more personalized responses.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Custom Instructions
+                  </label>
+                  <textarea
+                    value={personalization.custom_instructions}
+                    onChange={(e) =>
+                      setPersonalization({
+                        ...personalization,
+                        custom_instructions: e.target.value,
+                      })
+                    }
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 resize-none"
+                    placeholder="e.g., I want responses to be concise and technical. Always include safety warnings when discussing power tools."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Tell the AI how you'd like it to respond (tone, detail level, focus areas, etc.)
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    About You
+                  </label>
+                  <textarea
+                    value={personalization.about_you}
+                    onChange={(e) =>
+                      setPersonalization({
+                        ...personalization,
+                        about_you: e.target.value,
+                      })
+                    }
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 resize-none"
+                    placeholder="e.g., I'm a high school teacher interested in woodworking and 3D printing. I'm planning field trips for students aged 14-18."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Share relevant context about yourself, your interests, skill level, or goals
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-6 py-3 bg-primary-500 text-white rounded-xl hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {loading ? "Saving..." : "Save Personalization"}
+                </button>
+              </div>
+            </form>
+          )}
+
           {activeTab === "preferences" && (
             <form onSubmit={handlePreferencesUpdate} className="space-y-6">
               <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Chat Settings
+                </h3>
+
+                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                  <div>
+                    <p className="font-medium text-gray-800 text-left">
+                      Enable Chat Assistant
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Show/hide the AI chat button in the bottom right corner
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={preferences.chat_enabled}
+                      onChange={(e) =>
+                        setPreferences({
+                          ...preferences,
+                          chat_enabled: e.target.checked,
+                        })
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                  </label>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                  <p className="text-sm text-yellow-800">
+                    ⚠️ <strong>Disclaimer:</strong> Makerspace data was scraped from websites using AI technology. While we strive for accuracy, please verify critical information (like hours, costs, and available equipment) directly with the makerspace before visiting.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mt-6">
                 <h3 className="text-lg font-semibold text-gray-800">
                   Notification Preferences
                 </h3>

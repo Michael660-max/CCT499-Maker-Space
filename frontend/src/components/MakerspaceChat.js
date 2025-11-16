@@ -4,11 +4,17 @@ import { supabase } from "../lib/supabase";
 import { apiRequest, API_URL } from "../config/api";
 
 const MakerspaceChat = ({ makerspaces = [] }) => {
+  const { user } = useAuth();
+  
+  // Check if chat is enabled for this user
+  const chatEnabled = user?.user_metadata?.chat_enabled !== false;
+  
   // Debug logging for production
   useEffect(() => {
     console.log('MakerspaceChat - Environment:', process.env.NODE_ENV);
     console.log('MakerspaceChat - API URL:', API_URL);
-  }, []);
+    console.log('MakerspaceChat - Enabled:', chatEnabled);
+  }, [chatEnabled]);
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([
@@ -23,10 +29,9 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   };
 
-  const { user } = useAuth();
   const [conversationId, setConversationId] = useState(null);
   const [conversationLoading, setConversationLoading] = useState(false);
   const conversationInitialized = useRef(false);
@@ -35,7 +40,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
     scrollToBottom();
   }, [messages]);
 
-  // Scroll to bottom when chat is opened
+  // Scroll to bottom when chat
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => scrollToBottom(), 100);
@@ -140,24 +145,6 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
     }
   }, [user, conversationId, conversationLoading]);
 
-  const buildMakerspaceContext = () => {
-    return makerspaces
-      .map((space) => {
-        const props = space.properties;
-        return `
-        Name: ${props.name}
-        Category: ${props.category || "General"}
-        Address: ${props.address}
-        Skills/Services: ${props.skills || "Various maker skills"}
-        Access: ${props.accessModels || "Contact for details"}
-        Website: ${props.website || "No website listed"}
-        Phone: ${props.phone || "No phone listed"}
-        Notes: ${props.notes || "No additional notes"}
-        ---`;
-      })
-      .join("\n");
-  };
-
   // Format message content to handle markdown-like formatting
   const formatMessageContent = (content) => {
     let formatted = content.trim().replace(/\r\n/g, "\n");
@@ -214,7 +201,10 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
         },
         body: JSON.stringify({
           message: userMessage,
-          makerspaces: buildMakerspaceContext(),
+          user_metadata: {
+            custom_instructions: user?.user_metadata?.custom_instructions,
+            about_you: user?.user_metadata?.about_you,
+          },
         }),
       });
 
@@ -314,6 +304,11 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
       sendMessage();
     }
   };
+
+  // Don't render chat if disabled in user settings
+  if (!chatEnabled) {
+    return null;
+  }
 
   return (
     <>
