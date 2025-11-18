@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../context/AuthContext";
 import LandingPage from "./LandingPage";
 
-export default function ProtectedRoute({ children }) {
+export default function ProtectedRoute({ children, allowGuest = false }) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -16,9 +16,9 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  // If user is not authenticated, show landing page
+  // Allow guests through if explicitly permitted
   if (!user) {
-    return <LandingPage />;
+    return allowGuest ? children : <LandingPage />;
   }
 
   // If user is authenticated, show protected content

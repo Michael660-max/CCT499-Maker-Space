@@ -42,7 +42,7 @@ function App() {
           <Route 
             path="/map" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <MapboxBuildings />
               </ProtectedRoute>
             } 
