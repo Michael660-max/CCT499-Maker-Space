@@ -21,6 +21,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
     newsletter: user?.user_metadata?.preferences?.newsletter ?? true,
     public_profile: user?.user_metadata?.preferences?.public_profile ?? true,
     chat_enabled: user?.user_metadata?.chat_enabled ?? true,
+    show_ai_data: user?.user_metadata?.preferences?.show_ai_data ?? true,
   });
 
   // Personalization form state
@@ -359,7 +360,7 @@ export default function ProfileSettings({ isOpen, onClose }) {
             <form onSubmit={handlePreferencesUpdate} className="space-y-6">
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">
-                  Chat Settings
+                  AI Usage Settings
                 </h3>
 
                 <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
@@ -387,11 +388,36 @@ export default function ProfileSettings({ isOpen, onClose }) {
                   </label>
                 </div>
 
-                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                  <p className="text-sm text-yellow-800">
-                    ⚠️ <strong>Disclaimer:</strong> Makerspace data was scraped from websites using AI technology. While we strive for accuracy, please verify critical information (like hours, costs, and available equipment) directly with the makerspace before visiting.
-                  </p>
+                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                  <div>
+                    <p className="font-medium text-gray-800 text-left">
+                      Show AI-Scraped Data
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Display information that was scraped using AI (description, hours, equipment, etc.)
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={preferences.show_ai_data}
+                      onChange={(e) =>
+                        setPreferences({
+                          ...preferences,
+                          show_ai_data: e.target.checked,
+                        })
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                  </label>
                 </div>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                <p className="text-sm text-yellow-800">
+                  ⚠️ <strong>Disclaimer:</strong> If enabled, additional makerspace data will be displayed in the map. This data was scraped from websites using AI technology. While we strive for accuracy, please verify critical information (like hours, costs, and available equipment) directly with the makerspace before visiting.
+                </p>
               </div>
 
               <div className="space-y-4 mt-6">

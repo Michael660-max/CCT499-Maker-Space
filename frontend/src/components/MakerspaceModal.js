@@ -4,10 +4,16 @@ import { LuClock } from "react-icons/lu";
 import { FaLink } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlineLocalPhone } from "react-icons/md";
+import { useAuth } from "../context/AuthContext";
 
-const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
+const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null }) => {
+  const { user } = useAuth();
   const [showAllHours, setShowAllHours] = useState(false);
-  
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const [loadingPhoto, setLoadingPhoto] = useState(true);
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+
+  const showAiData = user?.user_metadata?.preferences?.show_ai_data ?? true;
 
   const {
     name,
@@ -28,7 +34,9 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
     training_required,
   } = makerspace || {};
 
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    address || ""
+  )}`;
 
   const days = [
     "monday",
@@ -46,8 +54,7 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
     if (!raw) return [];
     if (Array.isArray(raw)) return raw.map(String);
     if (typeof raw === "string") {
-      // remove brackets/quotes and split
-      const cleaned = raw.replace(/\[|\]|"|'/g, "");
+      const cleaned = raw.replace(/[\u2018\u2019\u201c\u201d]/g, '"').replace(/\[|\]|"/g, "");
       return cleaned
         .split(",")
         .map((s) => s.trim())
@@ -69,34 +76,45 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
 
   const renderCostValue = (costVal) => {
     if (!costVal) return null;
-    if (typeof costVal !== "string") return <div className="text-sm text-gray-600">{String(costVal)}</div>;
+    if (typeof costVal !== "string")
+      return <div className="text-sm text-gray-600">{String(costVal)}</div>;
 
     const httpMatch = costVal.match(/https?:\/\/[^\s)]+/i);
     const wwwMatch = costVal.match(/\bwww\.[^\s)]+/i);
     const match = httpMatch || wwwMatch;
-    if (!match) return <div className="text-sm text-gray-600">{costVal}</div>;
+    if (!match)
+      return <div className="text-sm text-gray-600">{costVal}</div>;
 
     const matchedText = match[0];
-    const href = matchedText.startsWith("http") ? matchedText : `http://${matchedText}`;
+    const href = matchedText.startsWith("http")
+      ? matchedText
+      : `http://${matchedText}`;
 
     const parts = costVal.split(matchedText);
     return (
       <div className="text-sm text-gray-600">
         {parts[0]}
-        <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-700 hover:underline">
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-blue-700 hover:underline"
+        >
           {matchedText}
         </a>
         {parts[1]}
       </div>
     );
   };
+
   const parseEmails = (raw) => {
     if (!raw) return [];
-    if (Array.isArray(raw)) return raw.map(String).map(s => s.trim()).filter(Boolean);
-    if (typeof raw === 'string') {
+    if (Array.isArray(raw))
+      return raw.map(String).map((s) => s.trim()).filter(Boolean);
+    if (typeof raw === "string") {
       return raw
-        .split(/;|,/) 
-        .map(s => s.trim().replace(/^mailto:/i, ''))
+        .split(/;|,/)
+        .map((s) => s.trim().replace(/^mailto:/i, ""))
         .filter(Boolean);
     }
     return [];
@@ -137,6 +155,93 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
 
   const normalizedHours = normalizeHours(hours_of_operation);
 
+  useEffect(() => {
+    if (googleMapsLoaded) return;
+    
+    // Check if already loaded
+    if (window.google?.maps?.places) {
+      setGoogleMapsLoaded(true);
+      return;
+    }
+
+    // Check if script is already being loaded
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existingScript) {
+      existingScript.onload = () => setGoogleMapsLoaded(true);
+      if (window.google?.maps?.places) {
+        setGoogleMapsLoaded(true);
+      }
+      return;
+    }
+  }, [googleMapsLoaded]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setPhotoUrl(null);
+      setLoadingPhoto(true);
+      return;
+    }
+
+    if (preloadedPhotoUrl) {
+      setPhotoUrl(preloadedPhotoUrl);
+      setLoadingPhoto(false);
+      return;
+    }
+
+    if (!address || !googleMapsLoaded) {
+      setLoadingPhoto(false);
+      return;
+    }
+
+    setLoadingPhoto(true);
+    
+    // Use new Place API - search by text
+    const fetchPhoto = async () => {
+      try {
+        const query = name ? `${name}, ${address}` : address;
+        const request = {
+          textQuery: query,
+          fields: ["id", "photos"],
+        };
+
+        const { places } = await window.google.maps.places.Place.searchByText(request);
+        
+        if (places && places.length > 0) {
+          const place = places[0];
+          
+          // Fetch place details with photos
+          await place.fetchFields({ fields: ["photos"] });
+          
+          if (place.photos && place.photos.length > 0) {
+            const photoUrl = place.photos[0].getURI({ maxWidth: 1200, maxHeight: 900 });
+            const img = new Image();
+            img.onload = () => {
+              setPhotoUrl(photoUrl);
+              setLoadingPhoto(false);
+            };
+            img.onerror = () => {
+              setPhotoUrl(null);
+              setLoadingPhoto(false);
+            };
+            img.src = photoUrl;
+            return;
+          }
+        }
+        
+        setPhotoUrl(null);
+        setLoadingPhoto(false);
+      } catch (error) {
+        console.warn("Failed to fetch photo:", error);
+        setPhotoUrl(null);
+        setLoadingPhoto(false);
+      }
+    };
+    
+    fetchPhoto();
+  }, [isOpen, address, name, googleMapsLoaded, preloadedPhotoUrl]);
+
+
+
   const renderHours = () => {
     if (!normalizedHours) return null;
     const validDays = days.filter(
@@ -149,14 +254,16 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
     return (
       <div className="mt-4">
         <div className="mt-2 flex items-center justify-between">
-              <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
             <LuClock />
             <div className="text-md text-gray-900 capitalize font-medium">
               {todayName}
             </div>
           </div>
           <div className="text-md text-gray-900 font-medium">
-            {todayHours && todayHours !== "closed" ? todayHours : "Closed"}
+            {todayHours && todayHours !== "closed"
+              ? todayHours
+              : "Closed"}
           </div>
         </div>
 
@@ -191,7 +298,7 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
   };
 
   const renderEquipment = () => {
-    if (!equipmentArray || equipmentArray.length === 0) return null;
+    if (!equipmentArray?.length) return null;
     return (
       <div className="mt-4 pb-2 border-t border-gray-100 pt-4">
         <div className="text-base font-semibold text-gray-900 mb-2">
@@ -216,6 +323,8 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
       <div className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-xl border border-gray-100">
+
+        {/* TOP BAR */}
         <div className="sticky top-0 bg-white pt-5 pb-2 px-5">
           <div className="flex items-start justify-center">
             <div className="w-10 flex-shrink-0" />
@@ -249,32 +358,51 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
             </div>
           </div>
         </div>
+
+        {/* PHOTO */}
+        {!loadingPhoto && photoUrl && (
+          <img
+            src={photoUrl}
+            alt={name}
+            className="w-full h-56 object-cover pb-3"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        )}
+
+        {/* CATEGORY */}
         <div>
-            {category && (
+          {category && (
             <div className="mb-2 ml-2 inline-block text-xs text-white bg-[#FF6B6B] px-2 py-1 rounded uppercase tracking-wide">
               {category}
-            </div>
-            )}
-        </div>
-        <div className="items-center">
-            {(ai || sustainability) && (
-            <div className="pb-2 flex gap-2 place-content-center">
-              {ai && (
-                <span className="text-xs font-medium text-purple-800 bg-purple-100 px-2 py-1 rounded">
-                  May use AI
-                </span>
-              )}
-              {sustainability && (
-                <span className="text-xs font-medium text-green-800 bg-green-100 px-2 py-1 rounded">
-                  Sustainable focus
-                </span>
-              )}
             </div>
           )}
         </div>
 
+        {/* AI + SUSTAINABILITY TAGS */}
+        {showAiData && (
+          <div className="items-center">
+            {(ai || sustainability) && (
+              <div className="pb-2 flex gap-2 place-content-center">
+                {ai && (
+                  <span className="text-xs font-medium text-purple-800 bg-purple-100 px-2 py-1 rounded">
+                    May use AI
+                  </span>
+                )}
+                {sustainability && (
+                  <span className="text-xs font-medium text-green-800 bg-green-100 px-2 py-1 rounded">
+                    Sustainable focus
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* CONTENT */}
         <div className="pb-6 px-6 space-y-4">
-          {description && (
+          {showAiData && description && (
             <p className="text-gray-700 text-sm leading-relaxed">
               {description}
             </p>
@@ -289,39 +417,60 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
                 className="items-center gap-2 flex text-gray-800 border-t pt-4 border-gray-100"
               >
                 <GrLocation className="text-lg -ml-0.5" />
-                <span className="text-base font-medium hover:text-blue-700 hover:underline">{address}</span>
+                <span className="text-base font-medium hover:text-blue-700 hover:underline">
+                  {address}
+                </span>
               </a>
             </div>
           )}
 
-          {renderHours()}
+          {showAiData && renderHours()}
 
-          {(accessmodels || difficulty_level) && (
-            <div className={`grid ${accessmodels && difficulty_level ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'} gap-4 pt-4 border-t border-gray-100`}>
+          {(accessmodels || (showAiData && difficulty_level)) && (
+            <div
+              className={`grid ${
+                accessmodels && showAiData && difficulty_level
+                  ? "grid-cols-1 sm:grid-cols-2"
+                  : "grid-cols-1"
+              } gap-4 pt-4 border-t border-gray-100`}
+            >
               {accessmodels && (
                 <div>
-                  <div className="text-md font-medium text-gray-800">Access</div>
-                  <div className="text-sm text-gray-600">{accessmodels}</div>
+                  <div className="text-md font-medium text-gray-800">
+                    Access
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {accessmodels}
+                  </div>
                 </div>
               )}
 
-              {difficulty_level && (
+              {showAiData && difficulty_level && (
                 <div>
-                  <div className="text-md font-medium text-gray-800">Difficulty</div>
-                  <div className="text-sm text-gray-600 capitalize">{difficulty_level}</div>
+                  <div className="text-md font-medium text-gray-800">
+                    Difficulty
+                  </div>
+                  <div className="text-sm text-gray-600 capitalize">
+                    {difficulty_level}
+                  </div>
                 </div>
               )}
             </div>
           )}
 
-          {renderEquipment()}
+          {showAiData && renderEquipment()}
 
-          { (website || email || phone || age || cost || training_required) && (
+          {(website ||
+            email ||
+            phone ||
+            (showAiData && (age || cost || training_required))) && (
             <div className="pt-4 border-t border-gray-100">
               <div className="grid grid-cols-2 gap-4">
                 {(website || email || phone) && (
                   <div>
-                    <div className="text-left text-md font-medium text-gray-800 mb-2">Contact</div>
+                    <div className="text-left text-md font-medium text-gray-800 mb-2">
+                      Contact
+                    </div>
                     <div className="space-y-1">
                       {website && (
                         <div className="flex gap-2 items-center">
@@ -336,12 +485,22 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
                           </a>
                         </div>
                       )}
-                      {emails && emails.length > 0 && emails.map((em, idx) => (
-                        <div className="flex gap-2 items-center" key={`email-${idx}`}>
+
+                      {emails?.map((em, idx) => (
+                        <div
+                          className="flex gap-2 items-center"
+                          key={`email-${idx}`}
+                        >
                           <HiOutlineMail />
-                          <a className="text-sm text-gray-600 hover:text-blue-700 hover:underline block" href={`mailto:${em}`}>{em}</a>
+                          <a
+                            className="text-sm text-gray-600 hover:text-blue-700 hover:underline block"
+                            href={`mailto:${em}`}
+                          >
+                            {em}
+                          </a>
                         </div>
                       ))}
+
                       {phone && (
                         <div className="flex gap-2 items-center">
                           <MdOutlineLocalPhone className="text-md" />
@@ -357,24 +516,32 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace }) => {
                   </div>
                 )}
 
-                {(age || cost || training_required) && (
+                {showAiData && (age || cost || training_required) && (
                   <div className="text-left space-y-4">
                     {age && (
                       <div>
-                        <div className="text-md font-medium text-gray-800">Age/Experience</div>
+                        <div className="text-md font-medium text-gray-800">
+                          Age/Experience
+                        </div>
                         <div className="text-sm text-gray-600">{age}</div>
                       </div>
                     )}
                     {cost && (
                       <div>
-                        <div className="text-md font-medium text-gray-800">Cost</div>
+                        <div className="text-md font-medium text-gray-800">
+                          Cost
+                        </div>
                         {renderCostValue(cost)}
                       </div>
                     )}
                     {training_required && (
                       <div>
-                        <div className="text-md font-medium text-gray-800">Training</div>
-                        <div className="text-sm text-gray-600">{training_required}</div>
+                        <div className="text-md font-medium text-gray-800">
+                          Training
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {training_required}
+                        </div>
                       </div>
                     )}
                   </div>

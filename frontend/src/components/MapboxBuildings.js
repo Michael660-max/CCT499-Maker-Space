@@ -12,10 +12,75 @@ const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
   const [allMakerspaces, setAllMakerspaces] = useState([]);
-  const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
   const [selectedMakerspace, setSelectedMakerspace] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [preloadedPhotos, setPreloadedPhotos] = useState({});
+  const preloadedPhotosRef = useRef({});
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const { user } = useAuth();
+
+  // Load Google Maps API script for photo fetching
+  useEffect(() => {
+    if (googleMapsLoaded || !process.env.REACT_APP_GOOGLE_API_KEY) return;
+    if (window.google?.maps?.places) {
+      setGoogleMapsLoaded(true);
+      return;
+    }
+
+    // Check if script is already in the DOM
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existingScript) {
+      existingScript.onload = () => setGoogleMapsLoaded(true);
+      if (window.google?.maps?.places) {
+        setGoogleMapsLoaded(true);
+      }
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGoogleMapsLoaded(true);
+    script.onerror = () => console.error("Failed to load Google Maps API");
+    document.head.appendChild(script);
+  }, [googleMapsLoaded]);
+
+  // Preload photo for a makerspace using new Place API
+  const preloadPhoto = useCallback(async (makerspaceProps) => {
+    if (!googleMapsLoaded || !makerspaceProps.address || preloadedPhotosRef.current[makerspaceProps.address]) {
+      return;
+    }
+
+    try {
+      const query = makerspaceProps.name ? `${makerspaceProps.name}, ${makerspaceProps.address}` : makerspaceProps.address;
+      
+      const request = {
+        textQuery: query,
+        fields: ["id", "photos"],
+      };
+
+      const { places } = await window.google.maps.places.Place.searchByText(request);
+      
+      if (places && places.length > 0) {
+        const place = places[0];
+        
+        await place.fetchFields({ fields: ["photos"] });
+        
+        if (place.photos && place.photos.length > 0) {
+          const photoUrl = place.photos[0].getURI({ maxWidth: 1200, maxHeight: 900 });
+          const img = new Image();
+          img.onload = () => {
+            preloadedPhotosRef.current[makerspaceProps.address] = photoUrl;
+            setPreloadedPhotos(prev => ({ ...prev, [makerspaceProps.address]: photoUrl }));
+          };
+          img.src = photoUrl;
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to preload photo:", error);
+    }
+  }, [googleMapsLoaded]);
 
   // Remove performance-heavy label layers to improve responsiveness
   const removePerformanceLabels = useCallback(() => {
@@ -109,11 +174,14 @@ const MapboxBuildings = () => {
     const coordinates = makerspace.geometry.coordinates.slice();
     const props = makerspace.properties;
 
-    // Fly to the makerspace location
+    // Start preloading photo immediately
+    preloadPhoto(props);
+
+    // Fly to the makerspace location with optimized zoom
     mapRef.current.flyTo({
       center: coordinates,
-      zoom: 20,
-      duration: 2000,
+      zoom: 17,
+      duration: 1500,
       essential: true,
     });
 
@@ -159,7 +227,7 @@ const MapboxBuildings = () => {
         .setHTML(popupContent)
         .addTo(mapRef.current);
     }, 2000);
-  }, []);
+  }, [preloadPhoto]);
 
   // Fetch points from Supabase and add to map
   const setupMakerspaceLayer = useCallback(async () => {
@@ -229,6 +297,9 @@ const MapboxBuildings = () => {
         const coordinates = e.features[0].geometry.coordinates.slice();
         const props = e.features[0].properties;
 
+        // Start preloading photo when makerspace is clicked
+        preloadPhoto(props);
+
         const popupContent = `
         <div style="border-width: 4px; padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
           <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; line-height: 1.3;">${
@@ -278,7 +349,7 @@ const MapboxBuildings = () => {
     } catch (error) {
       console.error("Error setting up makerspace layer:", error);
     }
-  }, []);
+  }, [preloadPhoto]);
 
   // Handle filtering from search component
   const handleFilter = useCallback((filtered) => {
@@ -357,6 +428,23 @@ const MapboxBuildings = () => {
         // Setup makerspace layers using static GeoJSON
         setupMakerspaceLayer();
       });
+
+      // Optimize performance during zoom
+      mapRef.current.on("zoomstart", () => {
+        const buildingLayer = mapRef.current.getLayer("add-3d-buildings");
+        if (buildingLayer) {
+          mapRef.current.setPaintProperty("add-3d-buildings", "fill-extrusion-opacity", 0.3);
+        }
+      });
+
+      mapRef.current.on("zoomend", () => {
+        const buildingLayer = mapRef.current.getLayer("add-3d-buildings");
+        if (buildingLayer) {
+          const zoom = mapRef.current.getZoom();
+          const opacity = zoom < 14 ? 0.4 : zoom < 16 ? 0.6 : 0.8;
+          mapRef.current.setPaintProperty("add-3d-buildings", "fill-extrusion-opacity", opacity);
+        }
+      });
     } catch (error) {
       console.error("Error initializing Mapbox:", error.message);
     }
@@ -399,6 +487,7 @@ const MapboxBuildings = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         makerspace={selectedMakerspace}
+        preloadedPhotoUrl={selectedMakerspace?.address ? preloadedPhotos[selectedMakerspace.address] : null}
       />
     </>
   );
