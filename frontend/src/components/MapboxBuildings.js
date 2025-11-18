@@ -503,7 +503,7 @@ const MapboxBuildings = () => {
       )}
 
       {/* Only show forms for admin users */}
-      {!isGuest && user?.email === "admin@gmail.com" && <MakerspaceForms />}
+      {!isGuest && (user?.email === "admin@gmail.com" || user?.email === "admin1@gmail.com") && <MakerspaceForms />}
 
       {/* Search Bar - Always in original position */}
       <MakerspaceSearch

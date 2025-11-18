@@ -35,10 +35,10 @@ function App() {
           {/* Auth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
           
-          {/* Landing page as the default route */}
+          {/* Landing page */}
           <Route path="/" element={<LandingPage />} />
           
-          {/* Main app route */}
+          {/* Protected map route */}
           <Route 
             path="/map" 
             element={

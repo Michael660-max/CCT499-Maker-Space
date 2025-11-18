@@ -16,6 +16,11 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
+  // If user is not authenticated, show landing page
+  if (!user) {
+    return <LandingPage />;
+  }
 
+  // If user is authenticated, show protected content
   return children;
 }

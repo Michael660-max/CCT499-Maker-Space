@@ -54,12 +54,23 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
           });
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error, data } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
+
         if (error) throw error;
+
+        console.log('Sign in successful:', data);
+        
+        // Close modal immediately
+        setLoading(false);
         onClose();
+        
+        // Force page reload to ensure auth state is properly detected
+        setTimeout(() => {
+          window.location.href = '/map';
+        }, 500);
       }
     } catch (error) {
       console.error("Auth error:", error);
