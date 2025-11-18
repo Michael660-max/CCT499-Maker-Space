@@ -16,9 +16,6 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  if (!user) {
-    return <LandingPage />;
-  }
 
   return children;
 }

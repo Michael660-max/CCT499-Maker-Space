@@ -19,6 +19,9 @@ const MapboxBuildings = () => {
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const { user } = useAuth();
 
+  // Add guest mode detection
+  const isGuest = !user;
+
   // Load Google Maps API script for photo fetching
   useEffect(() => {
     if (googleMapsLoaded || !process.env.REACT_APP_GOOGLE_API_KEY) return;
@@ -466,20 +469,35 @@ const MapboxBuildings = () => {
         }}
       />      
 
-      {/* Profile Dropdown */}
-      {user && (
+      {/* Profile Dropdown - Only show for logged in users */}
+      {!isGuest && (
         <div className="fixed top-4 right-4 z-50">
           <ProfileDropdown />
         </div>
       )}
 
-      {user?.email === "admin@gmail.com" && <MakerspaceForms />}
+      {/* Simple Sign Up/In Button for Guests */}
+      {isGuest && (
+        <div className="fixed top-4 right-4 z-50">
+          <button
+            onClick={() => window.location.href = '/welcome'}
+            className="bg-primary-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-primary-600 transition-colors font-medium"
+          >
+            Sign Up / In
+          </button>
+        </div>
+      )}
+
+      {/* Only show forms for admin users */}
+      {!isGuest && user?.email === "admin@gmail.com" && <MakerspaceForms />}
 
       <MakerspaceSearch
         makerspaces={allMakerspaces}
         onFilter={handleFilter}
         onSuggestionSelect={handleSuggestionSelect}
       />
+      
+      {/* Chat is available for both guests and logged in users */}
       <MakerspaceChat makerspaces={allMakerspaces} />
       
       {/* Detailed Modal */}

@@ -16,9 +16,6 @@ export default function ProfileSettings({ isOpen, onClose }) {
 
   // Preferences form state
   const [preferences, setPreferences] = useState({
-    email_notifications: user?.user_metadata?.preferences?.email_notifications ?? true,
-    sms_notifications: user?.user_metadata?.preferences?.sms_notifications ?? false,
-    newsletter: user?.user_metadata?.preferences?.newsletter ?? true,
     public_profile: user?.user_metadata?.preferences?.public_profile ?? true,
     chat_enabled: user?.user_metadata?.chat_enabled ?? true,
     show_ai_data: user?.user_metadata?.preferences?.show_ai_data ?? true,
@@ -418,87 +415,6 @@ export default function ProfileSettings({ isOpen, onClose }) {
                 <p className="text-sm text-yellow-800">
                   ⚠️ <strong>Disclaimer:</strong> If enabled, additional makerspace data will be displayed in the map. This data was scraped from websites using AI technology. While we strive for accuracy, please verify critical information (like hours, costs, and available equipment) directly with the makerspace before visiting.
                 </p>
-              </div>
-
-              <div className="space-y-4 mt-6">
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Notification Preferences
-                </h3>
-
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                  <div>
-                    <p className="font-medium text-gray-800 text-left">
-                      Email Notifications
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Receive updates about new makerspaces and events
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.email_notifications}
-                      onChange={(e) =>
-                        setPreferences({
-                          ...preferences,
-                          email_notifications: e.target.checked,
-                        })
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                  <div>
-                    <p className="font-medium text-gray-800 text-left">
-                      SMS Notifications
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Get text alerts about upcoming events
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.sms_notifications}
-                      onChange={(e) =>
-                        setPreferences({
-                          ...preferences,
-                          sms_notifications: e.target.checked,
-                        })
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                  <div>
-                    <p className="font-medium text-gray-800 text-left">
-                      Newsletter
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Monthly updates from the maker community
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.newsletter}
-                      onChange={(e) =>
-                        setPreferences({
-                          ...preferences,
-                          newsletter: e.target.checked,
-                        })
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-                  </label>
-                </div>
               </div>
 
               <div className="flex justify-end space-x-3 pt-4">

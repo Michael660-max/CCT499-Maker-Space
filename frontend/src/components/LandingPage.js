@@ -15,19 +15,22 @@ const LandingPage = () => {
               Discover the GTA's
               <span className="text-primary-500 block">Maker Community</span>
             </h1>
+            <p className="text-gray-600 mb-6">
+              Explore makerspaces, find equipment, and connect with the maker community. 
+              Get started instantly or create an account to save preferences and post events.
+            </p>
           </div>
 
           <div className="space-y-3">
+            {/* Continue as Guest Button - Red */}
             <button
-              onClick={() => {
-                setAuthMode("signup");
-                setShowAuthModal(true);
-              }}
+              onClick={() => window.location.href = '/'}
               className="w-full bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors duration-200"
             >
-              Get Started - Sign Up Free
+              Continue as Guest - Explore Map
             </button>
 
+            {/* Sign Up/In Button - Red Outline */}
             <button
               onClick={() => {
                 setAuthMode("signin");
@@ -35,8 +38,25 @@ const LandingPage = () => {
               }}
               className="w-full border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200"
             >
-              I Have an Account - Sign In
+              Sign Up / Sign In
             </button>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="font-semibold text-blue-800 mb-2">Guest Access Includes:</h3>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>• View all makerspaces on the map</li>
+              <li>• Search and filter makerspaces</li>
+              <li>• View detailed makerspace information</li>
+              <li>• Use the AI chat assistant</li>
+            </ul>
+            <h3 className="font-semibold text-green-800 mt-3 mb-2">Create Account to:</h3>
+            <ul className="text-sm text-green-700 space-y-1">
+              <li>• Post events and makerspaces</li>
+              <li>• Save preferences and personalization</li>
+              <li>• Enable/disable chat features</li>
+              <li>• Save your conversation history</li>
+            </ul>
           </div>
         </div>
       </div>
