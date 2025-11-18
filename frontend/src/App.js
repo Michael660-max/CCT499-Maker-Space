@@ -1,6 +1,6 @@
 import "./App.css";
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from "./lib/supabase";
 import MapboxBuildings from "./components/MapboxBuildings";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -35,18 +35,21 @@ function App() {
           {/* Auth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
           
-          {/* Landing page route */}
-          <Route path="/welcome" element={<LandingPage />} />
+          {/* Landing page as the default route */}
+          <Route path="/" element={<LandingPage />} />
           
-          {/* Main app - accessible to guests */}
+          {/* Main app route */}
           <Route 
-            path="*" 
+            path="/map" 
             element={
               <ProtectedRoute>
                 <MapboxBuildings />
               </ProtectedRoute>
             } 
           />
+          
+          {/* Redirect any unknown routes to landing page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
