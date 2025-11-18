@@ -6,7 +6,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlineLocalPhone } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
 
-const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null }) => {
+const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null, preloadedPhotos = {} }) => {
   const { user } = useAuth();
   const [showAllHours, setShowAllHours] = useState(false);
   const [photoUrl, setPhotoUrl] = useState(null);
@@ -182,8 +182,10 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
       return;
     }
 
-    if (preloadedPhotoUrl) {
-      setPhotoUrl(preloadedPhotoUrl);
+    // Check for preloaded photo (from prop or from preloadedPhotos object)
+    const photo = preloadedPhotoUrl || (address ? preloadedPhotos[address] : null);
+    if (photo) {
+      setPhotoUrl(photo);
       setLoadingPhoto(false);
       return;
     }
@@ -238,7 +240,7 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
     };
     
     fetchPhoto();
-  }, [isOpen, address, name, googleMapsLoaded, preloadedPhotoUrl]);
+  }, [isOpen, address, name, googleMapsLoaded, preloadedPhotoUrl, preloadedPhotos]);
 
 
 

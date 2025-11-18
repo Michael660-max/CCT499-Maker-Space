@@ -488,6 +488,7 @@ const MapboxBuildings = () => {
         onClose={() => setIsModalOpen(false)}
         makerspace={selectedMakerspace}
         preloadedPhotoUrl={selectedMakerspace?.address ? preloadedPhotos[selectedMakerspace.address] : null}
+        preloadedPhotos={preloadedPhotos}
       />
     </>
   );
