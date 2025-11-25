@@ -5,6 +5,7 @@ import { FaLink } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlineLocalPhone } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
+import { supabase } from "../lib/supabase";
 
 const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null, preloadedPhotos = {} }) => {
   const { user } = useAuth();
@@ -12,8 +13,16 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
   const [photoUrl, setPhotoUrl] = useState(null);
   const [loadingPhoto, setLoadingPhoto] = useState(true);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
-
+  const [events, setEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const showAiData = user?.user_metadata?.preferences?.show_ai_data ?? true;
+  const makerspaceId =
+    makerspace?.id ||
+    makerspace?.properties?.id ||
+    makerspace?.makerspace_id ||
+    makerspace?.properties?.makerspace_id;
+  const ms = makerspace?.properties || makerspace;
 
   const {
     name,
@@ -32,7 +41,7 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
     sustainability,
     difficulty_level,
     training_required,
-  } = makerspace || {};
+  } = ms || {};
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     address || ""
@@ -181,6 +190,7 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
       setLoadingPhoto(true);
       return;
     }
+    
 
     // Check for preloaded photo (from prop or from preloadedPhotos object)
     const photo = preloadedPhotoUrl || (address ? preloadedPhotos[address] : null);
@@ -242,6 +252,60 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
     fetchPhoto();
   }, [isOpen, address, name, googleMapsLoaded, preloadedPhotoUrl, preloadedPhotos]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (!makerspaceId) {
+      setEvents([]);
+      setLoadingEvents(false);
+      return;
+    }
+
+    // Supabase column is bigint, so try numeric match first
+    const makerspaceIdNumber = Number.isFinite(Number(makerspaceId))
+      ? Number(makerspaceId)
+      : null;
+
+    let isCancelled = false;
+
+    const fetchEvents = async () => {
+      setLoadingEvents(true);
+
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("makerspace_id", makerspaceIdNumber ?? makerspaceId)
+        .order("start_time", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching events:", error, {
+          makerspaceId,
+          makerspaceIdNumber,
+        });
+        if (!isCancelled) setLoadingEvents(false);
+        return;
+      }
+
+      if (!isCancelled) {
+        setEvents(data || []);
+        if (process.env.NODE_ENV === "development") {
+          console.log("Events fetched", {
+            makerspaceId,
+            makerspaceIdNumber,
+            count: data?.length,
+            sample: data?.slice(0, 2),
+          });
+        }
+        setLoadingEvents(false);
+      }
+    };
+
+    fetchEvents();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isOpen, makerspaceId]);
 
 
   const renderHours = () => {
@@ -321,6 +385,38 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
   };
 
   if (!isOpen || !makerspace) return null;
+  const now = new Date();
+  const upcomingEvents = events.filter((event) => {
+    if (!event.start_time) return false;
+    const start = new Date(event.start_time);
+    if (Number.isNaN(start.getTime())) return false;
+    return start >= now;
+  });
+  const pastEvents = events.filter((event) => {
+    if (!event.start_time) return false;
+    const start = new Date(event.start_time);
+    if (Number.isNaN(start.getTime())) return false;
+    return start < now;
+  });
+  const formatEventDateRange = (start, end) => {
+    const startDate = start ? new Date(start) : null;
+    const endDate = end ? new Date(end) : null;
+    if (!startDate || Number.isNaN(startDate.getTime())) return "Date TBA";
+
+    const startStr = startDate.toLocaleString([], {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    if (!endDate || Number.isNaN(endDate.getTime())) return startStr;
+
+    const sameDay = startDate.toDateString() === endDate.toDateString();
+    const endStr = sameDay
+      ? endDate.toLocaleTimeString([], { timeStyle: "short" })
+      : endDate.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+
+    return sameDay ? `${startStr} - ${endStr}` : `${startStr} – ${endStr}`;
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
@@ -551,6 +647,182 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
               </div>
             </div>
           )}
+          {/* EVENTS SECTION */}
+          <div className="px-6 pb-8 mt-6 border-t border-gray-200 pt-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">Events</h3>
+
+            {loadingEvents && (
+              <p className="text-gray-600 text-sm">Loading events...</p>
+            )}
+
+            {!loadingEvents && events.length === 0 && (
+              <p className="text-gray-600 text-sm">
+                No events found for this makerspace.
+              </p>
+            )}
+
+            {!loadingEvents && events.length > 0 && (
+              <>
+                {/* UPCOMING EVENTS */}
+                <h4 className="text-lg font-semibold mt-4 mb-2">
+                  Upcoming Events
+                </h4>
+                {upcomingEvents.length === 0 && (
+                  <p className="text-gray-600">No upcoming events.</p>
+                )}
+
+                <div className="space-y-4">
+                  {upcomingEvents.map((event) => (
+                    <div
+                      key={event.id}
+                      className="p-4 bg-gray-100 border border-gray-300 rounded-xl"
+                    >
+                      <h5 className="font-semibold text-gray-900">
+                        {event.title || "Untitled event"}
+                      </h5>
+                      <p className="text-gray-700 text-sm">
+                        {formatEventDateRange(event.start_time, event.end_time)}
+                      </p>
+                      {event.location_text && (
+                        <p className="text-gray-600 text-xs mt-1">
+                          Location: {event.location_text}
+                        </p>
+                      )}
+                      {event.difficulty_level && (
+                        <p className="text-gray-600 text-sm mt-1">
+                          Difficulty:{" "}
+                          <strong className="font-semibold">
+                            {event.difficulty_level}
+                          </strong>
+                        </p>
+                      )}
+                      <button
+                        onClick={() => setSelectedEvent(event)}
+                        className="mt-3 inline-flex px-3 py-1.5 rounded-lg text-sm font-medium bg-primary-500 text-white"
+                        type="button"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* PAST EVENTS */}
+                <h4 className="text-lg font-semibold mt-6 mb-2">Past Events</h4>
+                {pastEvents.length === 0 && (
+                  <p className="text-gray-600">No past events.</p>
+                )}
+
+                <div className="space-y-4">
+                  {pastEvents.map((event) => (
+                    <div
+                      key={event.id}
+                      className="p-4 bg-gray-50 border border-gray-200 rounded-xl opacity-75"
+                    >
+                      <h5 className="font-semibold text-gray-900">
+                        {event.title || "Untitled event"}
+                      </h5>
+                      <p className="text-gray-700 text-sm">
+                        {formatEventDateRange(event.start_time, event.end_time)}
+                      </p>
+                      {event.location_text && (
+                        <p className="text-gray-600 text-xs mt-1">
+                          Location: {event.location_text}
+                        </p>
+                      )}
+                      {event.difficulty_level && (
+                        <p className="text-gray-600 text-sm mt-1">
+                          Difficulty:{" "}
+                          <strong className="font-semibold">
+                            {event.difficulty_level}
+                          </strong>
+                        </p>
+                      )}
+                      <button
+                        onClick={() => setSelectedEvent(event)}
+                        className="mt-3 inline-flex px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-300 text-gray-800"
+                        type="button"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* EVENT DETAILS POPUP */}
+          {selectedEvent && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4">
+              <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 relative">
+                <button
+                  onClick={() => setSelectedEvent(null)}
+                  className="absolute top-3 right-3 text-gray-500 hover:text-[#FF6B6B]"
+                  aria-label="Close event details"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  {selectedEvent.title || "Event details"}
+                </h4>
+                <div className="space-y-2 text-sm text-gray-700">
+                  <div><span className="font-medium text-gray-800">When: </span>{formatEventDateRange(selectedEvent.start_time, selectedEvent.end_time)}</div>
+                  {selectedEvent.location_text && (
+                    <div><span className="font-medium text-gray-800">Location: </span>{selectedEvent.location_text}</div>
+                  )}
+                  {(selectedEvent.latitude || selectedEvent.longitude) && (
+                    <div>
+                      <span className="font-medium text-gray-800">Coords: </span>
+                      {selectedEvent.latitude ?? "?"}, {selectedEvent.longitude ?? "?"}
+                    </div>
+                  )}
+                  {selectedEvent.description && (
+                    <div>
+                      <div className="font-medium text-gray-800">Description</div>
+                      <p className="text-gray-700">{selectedEvent.description}</p>
+                    </div>
+                  )}
+                  {selectedEvent.difficulty_level && (
+                    <div><span className="font-medium text-gray-800">Difficulty: </span>{selectedEvent.difficulty_level}</div>
+                  )}
+                  {(selectedEvent.age_min != null ||
+                    selectedEvent.age_max != null ||
+                    selectedEvent.age_category) && (
+                    <div>
+                      <span className="font-medium text-gray-800">Ages: </span>
+                      {selectedEvent.age_category ||
+                        `${selectedEvent.age_min ?? 0} - ${selectedEvent.age_max ?? "∞"} years`}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-4 flex gap-3">
+                  {selectedEvent.rsvp_link && (
+                    <a
+                      href={selectedEvent.rsvp_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex px-4 py-2 rounded-lg text-sm font-medium bg-primary-500 text-white"
+                    >
+                      Open RSVP
+                    </a>
+                  )}
+                  <button
+                    onClick={() => setSelectedEvent(null)}
+                    className="inline-flex px-4 py-2 rounded-lg text-sm font-medium bg-gray-200 text-gray-800"
+                    type="button"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
