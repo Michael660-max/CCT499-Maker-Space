@@ -7,7 +7,7 @@ const MakerspaceChat = ({ makerspaces = [] }) => {
   const { user } = useAuth();
   
   // Check if chat is enabled for this user
-  const chatEnabled = user?.user_metadata?.chat_enabled !== false;
+  const chatEnabled = !user || user?.user_metadata?.chat_enabled !== false;
   
   // Debug logging for production
   useEffect(() => {

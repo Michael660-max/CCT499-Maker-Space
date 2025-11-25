@@ -18,6 +18,16 @@ const MapboxBuildings = () => {
   const preloadedPhotosRef = useRef({});
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
+
+  // Add guest mode detection
+  const isGuest = !user;
+
+  // Initialize filtered makerspaces when allMakerspaces changes
+  useEffect(() => {
+    setFilteredMakerspaces(allMakerspaces);
+  }, [allMakerspaces]);
 
   // Load Google Maps API script for photo fetching
   useEffect(() => {
@@ -395,6 +405,8 @@ const MapboxBuildings = () => {
 
   // Handle filtering from search component
   const handleFilter = useCallback((filtered) => {
+    setFilteredMakerspaces(filtered);
+    
     if (
       mapRef.current &&
       mapRef.current.isStyleLoaded &&
@@ -435,6 +447,11 @@ const MapboxBuildings = () => {
       delete window.showMakerspaceDetails;
     };
   }, []);
+
+  // Handler for sidebar makerspace click
+  const handleSidebarMakerspaceClick = useCallback((makerspace) => {
+    flyToMakerspace(makerspace);
+  }, [flyToMakerspace]);
 
   useEffect(() => {
     // Make sure to set your Mapbox access token in the .env file
@@ -508,20 +525,133 @@ const MapboxBuildings = () => {
         }}
       />      
 
-      {/* Profile Dropdown */}
-      {user && (
+      {/* Profile Dropdown - Only show for logged in users */}
+      {!isGuest && (
         <div className="fixed top-4 right-4 z-50">
           <ProfileDropdown />
         </div>
       )}
 
-      {user?.email === "admin@gmail.com" && <MakerspaceForms />}
+      {/* Simple Sign Up/In Button for Guests */}
+      {isGuest && (
+        <div className="fixed top-4 right-4 z-50">
+          <button
+            onClick={() => window.location.href = '/'}
+            className="bg-primary-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-primary-600 transition-colors font-medium"
+          >
+            Sign In
+          </button>
+        </div>
+      )}
 
+      {/* Only show forms for admin users */}
+      {!isGuest && (user?.email === "admin@gmail.com" || user?.email === "admin1@gmail.com") && <MakerspaceForms />}
+
+      {/* Search Bar - Always in original position */}
       <MakerspaceSearch
         makerspaces={allMakerspaces}
         onFilter={handleFilter}
         onSuggestionSelect={handleSuggestionSelect}
       />
+
+      {/* Sidebar */}
+      <div className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${
+        isSidebarOpen ? 'w-80 bg-white/95 backdrop-blur-md shadow-2xl' : 'w-0'
+      }`}>
+        {/* Sidebar Content - Only show when open */}
+        {isSidebarOpen && (
+          <div className="flex flex-col h-full">
+            {/* Sidebar Header */}
+            <div className="p-4 border-b border-gray-200/50 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-800">Makerspaces</h2>
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-2 rounded-lg hover:bg-gray-100/50 transition-colors"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Makerspace List */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-4">
+                <div className="text-sm text-gray-500 mb-4">
+                  {filteredMakerspaces.length} of {allMakerspaces.length} makerspaces
+                </div>
+                
+                <div className="space-y-3">
+                  {filteredMakerspaces.map((makerspace, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-xl p-4 border border-gray-200/80 hover:border-primary-300 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+                      onClick={() => handleSidebarMakerspaceClick(makerspace)}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-semibold text-gray-800 text-sm leading-tight group-hover:text-primary-600 transition-colors">
+                          {makerspace.properties.name}
+                        </h3>
+                        {makerspace.properties.category && (
+                          <span className="bg-primary-100 text-primary-800 text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2">
+                            {makerspace.properties.category}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className="text-xs text-gray-600 mb-3 line-clamp-2">
+                        {makerspace.properties.address}
+                      </p>
+
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-primary-600 font-medium">
+                          Click to view on map
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedMakerspace(makerspace.properties);
+                            setIsModalOpen(true);
+                          }}
+                          className="bg-primary-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-primary-600 transition-colors font-medium shadow-sm"
+                        >
+                          Details
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {filteredMakerspaces.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <svg className="w-12 h-12 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    <p>No makerspaces found</p>
+                    <p className="text-sm">Try adjusting your search</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Collapsed Sidebar Toggle - Only show when sidebar is closed */}
+      {!isSidebarOpen && (
+        <div className="fixed top-4 left-4 z-40">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="bg-white/90 backdrop-blur-md rounded-xl p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-white"
+          >
+            <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* Chat is available for both guests and logged in users */}
       <MakerspaceChat makerspaces={allMakerspaces} />
       
       {/* Detailed Modal */}

@@ -1,9 +1,10 @@
 import "./App.css";
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from "./lib/supabase";
 import MapboxBuildings from "./components/MapboxBuildings";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LandingPage from "./components/LandingPage";
 
 // Auth callback component that waits for Supabase to process auth
 function AuthCallback() {
@@ -34,15 +35,21 @@ function App() {
           {/* Auth callback route */}
           <Route path="/auth/callback" element={<AuthCallback />} />
           
-          {/* Main app */}
+          {/* Landing page */}
+          <Route path="/" element={<LandingPage />} />
+          
+          {/* Protected map route */}
           <Route 
-            path="*" 
+            path="/map" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <MapboxBuildings />
               </ProtectedRoute>
             } 
           />
+          
+          {/* Redirect any unknown routes to landing page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>

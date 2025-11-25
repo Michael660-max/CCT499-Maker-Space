@@ -15,19 +15,22 @@ const LandingPage = () => {
               Discover the GTA's
               <span className="text-primary-500 block">Maker Community</span>
             </h1>
+            <p className="text-gray-600 mb-6">
+              Explore makerspaces, find equipment, and connect with the maker community. 
+              Get started instantly or create an account to save AI preferences and see events.
+            </p>
           </div>
 
           <div className="space-y-3">
+            {/* Continue as Guest Button - Red */}
             <button
-              onClick={() => {
-                setAuthMode("signup");
-                setShowAuthModal(true);
-              }}
+              onClick={() => window.location.href = '/map'}
               className="w-full bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors duration-200"
             >
-              Get Started - Sign Up Free
+              Continue as Guest - Explore Map
             </button>
 
+            {/* Sign Up/In Button - Red Outline */}
             <button
               onClick={() => {
                 setAuthMode("signin");
@@ -35,9 +38,11 @@ const LandingPage = () => {
               }}
               className="w-full border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200"
             >
-              I Have an Account - Sign In
+              Sign Up / Sign In
             </button>
           </div>
+
+          
         </div>
       </div>
 
