@@ -79,7 +79,7 @@ const MapboxBuildings = () => {
     document.head.appendChild(script);
   }, [googleMapsLoaded]);
 
-  // Preload photo for a makerspace using new Place API
+  // Preload photos for a makerspace using new Place API
   const preloadPhoto = useCallback(async (makerspaceProps) => {
     if (!googleMapsLoaded || !makerspaceProps.address || preloadedPhotosRef.current[makerspaceProps.address]) {
       return;
@@ -101,17 +101,52 @@ const MapboxBuildings = () => {
         await place.fetchFields({ fields: ["photos"] });
         
         if (place.photos && place.photos.length > 0) {
-          const photoUrl = place.photos[0].getURI({ maxWidth: 1200, maxHeight: 900 });
-          const img = new Image();
-          img.onload = () => {
-            preloadedPhotosRef.current[makerspaceProps.address] = photoUrl;
-            setPreloadedPhotos(prev => ({ ...prev, [makerspaceProps.address]: photoUrl }));
-          };
-          img.src = photoUrl;
+          // Preload first 3 photos
+          const photoCount = Math.min(place.photos.length, 3);
+          const photoPromises = [];
+          
+          for (let i = 0; i < photoCount; i++) {
+            const photo = place.photos[i];
+            const photoUrl = photo.getURI({ maxWidth: 1200, maxHeight: 900 });
+            
+            // Get attribution from Google
+            let attribution = "© Google Maps";
+            try {
+              const attributions = photo.attributions;
+              if (attributions && attributions.length > 0) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = attributions[0];
+                attribution = tempDiv.textContent || tempDiv.innerText || "© Google Maps";
+              }
+            } catch (e) {
+              attribution = "© Google Maps";
+            }
+            
+            photoPromises.push(
+              new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                  resolve({
+                    url: photoUrl,
+                    attribution: attribution,
+                    source: "google_maps"
+                  });
+                };
+                img.onerror = () => resolve(null);
+                img.src = photoUrl;
+              })
+            );
+          }
+          
+          const loadedPhotos = (await Promise.all(photoPromises)).filter(Boolean);
+          if (loadedPhotos.length > 0) {
+            preloadedPhotosRef.current[makerspaceProps.address] = loadedPhotos;
+            setPreloadedPhotos(prev => ({ ...prev, [makerspaceProps.address]: loadedPhotos }));
+          }
         }
       }
     } catch (error) {
-      console.warn("Failed to preload photo:", error);
+      console.warn("Failed to preload photos:", error);
     }
   }, [googleMapsLoaded]);
 
@@ -344,11 +379,17 @@ const MapboxBuildings = () => {
         return `minx=${w}&miny=${s}&maxx=${e}&maxy=${n}`;
       }
 
-      async function fetchGeoJSON(map) {
+      async function fetchGeoJSON(map, fetchAll = false) {
         try {
-          const url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?${bboxParams(
-            map
-          )}`;
+          let url;
+          if (fetchAll) {
+            // For initial load, use a very large bounding box to get all makerspaces
+            url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?minx=-180&miny=-90&maxx=180&maxy=90`;
+          } else {
+            // For map updates, use actual bounding box for performance
+            url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?${bboxParams(map)}`;
+          }
+          
           const res = await fetch(url, {
             headers: {
               apikey: ANON,
@@ -369,13 +410,15 @@ const MapboxBuildings = () => {
       }
 
       // Initial load of data - fetch all data once
-      const initialGeoJSON = await fetchGeoJSON(mapRef.current);
+      const initialGeoJSON = await fetchGeoJSON(mapRef.current, true);
+       console.log(`Loaded ${initialGeoJSON.features?.length || 0} makerspaces from database`); 
       const featuresWithCount = (initialGeoJSON.features || []).map((f) => ({
         ...f,
         properties: { ...f.properties, event_count: 0 },
       }));
       setAllMakerspaces(featuresWithCount);
       setFilteredMakerspaces(featuresWithCount);
+     
 
       // Add source for makerspace points (no clustering)
       mapRef.current.addSource("makerspaces", {
@@ -1293,7 +1336,11 @@ const MapboxBuildings = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         makerspace={selectedMakerspace}
-        preloadedPhotoUrl={selectedMakerspace?.address ? preloadedPhotos[selectedMakerspace.address] : null}
+        preloadedPhotoUrl={selectedMakerspace?.address && Array.isArray(preloadedPhotos[selectedMakerspace.address]) 
+          ? preloadedPhotos[selectedMakerspace.address][0]?.url 
+          : (selectedMakerspace?.address && typeof preloadedPhotos[selectedMakerspace.address] === 'string'
+            ? preloadedPhotos[selectedMakerspace.address]
+            : null)}
         preloadedPhotos={preloadedPhotos}
       />
 

@@ -10,7 +10,8 @@ import { supabase } from "../lib/supabase";
 const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null, preloadedPhotos = {} }) => {
   const { user } = useAuth();
   const [showAllHours, setShowAllHours] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [loadingPhoto, setLoadingPhoto] = useState(true);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [events, setEvents] = useState([]);
@@ -186,71 +187,125 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
 
   useEffect(() => {
     if (!isOpen) {
-      setPhotoUrl(null);
+      setPhotos([]);
+      setCurrentPhotoIndex(0);
       setLoadingPhoto(true);
       return;
     }
     
 
-    // Check for preloaded photo (from prop or from preloadedPhotos object)
-    const photo = preloadedPhotoUrl || (address ? preloadedPhotos[address] : null);
-    if (photo) {
-      setPhotoUrl(photo);
-      setLoadingPhoto(false);
-      return;
-    }
+    // Get custom photos from database (if any)
+    const customPhotos = makerspace?.photos && Array.isArray(makerspace.photos) && makerspace.photos.length > 0
+      ? makerspace.photos
+          .filter(p => p.source === 'custom' && !p.skip_google_photos)
+          .map(p => ({
+            url: p.url,
+            attribution: p.attribution || '',
+            attributionUrl: p.attribution_url,
+            source: 'custom'
+          }))
+      : [];
 
-    if (!address || !googleMapsLoaded) {
+    const skipGooglePhotos = makerspace?.skip_google_photos === true || 
+                             (makerspace?.photos && Array.isArray(makerspace.photos) && 
+                              makerspace.photos.some(p => p.skip_google_photos === true));
+
+    // Function to fetch Google Maps photos and merge with custom photos
+    const fetchAndMergePhotos = async () => {
+      let googlePhotos = [];
+
+      if (skipGooglePhotos) {
+        console.log(`Skipping Google Maps photos for ${name} (skip_google_photos flag set)`);
+        if (customPhotos.length > 0) {
+          setPhotos(customPhotos);
+        } else {
+          setPhotos([]);
+        }
+        setLoadingPhoto(false);
+        return;
+      }
+
+      const preloadedPhoto = preloadedPhotoUrl || (address ? preloadedPhotos[address] : null);
+      if (preloadedPhoto) {
+        if (typeof preloadedPhoto === 'string') {
+          googlePhotos = [{ url: preloadedPhoto, attribution: "© Google Maps", source: "google_maps" }];
+        } else if (Array.isArray(preloadedPhoto)) {
+          googlePhotos = preloadedPhoto.filter(p => p.source === 'google_maps' || !p.source);
+        }
+      }
+
+      if (googlePhotos.length === 0 && address && googleMapsLoaded) {
+        try {
+          const query = name ? `${name}, ${address}` : address;
+          const request = {
+            textQuery: query,
+            fields: ["id", "photos"],
+          };
+
+          const { places } = await window.google.maps.places.Place.searchByText(request);
+          
+          if (places && places.length > 0) {
+            const place = places[0];
+            await place.fetchFields({ fields: ["photos"] });
+            
+            if (place.photos && place.photos.length > 0) {
+              const photoCount = Math.min(place.photos.length, 10);
+              const photoPromises = [];
+              
+              for (let i = 0; i < photoCount; i++) {
+                const photo = place.photos[i];
+                const photoUrl = photo.getURI({ maxWidth: 1200, maxHeight: 900 });
+                
+                let attribution = "© Google Maps";
+                try {
+                  const attributions = photo.attributions;
+                  if (attributions && attributions.length > 0) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = attributions[0];
+                    attribution = tempDiv.textContent || tempDiv.innerText || "© Google Maps";
+                  }
+                } catch (e) {
+                  attribution = "© Google Maps";
+                }
+                
+                photoPromises.push(
+                  new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                      resolve({
+                        url: photoUrl,
+                        attribution: attribution,
+                        source: "google_maps"
+                      });
+                    };
+                    img.onerror = () => resolve(null);
+                    img.src = photoUrl;
+                  })
+                );
+              }
+              
+              googlePhotos = (await Promise.all(photoPromises)).filter(Boolean);
+            }
+          }
+        } catch (error) {
+          console.warn("Failed to fetch Google Maps photos:", error);
+        }
+      }
+
+      const allPhotos = [...customPhotos, ...googlePhotos];
+      
+      if (allPhotos.length > 0) {
+        console.log(`Loaded ${customPhotos.length} custom + ${googlePhotos.length} Google Maps photos for ${name}`);
+        setPhotos(allPhotos);
+      } else {
+        setPhotos([]);
+      }
       setLoadingPhoto(false);
-      return;
-    }
+    };
 
     setLoadingPhoto(true);
-    
-    // Use new Place API - search by text
-    const fetchPhoto = async () => {
-      try {
-        const query = name ? `${name}, ${address}` : address;
-        const request = {
-          textQuery: query,
-          fields: ["id", "photos"],
-        };
-
-        const { places } = await window.google.maps.places.Place.searchByText(request);
-        
-        if (places && places.length > 0) {
-          const place = places[0];
-          
-          // Fetch place details with photos
-          await place.fetchFields({ fields: ["photos"] });
-          
-          if (place.photos && place.photos.length > 0) {
-            const photoUrl = place.photos[0].getURI({ maxWidth: 1200, maxHeight: 900 });
-            const img = new Image();
-            img.onload = () => {
-              setPhotoUrl(photoUrl);
-              setLoadingPhoto(false);
-            };
-            img.onerror = () => {
-              setPhotoUrl(null);
-              setLoadingPhoto(false);
-            };
-            img.src = photoUrl;
-            return;
-          }
-        }
-        
-        setPhotoUrl(null);
-        setLoadingPhoto(false);
-      } catch (error) {
-        console.warn("Failed to fetch photo:", error);
-        setPhotoUrl(null);
-        setLoadingPhoto(false);
-      }
-    };
-    
-    fetchPhoto();
-  }, [isOpen, address, name, googleMapsLoaded, preloadedPhotoUrl, preloadedPhotos]);
+    fetchAndMergePhotos();
+  }, [isOpen, address, name, googleMapsLoaded, preloadedPhotoUrl, preloadedPhotos, makerspace]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -457,16 +512,69 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
           </div>
         </div>
 
-        {/* PHOTO */}
-        {!loadingPhoto && photoUrl && (
-          <img
-            src={photoUrl}
-            alt={name}
-            className="w-full h-56 object-cover pb-3"
-            onError={(e) => {
-              e.target.style.display = 'none';
-            }}
-          />
+        {/* PHOTOS CAROUSEL */}
+        {!loadingPhoto && photos.length > 0 && (
+          <div className="relative w-full">
+            <div className="relative w-full h-56 overflow-hidden">
+              {photos.map((photo, index) => (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-300 ${
+                    index === currentPhotoIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  <img
+                    src={photo.url}
+                    alt={`${name} ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            
+            {photos[currentPhotoIndex]?.attribution && (
+              <div className="text-xs text-gray-700 font-medium px-3 py-1.5 text-left border-t border-gray-100">
+                {photos[currentPhotoIndex].attributionUrl ? (
+                  <a
+                    href={photos[currentPhotoIndex].attributionUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline text-gray-800"
+                  >
+                    {photos[currentPhotoIndex].attribution}
+                  </a>
+                ) : (
+                  <span>{photos[currentPhotoIndex].attribution}</span>
+                )}
+              </div>
+            )}
+
+            {photos.length > 1 && (
+              <>
+                <button
+                  onClick={() => setCurrentPhotoIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1))}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2.5 transition-all z-10 shadow-lg"
+                  aria-label="Previous photo"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setCurrentPhotoIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1))}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2.5 transition-all z-10 shadow-lg"
+                  aria-label="Next photo"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </div>
         )}
 
         {/* CATEGORY */}
