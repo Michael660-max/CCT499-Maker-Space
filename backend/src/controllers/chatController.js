@@ -87,8 +87,9 @@ const handleChatMessage = async (req, res) => {
     - Verify all recommendations against the available makerspaces list
     - If a specific type of makerspace isn't in the database, clearly state "Based on the available makerspaces, I don't see any that specifically offer [service]"
 
-    STRICT GUIDELINES:
-    - ONLY answer questions related to: making, building, crafting, 3D printing, woodworking, electronics, metalworking, sewing, laser cutting, programming hardware, prototyping, fabrication, tools, materials, and makerspace activities
+    GUIDELINES:
+    - Answer questions related to: making, building, crafting, 3D printing, woodworking, electronics, metalworking, sewing, laser cutting, programming hardware, prototyping, fabrication, tools, materials, and makerspace activities
+    - Answer questions thats related to the main topics
     - If asked about unrelated topics, redirect: "I'm specifically designed to help with makerspace and maker projects. Please ask me about building, crafting, or making something!"
 
     AVAILABLE TORONTO MAKERSPACES DATABASE:
