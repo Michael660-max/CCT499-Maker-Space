@@ -254,41 +254,28 @@ const MapboxBuildings = () => {
 
   useEffect(() => {
     if (googleMapsLoaded || !process.env.REACT_APP_GOOGLE_API_KEY) return;
-    
-    // Check if already loaded
     if (window.google?.maps?.places) {
       setGoogleMapsLoaded(true);
       return;
     }
 
-    // Listen for the API loaded event from AuthContext
-    const handleApiLoaded = () => {
+    // Check if script is already in the DOM
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existingScript) {
+      existingScript.onload = () => setGoogleMapsLoaded(true);
       if (window.google?.maps?.places) {
         setGoogleMapsLoaded(true);
       }
-    };
-    
-    window.addEventListener('googlemapsapi:loaded', handleApiLoaded);
+      return;
+    }
 
-    // Poll more aggressively for API readiness
-    const checkInterval = setInterval(() => {
-      if (window.google?.maps?.places) {
-        setGoogleMapsLoaded(true);
-        clearInterval(checkInterval);
-      }
-    }, 100); // Check every 100ms for faster detection
-
-    // Cleanup after 15 seconds
-    const timeout = setTimeout(() => {
-      clearInterval(checkInterval);
-    }, 15000);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('googlemapsapi:loaded', handleApiLoaded);
-      clearInterval(checkInterval);
-      clearTimeout(timeout);
-    };
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGoogleMapsLoaded(true);
+    script.onerror = () => console.error("Failed to load Google Maps API");
+    document.head.appendChild(script);
   }, [googleMapsLoaded]);
 
   // Preload photos for a makerspace using new Place API

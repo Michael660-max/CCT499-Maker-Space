@@ -174,30 +174,15 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
       return;
     }
 
-    const handleApiLoaded = () => {
+    // Check if script is already being loaded
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existingScript) {
+      existingScript.onload = () => setGoogleMapsLoaded(true);
       if (window.google?.maps?.places) {
         setGoogleMapsLoaded(true);
       }
-    };
-    
-    window.addEventListener('googlemapsapi:loaded', handleApiLoaded);
-
-    const checkInterval = setInterval(() => {
-      if (window.google?.maps?.places) {
-        setGoogleMapsLoaded(true);
-        clearInterval(checkInterval);
-      }
-    }, 100);
-
-    const timeout = setTimeout(() => {
-      clearInterval(checkInterval);
-    }, 15000);
-
-    return () => {
-      window.removeEventListener('googlemapsapi:loaded', handleApiLoaded);
-      clearInterval(checkInterval);
-      clearTimeout(timeout);
-    };
+      return;
+    }
   }, [googleMapsLoaded]);
 
   useEffect(() => {
