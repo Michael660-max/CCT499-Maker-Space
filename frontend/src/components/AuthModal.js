@@ -206,7 +206,8 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
             <div className="space-y-3">
               <button
                 onClick={() => handleOAuth("google")}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200 opacity-60 cursor-not-allowed"
+                disabled
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
