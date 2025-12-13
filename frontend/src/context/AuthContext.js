@@ -5,15 +5,57 @@ const AuthContext = createContext(null);
 
 // Load Google Maps API when user authenticates
 const loadGoogleMapsAPI = () => {
-  if (window.google?.maps?.places) return; // Loaded
-  if (document.querySelector('script[src*="maps.googleapis.com"]')) return; // Loading
+  if (window.google?.maps?.places) {
+    window.dispatchEvent(new CustomEvent('googlemapsapi:loaded'));
+    return;
+  }
   
   if (!process.env.REACT_APP_GOOGLE_API_KEY) return;
 
+  const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+  if (existingScript) {
+    if (!window.google?.maps?.places) {
+      if (!existingScript.hasAttribute('data-googlemaps-handler')) {
+        existingScript.setAttribute('data-googlemaps-handler', 'true');
+        existingScript.onload = () => {
+          // Small delay to ensure API is fully initialized
+          setTimeout(() => {
+            if (window.google?.maps?.places) {
+              window.dispatchEvent(new CustomEvent('googlemapsapi:loaded'));
+            }
+          }, 100);
+        };
+      }
+      
+      const checkInterval = setInterval(() => {
+        if (window.google?.maps?.places) {
+          clearInterval(checkInterval);
+          window.dispatchEvent(new CustomEvent('googlemapsapi:loaded'));
+        }
+      }, 100);
+      setTimeout(() => clearInterval(checkInterval), 10000);
+    } else {
+      window.dispatchEvent(new CustomEvent('googlemapsapi:loaded'));
+    }
+    return;
+  }
+
+  // Create and load the script
   const script = document.createElement("script");
   script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
   script.async = true;
   script.defer = true;
+  script.onload = () => {
+    // Small delay to ensure API is fully initialized
+    setTimeout(() => {
+      if (window.google?.maps?.places) {
+        window.dispatchEvent(new CustomEvent('googlemapsapi:loaded'));
+      }
+    }, 100);
+  };
+  script.onerror = () => {
+    console.error("Failed to load Google Maps API");
+  };
   document.head.appendChild(script);
 };
 
