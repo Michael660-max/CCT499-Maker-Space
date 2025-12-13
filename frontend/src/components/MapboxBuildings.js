@@ -9,34 +9,9 @@ import MakerspaceModal from './MakerspaceModal';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from "../lib/supabase";
 
-function normalizeStr(s) {
-  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-}
-
-function deriveAgeBuckets(props) {
-  const text = [
-    props.audience,
-    props.age,
-    props.age_range,
-    props.description,
-    props.notes,
-    props.access,
-    props.requirements
-  ].filter(Boolean).join(" | ").toLowerCase();
-  const buckets = new Set();
-  if (/(0\s*[-to]*\s*6|early childhood|preschool|kindergarten)/i.test(text)) buckets.add("0-6");
-  if (/(6\s*[-to]*\s*13|elementary|grade\s?[1-8]|middle school)/i.test(text)) buckets.add("6-13");
-  if (/(13\s*[-to]*\s*17|high school|teen|youth)/i.test(text)) buckets.add("13-17");
-  if (/(18\+|adult|college|faculty|staff)/i.test(text)) buckets.add("Only 18+");
-  return Array.from(buckets);
-}
-
-const SUSTAINABILITY_TAG = "Sustainable Makerspace";
-
 const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
-  const [mapReady, setMapReady] = useState(false);
   const [allMakerspaces, setAllMakerspaces] = useState([]);
   const [selectedMakerspace, setSelectedMakerspace] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,15 +19,6 @@ const MapboxBuildings = () => {
   const preloadedPhotosRef = useRef({});
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const { user } = useAuth();
-
-  // Events
-  const [allEvents, setAllEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [viewMode, setViewMode] = useState("makerspaces");
-  const [eventSearch, setEventSearch] = useState("");
-  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
-
-  // Filters
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [filteredMakerspaces, setFilteredMakerspaces] = useState([]);
   const [events, setEvents] = useState([]);
@@ -69,213 +35,61 @@ const MapboxBuildings = () => {
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [tempDateRange, setTempDateRange] = useState({ start: null, end: null });
   const [selectingDateRange, setSelectingDateRange] = useState(false);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [selectedTags, setSelectedTags] = useState(new Set());
-  const [tagSearch, setTagSearch] = useState("");
-  const [searchCategory, setSearchCategory] = useState("All");
-  const [openCategories, setOpenCategories] = useState({
-    Equipment: false,
-    Facility: false,
-    Access: false,
-    Audience: false,
-    Sustainability: false
-  });
 
+  // Add guest mode detection
   const isGuest = !user;
 
-  const {
-    equipmentTags,
-    facilityTags,
-    accessTags,
-    audienceTags,
-    sustainabilityTags,
-    countsByTag,
-    categoriesMap
-  } = useMemo(() => {
-    const equipSet = new Set();
-    const facilitySet = new Set();
-    const accessSet = new Set();
-    const audienceSet = new Set();
-    const sustainabilitySet = new Set();
-    const counts = {};
-
-    function accumulateFromProps(p) {
-      (p.tags || []).forEach(t => {
-        const tag = String(t).trim();
-        if (!tag) return;
-        equipSet.add(tag);
-        counts[tag] = (counts[tag] || 0) + 1;
-      });
-      if (p.category) {
-        const catTag = String(p.category).trim();
-        if (catTag) {
-          facilitySet.add(catTag);
-          counts[catTag] = (counts[catTag] || 0) + 1;
-        }
-      }
-      if (p.skills) {
-        const skillTag = String(p.skills).trim();
-        if (skillTag) {
-          accessSet.add(skillTag);
-          counts[skillTag] = (counts[skillTag] || 0) + 1;
-        }
-      }
-      deriveAgeBuckets(p).forEach(ageTag => {
-        audienceSet.add(ageTag);
-        counts[ageTag] = (counts[ageTag] || 0) + 1;
-      });
-      if (p.sustainable) {
-        sustainabilitySet.add(SUSTAINABILITY_TAG);
-        counts[SUSTAINABILITY_TAG] = (counts[SUSTAINABILITY_TAG] || 0) + 1;
-      }
-    }
-
-    for (const ms of allMakerspaces) accumulateFromProps(ms.properties || {});
-    allEvents.forEach(ev => accumulateFromProps(ev));
-
-    sustainabilitySet.add(SUSTAINABILITY_TAG);
-    if (!counts[SUSTAINABILITY_TAG]) counts[SUSTAINABILITY_TAG] = 0;
-
-    const sortAlpha = (a, b) => a.localeCompare(b);
-    const audienceOrder = ["0-6", "6-13", "13-17", "Only 18+"];
-    const audienceArr = Array.from(audienceSet)
-      .sort((a, b) => audienceOrder.indexOf(a) - audienceOrder.indexOf(b))
-      .filter(v => audienceOrder.includes(v));
-
-    const categoriesMapInner = {
-      Equipment: Array.from(equipSet).sort(sortAlpha),
-      Facility: Array.from(facilitySet).sort(sortAlpha),
-      Access: Array.from(accessSet).sort(sortAlpha),
-      Audience: audienceArr,
-      Sustainability: Array.from(sustainabilitySet).sort(sortAlpha)
-    };
-
-    return {
-      equipmentTags: categoriesMapInner.Equipment,
-      facilityTags: categoriesMapInner.Facility,
-      accessTags: categoriesMapInner.Access,
-      audienceTags: categoriesMapInner.Audience,
-      sustainabilityTags: categoriesMapInner.Sustainability,
-      countsByTag: counts,
-      categoriesMap: categoriesMapInner
-    };
-  }, [allMakerspaces, allEvents]);
-
-  const allSearchableTags = useMemo(() => [
-    ...equipmentTags,
-    ...facilityTags,
-    ...accessTags,
-    ...audienceTags,
-    ...sustainabilityTags
-  ], [equipmentTags, facilityTags, accessTags, audienceTags, sustainabilityTags]);
-
-  const searchSuggestions = useMemo(() => {
-    const q = normalizeStr(tagSearch);
-    if (!q) return [];
-    const source = searchCategory === "All" ? allSearchableTags : (categoriesMap[searchCategory] || []);
-    return source.filter(t => normalizeStr(t).includes(q)).slice(0, 10);
-  }, [tagSearch, searchCategory, allSearchableTags, categoriesMap]);
-
-  const aggregateTagsForMakerspace = useCallback((p) => [
-    ...(p.tags || []),
-    ...(p.category ? [p.category] : []),
-    ...(p.skills ? [p.skills] : []),
-    ...(deriveAgeBuckets(p)),
-    ...(p.sustainable ? [SUSTAINABILITY_TAG] : [])
-  ].map(t => String(t).trim()).filter(Boolean), []);
-
-  const aggregateTagsForEvent = useCallback((ev) => [
-    ...(ev.tags || []),
-    ...(ev.category ? [ev.category] : []),
-    ...(ev.skills ? [ev.skills] : []),
-    ...(deriveAgeBuckets(ev)),
-    ...(ev.sustainable ? [SUSTAINABILITY_TAG] : [])
-  ].map(t => String(t).trim()).filter(Boolean), []);
-
-  const updateMakerspaceSource = useCallback((features) => {
-    if (!mapReady || !mapRef.current) return;
-    try {
-      const src = mapRef.current.getSource("makerspaces");
-      if (src) src.setData({ type: "FeatureCollection", features });
-    } catch (e) {
-      console.warn("Source update skipped:", e);
-    }
-  }, [mapReady]);
-
+  // Initialize filtered makerspaces when allMakerspaces changes
   useEffect(() => {
-    if (!mapReady) return;
-    if (selectedTags.size === 0) {
-      setFilteredMakerspaces(allMakerspaces);
-      updateMakerspaceSource(allMakerspaces);
-      return;
-    }
-    const filtered = allMakerspaces.filter(m => {
-      const agg = aggregateTagsForMakerspace(m.properties || {});
-      return agg.some(t => selectedTags.has(t));
+    setFilteredMakerspaces(allMakerspaces);
+    const idNameMap = {};
+    allMakerspaces.forEach((f) => {
+      const id = f?.properties?.id;
+      if (id != null) {
+        idNameMap[id] = f.properties.name;
+      }
     });
-    setFilteredMakerspaces(filtered);
-    updateMakerspaceSource(filtered);
-  }, [selectedTags, allMakerspaces, mapReady, updateMakerspaceSource, aggregateTagsForMakerspace]);
+    setMakerspaceNameMap(idNameMap);
+  }, [allMakerspaces]);
 
-  useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    let evs = [...allEvents];
-    if (selectedTags.size > 0) {
-      evs = evs.filter(ev => aggregateTagsForEvent(ev).some(t => selectedTags.has(t)));
-    }
-    if (showUpcomingOnly) {
-      evs = evs.filter(ev => ev.start_date && ev.start_date >= today);
-    }
-    evs.sort((a, b) => {
-      const ad = a.start_date || "";
-      const bd = b.start_date || "";
-      const ua = ad >= today;
-      const ub = bd >= today;
-      if (ua !== ub) return ua ? -1 : 1;
-      return ad.localeCompare(bd);
-    });
-    setFilteredEvents(evs);
-  }, [allEvents, selectedTags, showUpcomingOnly, aggregateTagsForEvent]);
-
-  const toggleTag = useCallback((tag) => {
-    const key = String(tag).trim();
-    setSelectedTags(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key); else next.add(key);
-      return next;
-    });
-  }, []);
-
-  const clearFilters = useCallback(() => setSelectedTags(new Set()), []);
-  
-  const toggleCategoryOpen = useCallback((cat) => {
-    setOpenCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
-  }, []);
-
+  // Load Google Maps API script for photo fetching
   useEffect(() => {
     if (googleMapsLoaded || !process.env.REACT_APP_GOOGLE_API_KEY) return;
+    
+    // Check if already loaded
     if (window.google?.maps?.places) {
       setGoogleMapsLoaded(true);
       return;
     }
 
-    // Check if script is already in the DOM
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existingScript) {
-      existingScript.onload = () => setGoogleMapsLoaded(true);
+    // Listen for the API loaded event from AuthContext
+    const handleApiLoaded = () => {
       if (window.google?.maps?.places) {
         setGoogleMapsLoaded(true);
       }
-      return;
-    }
+    };
+    
+    window.addEventListener('googlemapsapi:loaded', handleApiLoaded);
 
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setGoogleMapsLoaded(true);
-    script.onerror = () => console.error("Failed to load Google Maps API");
-    document.head.appendChild(script);
+    // Poll more aggressively for API readiness
+    const checkInterval = setInterval(() => {
+      if (window.google?.maps?.places) {
+        setGoogleMapsLoaded(true);
+        clearInterval(checkInterval);
+      }
+    }, 100); // Check every 100ms for faster detection
+
+    // Cleanup after 15 seconds
+    const timeout = setTimeout(() => {
+      clearInterval(checkInterval);
+    }, 15000);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('googlemapsapi:loaded', handleApiLoaded);
+      clearInterval(checkInterval);
+      clearTimeout(timeout);
+    };
   }, [googleMapsLoaded]);
 
   // Preload photos for a makerspace using new Place API
@@ -284,29 +98,19 @@ const MapboxBuildings = () => {
       return;
     }
 
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existingScript) {
-      existingScript.onload = () => setGoogleMapsLoaded(true);
-      if (window.google?.maps?.places) setGoogleMapsLoaded(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setGoogleMapsLoaded(true);
-    script.onerror = () => console.error("Failed to load Google Maps API");
-    document.head.appendChild(script);
-  }, [googleMapsLoaded]);
-
-  const preloadPhoto = useCallback(async (props) => {
-    if (!googleMapsLoaded || !props.address || preloadedPhotosRef.current[props.address]) return;
     try {
-      const query = props.name ? `${props.name}, ${props.address}` : props.address;
-      const request = { textQuery: query, fields: ["id", "photos"] };
+      const query = makerspaceProps.name ? `${makerspaceProps.name}, ${makerspaceProps.address}` : makerspaceProps.address;
+      
+      const request = {
+        textQuery: query,
+        fields: ["id", "photos"],
+      };
+
       const { places } = await window.google.maps.places.Place.searchByText(request);
-      if (places?.length) {
+      
+      if (places && places.length > 0) {
         const place = places[0];
+        
         await place.fetchFields({ fields: ["photos"] });
         
         if (place.photos && place.photos.length > 0) {
@@ -511,64 +315,24 @@ const MapboxBuildings = () => {
   }, []);
 
   // Fly to a makerspace and show popup
-        if (place.photos?.length) {
-          const photoUrl = place.photos[0].getURI({ maxWidth: 1200, maxHeight: 900 });
-          const img = new Image();
-          img.onload = () => {
-            preloadedPhotosRef.current[props.address] = photoUrl;
-            setPreloadedPhotos(prev => ({ ...prev, [props.address]: photoUrl }));
-          };
-          img.src = photoUrl;
-        }
-      }
-    } catch (e) {
-      console.warn("Photo preload failed", e);
-    }
-  }, [googleMapsLoaded]);
-
   const flyToMakerspace = useCallback((makerspace) => {
-    if (!mapRef.current || !makerspace?.geometry) return;
-    const coords = makerspace.geometry.coordinates.slice();
+    if (!mapRef.current || !makerspace.geometry) return;
+
+    const coordinates = makerspace.geometry.coordinates.slice();
     const props = makerspace.properties;
+
+    // Start preloading photo immediately
     preloadPhoto(props);
 
-    const todayISO = new Date().toISOString().split("T")[0];
-    const msId = props.id || props.makerspace_id;
-    const relatedEvents = allEvents.filter(ev => ev.makerspace_id === msId);
-    const sortedEvents = [...relatedEvents].sort((a, b) => {
-      const ad = a.start_date || "";
-      const bd = b.start_date || "";
-      const ua = ad >= todayISO;
-      const ub = bd >= todayISO;
-      if (ua !== ub) return ua ? -1 : 1;
-      return ad.localeCompare(bd);
+    // Fly to the makerspace location with optimized zoom
+    mapRef.current.flyTo({
+      center: coordinates,
+      zoom: 17,
+      duration: 1500,
+      essential: true,
     });
 
-    const eventsMarkup = sortedEvents.length === 0
-      ? `<div style="font-size:12px;color:#666;">No events yet.</div>`
-      : sortedEvents.slice(0, 6).map(ev => {
-          const upcoming = ev.start_date && ev.start_date >= todayISO;
-          return `
-            <div style="margin:4px 0;padding:6px 8px;border:1px solid #eee;border-radius:8px;background:#fafafa;">
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:12px;font-weight:600;color:#333;">${ev.name || "Untitled"}</span>
-                <span style="font-size:10px;padding:2px 6px;border-radius:12px;background:${upcoming ? '#DCFCE7' : '#E5E7EB'};color:${upcoming ? '#166534' : '#374151'};">
-                  ${upcoming ? 'Upcoming' : 'Past'}
-                </span>
-              </div>
-              <div style="font-size:11px;color:#555;margin-top:2px;">
-                ${ev.start_date ? ev.start_date : 'TBD'}${ev.end_date ? ' → ' + ev.end_date : ''}
-              </div>
-              <button
-                onclick='window.showEventDetails(${JSON.stringify(ev).replace(/'/g,"\\'")})'
-                style="margin-top:4px;width:100%;background:#FF6B6B;color:#fff;border:none;border-radius:8px;padding:4px 6px;font-size:11px;cursor:pointer;">
-                View Event
-              </button>
-            </div>
-          `;
-        }).join("");
-
-    mapRef.current.flyTo({ center: coords, zoom: 17, duration: 1200, essential: true });
+    // Wait for flyTo to complete, then show popup
     setTimeout(() => {
       const popupContent = `
         <div style="border-width: 4px; padding: 12px; max-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
@@ -738,21 +502,39 @@ const MapboxBuildings = () => {
           >
             View Full Details →
           </button>
-          <div style="margin-top:12px;">
-            <h4 style="margin:0 0 6px;font-size:13px;font-weight:600;color:#222;">Past & Upcoming Events</h4>
-            <div style="max-height:220px;overflow-y:auto;padding-right:4px;">
-              ${eventsMarkup}
-            </div>
-          </div>
-        </div>`;
-      document.querySelectorAll(".mapboxgl-popup").forEach(p => p.remove());
-      new mapboxgl.Popup({ offset:15, closeButton:true, closeOnClick:false })
-        .setLngLat(coords)
+        </div>
+      `;
+
+      new mapboxgl.Popup({
+        offset: 15,
+        closeButton: true,
+        closeOnClick: false,
+        className: 'custom-popup',
+        closeButtonClassName: 'custom-popup-close',
+      })
+        .setLngLat(coordinates)
         .setHTML(popupContent)
         .addTo(mapRef.current);
-    }, 600);
-  }, [preloadPhoto, allEvents]);
+    });
 
+      // Cursor changes for individual points
+      mapRef.current.on("mouseenter", "makerspace-points", () => {
+        mapRef.current.getCanvas().style.cursor = "pointer";
+      });
+
+      mapRef.current.on("mouseleave", "makerspace-points", () => {
+        mapRef.current.getCanvas().style.cursor = "";
+      });
+
+      console.log(
+        "Makerspace layers setup complete - using Supabase PostGIS data"
+      );
+    } catch (error) {
+      console.error("Error setting up makerspace layer:", error);
+    }
+  }, [preloadPhoto]);
+
+  // Handle filtering from search component
   const handleFilter = useCallback((filtered) => {
     setFilteredMakerspaces(filtered);
     
@@ -785,237 +567,88 @@ const MapboxBuildings = () => {
     }
   }, [eventCountMap, showEventsEnabled]);
 
-  const handleSuggestionSelect = useCallback(m => flyToMakerspace(m), [flyToMakerspace]);
+  // Handle suggestion selection from search component
+  const handleSuggestionSelect = useCallback(
+    (makerspace) => {
+      flyToMakerspace(makerspace);
+    },
+    [flyToMakerspace]
+  );
 
-  const handleSidebarMakerspaceClick = useCallback(m => flyToMakerspace(m), [flyToMakerspace]);
-
+  // Handler for 'see more' button
   useEffect(() => {
     window.showMakerspaceDetails = (props) => {
       setSelectedMakerspace(props);
       setIsModalOpen(true);
     };
-    window.showEventDetails = (ev) => setSelectedEvent(ev);
+
     return () => {
       delete window.showMakerspaceDetails;
-      delete window.showEventDetails;
     };
   }, []);
 
-  // Map initialization - run ONCE on mount
+  // Handler for sidebar makerspace click
+  const handleSidebarMakerspaceClick = useCallback((makerspace) => {
+    flyToMakerspace(makerspace);
+  }, [flyToMakerspace]);
+
   useEffect(() => {
+    // Make sure to set your Mapbox access token in the .env file
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-    
-    const map = new mapboxgl.Map({
-      style: "mapbox://styles/mapbox/standard",
-      center: [-79.3832, 43.6532],
-      zoom: 11,
-      minZoom: 6,
-      maxZoom: 18,
-      pitch: 45,
-      bearing: -17.6,
-      container: mapContainerRef.current,
-      antialias: true
-    });
 
-    mapRef.current = map;
+    try {
+      mapRef.current = new mapboxgl.Map({
+        style: "mapbox://styles/mapbox/standard",
+        center: [-79.3832, 43.6532], // Toronto location
+        zoom: 11, // Start zoomed out to see more makerspaces
+        minZoom: 6,
+        maxZoom: 18,
+        pitch: 45,
+        bearing: -17.6,
+        container: mapContainerRef.current,
+        antialias: true,
+        // Performance optimizations for better responsiveness
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false,
+        fadeDuration: 100,
+        // Additional performance settings
+        renderWorldCopies: false,
+        optimizeForTerrain: true,
+      });
 
-    const removeLabels = () => {
-      const labels = ["poi-label","transit-label","road-label","place-label-city","place-label-town","natural-label-line","natural-label-point","water-label-line","water-label-point"];
-      setTimeout(() => {
-        labels.forEach(id => {
-          if (map.getLayer(id)) {
-            try { map.removeLayer(id); } catch {}
-          }
-        });
-      }, 1000);
-    };
+      mapRef.current.on("style.load", () => {
+        // Apply performance improvements
+        removePerformanceLabels();
 
-    const add3DBuildings = () => {
-      const layers = map.getStyle().layers;
-      const labelLayerId = layers.find(l => l.type === "symbol" && l.layout["text-field"])?.id;
-      map.addLayer({
-        id: "add-3d-buildings",
-        source: "composite",
-        "source-layer": "building",
-        filter: ["==", "extrude", "true"],
-        type: "fill-extrusion",
-        minzoom: 14,
-        paint: {
-          "fill-extrusion-color": "#aaa",
-          "fill-extrusion-height": [
-            "interpolate", ["linear"], ["zoom"],
-            14, 0,
-            14.5, ["*", ["get", "height"], 0.5],
-            16, ["get", "height"]
-          ],
-          "fill-extrusion-base": [
-            "interpolate", ["linear"], ["zoom"],
-            14, 0,
-            14.5, ["*", ["get", "min_height"], 0.5],
-            16, ["get", "min_height"]
-          ],
-          "fill-extrusion-opacity": [
-            "interpolate", ["linear"], ["zoom"],
-            14, 0.4,
-            16, 0.6,
-            18, 0.8
-          ]
+        // Add optimized 3D buildings layer
+        add3DBuildingsLayer();
+
+        // Setup makerspace layers using static GeoJSON
+        setupMakerspaceLayer();
+      });
+
+      // Optimize performance during zoom
+      mapRef.current.on("zoomstart", () => {
+        const buildingLayer = mapRef.current.getLayer("add-3d-buildings");
+        if (buildingLayer) {
+          mapRef.current.setPaintProperty("add-3d-buildings", "fill-extrusion-opacity", 0.3);
         }
-      }, labelLayerId);
-    };
+      });
 
-    const setupLayers = async () => {
-      try {
-        const REST_URL = process.env.REACT_APP_REST_URL;
-        const ANON = process.env.REACT_APP_ANON_KEY;
-        
-        if (!REST_URL || !ANON) {
-          console.error("Missing Supabase env");
-          return;
+      mapRef.current.on("zoomend", () => {
+        const buildingLayer = mapRef.current.getLayer("add-3d-buildings");
+        if (buildingLayer) {
+          const zoom = mapRef.current.getZoom();
+          const opacity = zoom < 14 ? 0.4 : zoom < 16 ? 0.6 : 0.8;
+          mapRef.current.setPaintProperty("add-3d-buildings", "fill-extrusion-opacity", opacity);
         }
+      });
+    } catch (error) {
+      console.error("Error initializing Mapbox:", error.message);
+    }
 
-        const bboxParams = (map) => {
-          const [[w, s],[e, n]] = map.getBounds().toArray();
-          return `minx=${w}&miny=${s}&maxx=${e}&maxy=${n}`;
-        };
-
-        const fetchMakerspaces = async (map) => {
-          try {
-            const url = `${REST_URL}/rest/v1/rpc/makerspaces_geojson?${bboxParams(map)}`;
-            const res = await fetch(url, {
-              headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }
-            });
-            if (!res.ok) throw new Error(res.status);
-            const data = await res.json();
-            if (data?.features) {
-              data.features = data.features.map(f => {
-                const p = f.properties || {};
-                let tags = [];
-                const eq = p.equipment;
-                if (Array.isArray(eq)) tags = eq;
-                else if (typeof eq === "string") {
-                  let parsed = null;
-                  try { parsed = JSON.parse(eq); } catch {}
-                  if (Array.isArray(parsed)) tags = parsed;
-                  else {
-                    const m = eq.match(/^\{(.+)\}$/);
-                    if (m && m[1]) tags = m[1].split(",").map(s => s.trim().replace(/^"(.*)"$/,"$1"));
-                  }
-                }
-                p.tags = (tags || []).map(t => String(t).trim()).filter(Boolean);
-                if (p.skills) p.skills = String(p.skills).trim();
-                p.ageBuckets = deriveAgeBuckets(p);
-                f.properties = p;
-                return f;
-              });
-            }
-            return data;
-          } catch (e) {
-            console.error("Makerspaces fetch error", e);
-            return { type:"FeatureCollection", features: [] };
-          }
-        };
-
-        const fetchEvents = async () => {
-          try {
-            const url = `${REST_URL}/rest/v1/events?select=id,name,description,start_date,end_date,category,skills,equipment,tags,makerspace_id,sustainable,created_at&order=start_date.asc.nullsLast`;
-            const res = await fetch(url, {
-              headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }
-            });
-            if (!res.ok) throw new Error(res.status);
-            const data = await res.json();
-            return data.map(ev => {
-              let tags = [];
-              const raw = ev.tags || ev.equipment;
-              if (Array.isArray(raw)) tags = raw;
-              else if (typeof raw === "string") {
-                let parsed = null;
-                try { parsed = JSON.parse(raw); } catch {}
-                if (Array.isArray(parsed)) tags = parsed;
-                else {
-                  const m = raw.match(/^\{(.+)\}$/);
-                  if (m && m[1]) tags = m[1].split(",").map(s => s.trim().replace(/^"(.*)"$/,"$1"));
-                }
-              }
-              ev.tags = (tags || []).map(t => String(t).trim()).filter(Boolean);
-              if (ev.skills) ev.skills = String(ev.skills).trim();
-              ev.ageBuckets = deriveAgeBuckets(ev);
-              return ev;
-            });
-          } catch (e) {
-            console.error("Events fetch error", e);
-            return [];
-          }
-        };
-
-        const geoJSON = await fetchMakerspaces(map);
-        setAllMakerspaces(geoJSON.features || []);
-        const eventsData = await fetchEvents();
-        setAllEvents(eventsData);
-
-        map.addSource("makerspaces", { type: "geojson", data: geoJSON });
-        map.addLayer({
-          id: "makerspace-points",
-          type: "circle",
-          source: "makerspaces",
-          paint: {
-            "circle-color": "#FF6B6B",
-            "circle-radius": 8,
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#fff"
-          }
-        });
-
-        map.on("click", "makerspace-points", e => {
-          const feature = e.features[0];
-          // Call flyToMakerspace directly since it's stable
-          if (mapRef.current && feature?.geometry) {
-            const coords = feature.geometry.coordinates.slice();
-            map.flyTo({ center: coords, zoom: 17, duration: 1200, essential: true });
-          }
-        });
-
-        map.on("mouseenter", "makerspace-points", () => {
-          map.getCanvas().style.cursor = "pointer";
-        });
-        map.on("mouseleave", "makerspace-points", () => {
-          map.getCanvas().style.cursor = "";
-        });
-      } catch (e) {
-        console.error("Layer setup error", e);
-      }
-    };
-
-    map.on("load", () => {
-      setMapReady(true);
-      removeLabels();
-      add3DBuildings();
-      setupLayers();
-    });
-
-    return () => {
-      setMapReady(false);
-      map.remove();
-    };
-  }, []); // Empty dependency array - run once on mount
-
-  useEffect(() => {
-    if (!allEvents.length || !allMakerspaces.length) return;
-    setAllEvents(prev =>
-      prev.map(ev => {
-        if ((!ev.tags || ev.tags.length === 0) && ev.makerspace_id) {
-          const ms = allMakerspaces.find(f => f.properties.id === ev.makerspace_id || f.properties.makerspace_id === ev.makerspace_id);
-          if (ms?.properties?.tags?.length) {
-            return { ...ev, tags: [...ms.properties.tags] };
-          }
-        }
-        return ev;
-      })
-    );
-  }, [allMakerspaces, allEvents.length]);
-
-  const DISPLAY_ORDER = ["Equipment","Facility","Access","Audience","Sustainability"];
-  const todayISO = new Date().toISOString().split("T")[0];
+    return () => mapRef.current?.remove();
+  }, [removePerformanceLabels, add3DBuildingsLayer, setupMakerspaceLayer]);
 
   const formatEventDateRange = (start, end) => {
     const startDate = start ? new Date(start) : null;
@@ -1242,9 +875,9 @@ const MapboxBuildings = () => {
           position: "fixed",
           top: 0,
           left: 0,
-          zIndex: 1
+          zIndex: 1,
         }}
-      />
+      />      
 
       {/* Top-right controls */}
       <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
@@ -1273,7 +906,7 @@ const MapboxBuildings = () => {
         {/* Simple Sign Up/In Button for Guests */}
         {isGuest && (
           <button
-            onClick={() => window.location.href='/'}
+            onClick={() => window.location.href = '/'}
             className="bg-primary-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-primary-600 transition-colors font-medium"
           >
             Sign In
@@ -1281,15 +914,21 @@ const MapboxBuildings = () => {
         )}
       </div>
 
+      {/* Only show forms for admin users */}
       {!isGuest && (user?.email === "admin@gmail.com" || user?.email === "admin1@gmail.com") && <MakerspaceForms />}
 
+      {/* Search Bar - Always in original position */}
       <MakerspaceSearch
         makerspaces={allMakerspaces}
         onFilter={handleFilter}
         onSuggestionSelect={handleSuggestionSelect}
       />
 
-      <div className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${isSidebarOpen ? 'w-80 bg-white shadow-xl' : 'w-0'}`}>
+      {/* Sidebar */}
+      <div className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${
+        isSidebarOpen ? 'w-80 bg-white/95 backdrop-blur-md shadow-2xl' : 'w-0'
+      }`}>
+        {/* Sidebar Content - Only show when open */}
         {isSidebarOpen && (
           <div className="flex flex-col h-full">
             {/* Sidebar Header */}
@@ -1575,35 +1214,6 @@ const MapboxBuildings = () => {
                         >
                           Clear all filters
                         </button>
-                        {openCategories[cat] && (
-                          <div className="px-3 pb-3 max-h-44 overflow-y-auto custom-scrollbar">
-                            {tags
-                              .filter(t => !tagSearch || normalizeStr(t).includes(normalizeStr(tagSearch)))
-                              .map(tag => (
-                                <label
-                                  key={tag}
-                                  className={`flex items-center justify-between p-2 mb-1 rounded-lg cursor-pointer transition-all ${
-                                    selectedTags.has(tag)
-                                      ? 'bg-primary-100 border border-primary-400'
-                                      : 'bg-white border border-gray-200 hover:bg-gray-50'
-                                  }`}
-                                >
-                                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                                    <input
-                                      type="checkbox"
-                                      checked={selectedTags.has(tag)}
-                                      onChange={() => toggleTag(tag)}
-                                      className="w-3.5 h-3.5 rounded cursor-pointer accent-primary-500 flex-shrink-0"
-                                    />
-                                    <span className="text-[11px] font-medium text-gray-700 truncate">{tag}</span>
-                                  </div>
-                                  <span className="text-[10px] font-semibold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full ml-2 flex-shrink-0 border border-primary-200">
-                                    {countsByTag[tag] || 0}
-                                  </span>
-                                </label>
-                              ))}
-                          </div>
-                        )}
                       </div>
                     )}
 
@@ -1717,11 +1327,12 @@ const MapboxBuildings = () => {
         )}
       </div>
 
+      {/* Collapsed Sidebar Toggle - Only show when sidebar is closed */}
       {!isSidebarOpen && (
         <div className="fixed top-4 left-4 z-40">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="bg-white rounded-xl p-3 shadow-lg hover:shadow-xl transition hover:bg-gray-50"
+            className="bg-white/90 backdrop-blur-md rounded-xl p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-white"
           >
             <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -1730,6 +1341,10 @@ const MapboxBuildings = () => {
         </div>
       )}
 
+      {/* Chat is available for both guests and logged in users */}
+      <MakerspaceChat makerspaces={allMakerspaces} />
+      
+      {/* Detailed Modal */}
       <MakerspaceModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -1826,8 +1441,6 @@ const MapboxBuildings = () => {
           </div>
         </div>
       )}
-
-      <MakerspaceChat makerspaces={allMakerspaces} />
     </>
   );
 };
