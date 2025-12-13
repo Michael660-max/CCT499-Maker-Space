@@ -27,9 +27,11 @@ main {
 }
 
 /* Custom Mapbox Popup Styles */
-.custom-popup .mapboxgl-popup-close-button {
-  font-size: 20px;
-  padding: 4px 8px;
+.mapboxgl-popup-close-button {
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
   right: 4px;
   top: 4px;
   color: #333;
@@ -37,5 +39,16 @@ main {
   border-radius: 4px;
   cursor: pointer;
   background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.mapboxgl-popup-close-button:hover {
+  background: #f3f4f6;
+  color: #FF6B6B;
+  transform: scale(1.1);
 }
 
