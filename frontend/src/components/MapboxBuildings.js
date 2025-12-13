@@ -42,6 +42,7 @@ const MapboxBuildings = () => {
   const [preloadedPhotos, setPreloadedPhotos] = useState({});
   const preloadedPhotosRef = useRef({});
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const flyToMakerspaceRef = useRef(null);
   const { user } = useAuth();
 
   // Events
@@ -381,6 +382,11 @@ const MapboxBuildings = () => {
     }, 600);
   }, [preloadPhoto, allEvents]);
 
+  // Update ref whenever flyToMakerspace changes
+  useEffect(() => {
+    flyToMakerspaceRef.current = flyToMakerspace;
+  }, [flyToMakerspace]);
+
   const handleFilter = useCallback((filtered) => {
     setFilteredMakerspaces(filtered);
     updateMakerspaceSource(filtered);
@@ -569,10 +575,8 @@ const MapboxBuildings = () => {
 
         map.on("click", "makerspace-points", e => {
           const feature = e.features[0];
-          // Call flyToMakerspace directly since it's stable
-          if (mapRef.current && feature?.geometry) {
-            const coords = feature.geometry.coordinates.slice();
-            map.flyTo({ center: coords, zoom: 17, duration: 1200, essential: true });
+          if (feature && flyToMakerspaceRef.current) {
+            flyToMakerspaceRef.current(feature);
           }
         });
 
