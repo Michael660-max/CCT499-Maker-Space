@@ -239,23 +239,53 @@ const MapboxBuildings = () => {
 
   useEffect(() => {
     if (googleMapsLoaded || !process.env.REACT_APP_GOOGLE_API_KEY) return;
+    
     if (window.google?.maps?.places) {
       setGoogleMapsLoaded(true);
       return;
     }
+
+    const handleApiLoaded = () => {
+      if (window.google?.maps?.places) {
+        setGoogleMapsLoaded(true);
+      }
+    };
+    
+    window.addEventListener('googlemapsapi:loaded', handleApiLoaded);
+
+    const checkInterval = setInterval(() => {
+      if (window.google?.maps?.places) {
+        setGoogleMapsLoaded(true);
+        clearInterval(checkInterval);
+      }
+    }, 100);
+
     const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existingScript) {
-      existingScript.onload = () => setGoogleMapsLoaded(true);
-      if (window.google?.maps?.places) setGoogleMapsLoaded(true);
-      return;
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        setTimeout(() => {
+          if (window.google?.maps?.places) {
+            setGoogleMapsLoaded(true);
+          }
+        }, 100);
+      };
+      script.onerror = () => console.error("Failed to load Google Maps API");
+      document.head.appendChild(script);
     }
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&loading=async`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setGoogleMapsLoaded(true);
-    script.onerror = () => console.error("Failed to load Google Maps API");
-    document.head.appendChild(script);
+
+    const timeout = setTimeout(() => {
+      clearInterval(checkInterval);
+    }, 15000);
+
+    return () => {
+      window.removeEventListener('googlemapsapi:loaded', handleApiLoaded);
+      clearInterval(checkInterval);
+      clearTimeout(timeout);
+    };
   }, [googleMapsLoaded]);
 
   const preloadPhoto = useCallback(async (props) => {
@@ -661,7 +691,7 @@ const MapboxBuildings = () => {
               </div>
 
               <div className="bg-white rounded-lg border border-gray-200">
-                <div className="flex items-center gap-2 p-3 border-b border-gray-200">
+                <div className="flex items-center gap-2 p-3 border-b border-gray-200 min-w-0">
                   <input
                     type="text"
                     value={tagSearch}
@@ -673,12 +703,12 @@ const MapboxBuildings = () => {
                       }
                     }}
                     placeholder="Search tags..."
-                    className="flex-1 text-xs px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-300 bg-white"
+                    className="flex-1 min-w-0 text-xs px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-300 bg-white"
                   />
                   <select
                     value={searchCategory}
                     onChange={e => setSearchCategory(e.target.value)}
-                    className="text-xs px-2 py-2 rounded-md border border-gray-300 bg-white"
+                    className="text-xs px-2 py-2 rounded-md border border-gray-300 bg-white flex-shrink-0 max-w-[120px]"
                   >
                     <option value="All">All</option>
                     {DISPLAY_ORDER.filter(c => categoriesMap[c]?.length).map(c => (

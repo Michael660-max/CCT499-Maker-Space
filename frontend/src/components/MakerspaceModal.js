@@ -158,21 +158,35 @@ const MakerspaceModal = ({ isOpen, onClose, makerspace, preloadedPhotoUrl = null
   useEffect(() => {
     if (googleMapsLoaded) return;
     
-    // Check if already loaded
     if (window.google?.maps?.places) {
       setGoogleMapsLoaded(true);
       return;
     }
 
-    // Check if script is already being loaded
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existingScript) {
-      existingScript.onload = () => setGoogleMapsLoaded(true);
+    const handleApiLoaded = () => {
       if (window.google?.maps?.places) {
         setGoogleMapsLoaded(true);
       }
-      return;
-    }
+    };
+    
+    window.addEventListener('googlemapsapi:loaded', handleApiLoaded);
+
+    const checkInterval = setInterval(() => {
+      if (window.google?.maps?.places) {
+        setGoogleMapsLoaded(true);
+        clearInterval(checkInterval);
+      }
+    }, 100);
+
+    const timeout = setTimeout(() => {
+      clearInterval(checkInterval);
+    }, 15000);
+
+    return () => {
+      window.removeEventListener('googlemapsapi:loaded', handleApiLoaded);
+      clearInterval(checkInterval);
+      clearTimeout(timeout);
+    };
   }, [googleMapsLoaded]);
 
   useEffect(() => {
