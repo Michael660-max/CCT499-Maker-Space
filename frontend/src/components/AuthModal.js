@@ -136,27 +136,13 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
     setIsSignUp(isSignUpMode);
   };
 
-  const handleClose = () => {
-    resetForm();
-    setIsSignUp(defaultMode === "signup");
-    onClose();
-  };
-
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[10000] p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all">
         {/* Header */}
-        <div className="p-6 border-b border-gray-100 relative">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 focus:outline-none"
-            aria-label="Close"
-          >
-            <span className="text-xl leading-none">&times;</span>
-          </button>
+        <div className="p-6 border-b border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-gray-800 text-center w-full">
               {showVerificationNotice
@@ -220,7 +206,8 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup" }) {
             <div className="space-y-3">
               <button
                 onClick={() => handleOAuth("google")}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200 opacity-60 cursor-not-allowed"
+                disabled
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
