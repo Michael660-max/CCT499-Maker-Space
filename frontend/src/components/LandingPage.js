@@ -1,9 +1,21 @@
 import React, { useState } from "react";
+import { supabase } from "../lib/supabase";
 import AuthModal from "./AuthModal";
 
 const LandingPage = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState("signin");
+
+  const handleContinueAsGuest = async () => {
+    try {
+      // Ensure any previous auth attempt/session is cleared
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("Guest sign-out error:", err);
+    } finally {
+      window.location.href = "/map";
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -24,7 +36,7 @@ const LandingPage = () => {
           <div className="space-y-3">
             {/* Continue as Guest Button - Red */}
             <button
-              onClick={() => window.location.href = '/map'}
+              onClick={handleContinueAsGuest}
               className="w-full bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors duration-200"
             >
               Continue as Guest - Explore Map

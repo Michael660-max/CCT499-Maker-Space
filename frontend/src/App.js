@@ -11,13 +11,12 @@ function AuthCallback() {
   React.useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Let Supabase process the auth tokens in the URL
+        // Let Supabase process the OAuth callback, then take the user to the map
         await supabase.auth.getSession();
-        window.location.replace('/');
-        
+        window.location.replace('/map');
       } catch (error) {
         console.error('Auth callback error:', error);
-        window.location.replace('/');
+        window.location.replace('/map');
       }
     };
 
