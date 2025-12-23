@@ -32,6 +32,200 @@ function deriveAgeBuckets(props) {
 
 const SUSTAINABILITY_TAG = "Sustainable Makerspace";
 
+const EQUIPMENT_GROUPS = {
+  "3D Printing": [
+    "3d printer", "3d printers", "3d printing", "3d printing materials",
+    "ultimaker", "monochrome binder-jet 3d printer", "pla filament",
+    "ultimaker s3", "ultimaker 3", "ultimaker 3 extended", "ultimaker 2+connect",
+    "ultimaker 3 extended and 2+connect", "ultimaker 3 extended and 2+connect 3d printers",
+    "lulzbot", "lulzbot taz 6", "lulzbot taz 6 3d printers", "fdm", "binder jet", 
+    "three fused deposition modelling", "three fused deposition modelling rapid-prototyping systems",
+    "two large binder-jet", "two large binder-jet full colour 3d printers",
+    "pla filament in various colors", "eos p110", "eos p110 velocis", "eos p396",
+    "mjf", "sla", "selective laser sintering", "3d cad design", "3d cad design services",
+    "3d design imac", "3d design imac workstation", "3d printer ultimaker s3",
+    "dmls", "sls", "rapid prototyping", "rapid-prototyping systems"
+  ],
+  "3D Scanning and Visualization": [
+    "3d scanner", "3d scanners", "3d scanner shining 3d einstar", "3d digitizer", "3d visualization tools",
+    "3d x-ray inspection", "3d laser scanner", "shining 3d", "shining 3d einstar",
+    "scanner", "scanners", "digitization", "digitizing",
+    "3d visualization", "3d x-ray", "sick vision", "sick vision cameras", "sick vision cameras and accessories",
+    "digitization equipment"
+  ],
+  "Audio & Recording": [
+    "audio", "audio equipment", "microphones", "sound booth", "studio equipment",
+    "microphone", "recording studio", "recording", "recording space", "recording spaces",
+    "recording studio equipment", "sound system", "individual recording", "individual recording station",
+    "dynaudio", "dynaudio bm6 mkii", "dynaudio bm6 mkii powered studio monitor",
+    "focusrite", "focusrite scarlett", "focusrite scarlett 2i2", "focusrite clarett", 
+    "focusrite clarett 8prex", "focusrite clarett 8prex 26 28 thunderbolt",
+    "universal audio", "universal audio la-610 mkii", "universal audio la-610 mkii compressor",
+    "akai", "akai professional advance", "49 keyboard controller", "49 keyboard controller akai professional advance",
+    "roland", "roland rd-800", "stage piano", "stage piano roland rd-800",
+    "poineer", "poineer dj", "poineer dj ddj-sx2", "poineer dj ddj-sx2 serato dj controller",
+    "serato dj", "slate media", "slate media raven", "slate media raven mti2", "slate media raven mti2 w raven 3.0",
+    "logic pro", "garageband", "wireless mic", "wireless mic system", "wireless mic system with me2 lavalier mic",
+    "studio", "mixer", "amplifier", "speaker", "studio monitor", "headphones",
+    "photography and audio-visual", "photography and audio-visual resources"
+  ],
+  "Musical Instruments": [
+    "guitar", "guitars", "ukulele", "banjo", "bass", "stage piano", "keyboard",
+    "electronic instruments", "electronic instrument", "synthesizer",
+    "roland rd-800"
+  ],
+  "CNC and Machining": [
+    "cnc mill", "cnc milling", "cnc machines", "cnc milling machine", "laser cutter", "plasma cutter",
+    "cnc", "laser", "waterjet", "waterjet cutter", "laser engraver", "laser engraving",
+    "glowforge", "glowforge plus", "glowforge plus laser cutter engraver",
+    "trotec", "trotec speedy 400", "trotec speedy 400 laser cutter",
+    "epilog", "epilog fusion", "epilog fusion maker 24", "epilog fusion maker 24 laser cutter engraver",
+    "cnc router", "mill", "milling machines", "bridgeport", "bridgeport-style", "bridgeport-style milling machines",
+    "5-axis", "5-axis cnc", "5-axis cnc machining", "5-axis cnc machining centre", 
+    "dmu", "dmu 50", "5-axis cnc machining centre dmu 50",
+    "lathe", "lathe machine", "lathe machines", "saw", "bandsaw", "metal bandsaw",
+    "drill press", "metal drill press", "jointer", "jointer planer",
+    "table saw", "tablesaw", "miter saw", "mitre saw", "router table",
+    "band saw", "circle saw", "scroll saw", "reciprocating saw", "tacksaw",
+    "orbital sanders", "sander", "belt disk sander", "bandsaws",
+    "five axis", "five-axis", "large three-axis", "laser cutting", "laser-cutting",
+    "laser cutters", "six laser cutters", "large three-axis and four-axis cnc",
+    "cmc milling machine", "drill presses", "drills", "laser-cutting systems"
+  ],
+  "Woodworking & Metalworking": [
+    "woodworking", "woodworking tools", "metal working", "metal-working tools",
+    "metal and woodworking tools", "metal bandsaws", "blacksmith",
+    "blacksmith forge", "blacksmith tools", "bronze foundry",
+    "planer", "thickness planer", "router table", "routers"
+  ],
+  "Fabrication & Sewing": [
+    "button maker", "button maker 2.25", "craft tools", "sewing machines", "sewing machine", 
+    "embroidery machine", "embroidery", "cricut", "heat press", "vinyl cutter", 
+    "vinyl", "serger", "welder", "welding equipment", "button makers", 
+    "cricut maker", "cricut maker 3", "cricut autopress", "cricut easypress", "cricut hat press", 
+    "cricut mug press", "craft tool", "fabric printing", "sublimation",
+    "sublimation printer", "epson surecolor", "epson 24 surecolor f570",
+    "epson 24 surecolor f570 dye-sublimation printer",
+    "heat presses", "vacuum former", "vacuum formers", "poster-size laminator",
+    "cricut machines", "cricut vinyl cutter heat press", "sewing and embroidery machines",
+    "embroidery machines", "digital embroidery machine"
+  ],
+  "Computers & Software": [
+    "apple imac", "microsoft workstations", "autodesk autocad", "adobe suite",
+    "imac", "workstation", "autocad", "adobe", "photoshop",
+    "illustrator", "premiere", "final cut", "indesign", "cura",
+    "pc", "mac", "computer", "iphone", "ipad", "mac studio", "mac mini",
+    "apple", "apple mac mini", "apple mac studio", "microsoft", "autodesk", "inventor",
+    "cad software", "computer lab", "computer lab with printers",
+    "computer gear", "dual widescreen", "dual widescreen workstation", "lcd screen", "lcd screens",
+    "software", "desktop", "workstations", "microsoft office", "microsoft office workstations",
+    "computers with adobe creative cloud", "iMacs", "iMacs with adobe creative cloud",
+    "apple garageband", "apple iMac computer workstation",
+    "logic pro x", "inventor pro", "autodesk inventor",
+    "adobe creative cloud", "adobe creative suite",
+    "website creation", "relevant software", "mobile software development equipment",
+    "computers"
+  ],
+  "Photography & Media": [
+    "cameras", "photography", "studio cameras", "editing tools", "final cut pro",
+    "camera", "nikon", "nikon cameras", "nikon cameras d750 and d5500", "nikon d750", "nikon d5500",
+    "sony", "sony film cameras", "sony film cameras pxw-x70 hxr-nx3 pxw-x180", "sony pxw-x70", "sony hxr-nx3", "sony pxw-x180",
+    "canon", "video", "film", "lighting", "lights", "green screen", "backdrop",
+    "photography studio", "darkroom", "dye-sublimation", "sublimation printer",
+    "lytro", "lytro illum", "lytro illum light field digital camera",
+    "led video", "led go", "led go lg", "led go lg-600s", "led go lg-600s led video lights",
+    "chromakey", "photo", "video studio", "digital media", "digital media lab",
+    "media lab", "digital video editing", "editing",
+    "revolution lightboard", "lightboard", "slate media", "slate media raven",
+    "dj", "serato dj",
+    "photography and audio-visual", "photography & video studio",
+    "photography studio with darkroom", "green screens", "chromakey backdrops",
+    "sublimation printing", "sublimation printers", "digital media equipment",
+    "multimedia tools"
+  ],
+  "Electronics & Robotics": [
+    "arduino", "arduino uno", "microcontroller", "multimeter", "multimeters",
+    "oscilloscope", "oscilloscopes", "pcb assembly",
+    "soldering", "soldering iron", "electronics", "electronics tools",
+    "raspberry pi", "robotics", "industrial robotic", "collaborative robotic",
+    "pepper humanoid", "makey makey", "transformer", "power supply",
+    "arduino components", "microcontrollers",
+    "soldering & electronics tools", "soldering irons",
+    "industrial and collaborative robotic arms", "pepper humanoid robot",
+    "transformers", "power supplies"
+  ],
+  "Virtual Reality & Gaming": [
+    "virtual reality", "vr", "vr headset", "video game", "gaming",
+    "augmented reality", "pc vr", "vr equipment",
+    "video games", "video game console", "video game console vr headset",
+    "virtual reality equipment",
+    "pc vr headsets", "augmented reality maintenance tool",
+    "video games & virtual reality", "tabletop gaming", "tabletop", "board games",
+    "board game", "dice", "gaming table", "game table"
+  ],
+  "Arts & Sculpture": [
+    "ceramics", "ceramics studio", "ceramics studio with 10 potter's wheels", "kiln", "pottery", "sculpture", "casting", "carving",
+    "painting", "drawing", "printmaking", "printmaker",
+    "sculpture studio", "drawing and painting studios",
+    "printmaking studio", "kiln room",
+    "drawing and painting studios with skylights",
+    "sculpture studio with casting carving and fabrication areas",
+    "printmaking studio with lithography and etching presses"
+  ],
+  "Office & Output Equipment": [
+    "printer", "plotters", "photocopier", "scanner",
+    "printers", "photocopiers",
+    "computer lab with printers", "computer lab with printers 3d printer and computers",
+    "roland gs-24", "roland gs-24 vinyl cutter", "vinyl cutter printer", "vinyl printer cutter"
+  ],
+
+  "Prototyping & Manufacturing": [
+    "prototyping", "prototyping equipment", "manufacturing",
+    "manufacturing tools", "manufacturing services",
+    "manufacturing execution system", "post-processing solutions",
+    "fabrication equipment"
+  ],
+  "Safety & Infrastructure": [
+    "safety", "security features", "energy management",
+    "power distribution", "safety and security features",
+    "energy management and power distribution system"
+  ],
+  "Specialty & Hobby Equipment": [
+    "biology tools", "food tools", "awesome toys",
+    "amateur radio tools", "amateur radio", "ham radio", "ham radio equipment", "radio equipment",
+    "model building", "model kit", "rc cars", "rc car", "rc drone", "drones", "drone", "miniatures", "model kits", "rc", "radio controlled", "scale models",
+    "hobby electronics", "electronics hobby", "hobby soldering", "hobby circuits",
+    "craft supplies", "hobby crafts", "craft hobby", "craft materials", "hobby materials",
+    "collectibles", "display space", "display spaces", "collectibles display", "collection display",
+    "multi tool", "tool", "camera mount", "lcd screen"
+  ],
+  "Glass Work": [
+    "glass work", "fused glass", "glass blowing", "stained glass", "glass etching"
+  ]
+};
+
+// Create reverse mapping: tag -> group names (tags can belong to multiple groups)
+const TAG_TO_GROUPS = {};
+Object.entries(EQUIPMENT_GROUPS).forEach(([groupName, tags]) => {
+  tags.forEach(tag => {
+    const normalized = normalizeStr(tag);
+    if (!TAG_TO_GROUPS[normalized]) {
+      TAG_TO_GROUPS[normalized] = [];
+    }
+    TAG_TO_GROUPS[normalized].push(groupName);
+  });
+});
+
+const getEquipmentGroups = (tag) => {
+  return TAG_TO_GROUPS[normalizeStr(tag)] || [];
+};
+
+// Backwards compatibility - gets first group
+const getEquipmentGroup = (tag) => {
+  const groups = getEquipmentGroups(tag);
+  return groups.length > 0 ? groups[0] : null;
+};
+
 const MapboxBuildings = () => {
   const mapContainerRef = useRef();
   const mapRef = useRef();
@@ -76,6 +270,7 @@ const MapboxBuildings = () => {
     audienceTags,
     sustainabilityTags,
     countsByTag,
+    groupCounts,
     categoriesMap
   } = useMemo(() => {
     const equipSet = new Set();
@@ -84,13 +279,31 @@ const MapboxBuildings = () => {
     const audienceSet = new Set();
     const sustainabilitySet = new Set();
     const counts = {};
+    const groupCountsMap = {};
 
     function accumulateFromProps(p) {
+      // For equipment tags, track which groups we've seen to count unique makerspaces per group
+      const groupsSeenInThisItem = new Set();
+      
       (p.tags || []).forEach(t => {
         const tag = String(t).trim();
         if (!tag) return;
-        equipSet.add(tag);
-        counts[tag] = (counts[tag] || 0) + 1;
+        const groups = getEquipmentGroups(tag);
+        if (groups.length > 0) {
+          // Tag belongs to one or more groups - add to each group
+          groups.forEach(group => {
+            equipSet.add(group);
+            // Count each group once per makerspace/event
+            if (!groupsSeenInThisItem.has(group)) {
+              groupCountsMap[group] = (groupCountsMap[group] || 0) + 1;
+              groupsSeenInThisItem.add(group);
+            }
+          });
+        } else {
+          // Ungrouped tag
+          equipSet.add(tag);
+          counts[tag] = (counts[tag] || 0) + 1;
+        }
       });
       if (p.category) {
         const catTag = String(p.category).trim();
@@ -143,6 +356,7 @@ const MapboxBuildings = () => {
       audienceTags: categoriesMapInner.Audience,
       sustainabilityTags: categoriesMapInner.Sustainability,
       countsByTag: counts,
+      groupCounts: groupCountsMap,
       categoriesMap: categoriesMapInner
     };
   }, [allMakerspaces, allEvents]);
@@ -158,25 +372,66 @@ const MapboxBuildings = () => {
   const searchSuggestions = useMemo(() => {
     const q = normalizeStr(tagSearch);
     if (!q) return [];
-    const source = searchCategory === "All" ? allSearchableTags : (categoriesMap[searchCategory] || []);
+    
+    let source = searchCategory === "All" ? allSearchableTags : (categoriesMap[searchCategory] || []);
+    
+    // For Equipment category, also include ungrouped tags that are in the data
+    if (searchCategory === "All" || searchCategory === "Equipment") {
+      const ungroupedTags = Object.keys(countsByTag).filter(tag => {
+        const isGrouped = Object.values(EQUIPMENT_GROUPS).some(tags => 
+          tags.some(t => normalizeStr(t) === normalizeStr(tag))
+        );
+        return !isGrouped;
+      });
+      source = [...source, ...ungroupedTags];
+    }
+    
     return source.filter(t => normalizeStr(t).includes(q)).slice(0, 10);
-  }, [tagSearch, searchCategory, allSearchableTags, categoriesMap]);
+  }, [tagSearch, searchCategory, allSearchableTags, categoriesMap, countsByTag, EQUIPMENT_GROUPS]);
 
-  const aggregateTagsForMakerspace = useCallback((p) => [
-    ...(p.tags || []),
-    ...(p.category ? [p.category] : []),
-    ...(p.skills ? [p.skills] : []),
-    ...(deriveAgeBuckets(p)),
-    ...(p.sustainable ? [SUSTAINABILITY_TAG] : [])
-  ].map(t => String(t).trim()).filter(Boolean), []);
+  const aggregateTagsForMakerspace = useCallback((p) => {
+    const tags = [
+      ...(p.tags || []),
+      ...(p.category ? [p.category] : []),
+      ...(p.skills ? [p.skills] : []),
+      ...(deriveAgeBuckets(p)),
+      ...(p.sustainable ? [SUSTAINABILITY_TAG] : [])
+    ].map(t => String(t).trim()).filter(Boolean);
+    
+    const result = new Set();
+    tags.forEach(t => {
+      const groups = getEquipmentGroups(t);
+      if (groups.length > 0) {
+        // Add all groups this tag belongs to
+        groups.forEach(g => result.add(g));
+      } else {
+        // Add ungrouped tag as-is
+        result.add(t);
+      }
+    });
+    return Array.from(result);
+  }, []);
 
-  const aggregateTagsForEvent = useCallback((ev) => [
-    ...(ev.tags || []),
-    ...(ev.category ? [ev.category] : []),
-    ...(ev.skills ? [ev.skills] : []),
-    ...(deriveAgeBuckets(ev)),
-    ...(ev.sustainable ? [SUSTAINABILITY_TAG] : [])
-  ].map(t => String(t).trim()).filter(Boolean), []);
+  const aggregateTagsForEvent = useCallback((ev) => {
+    const tags = [
+      ...(ev.tags || []),
+      ...(ev.category ? [ev.category] : []),
+      ...(ev.skills ? [ev.skills] : []),
+      ...(deriveAgeBuckets(ev)),
+      ...(ev.sustainable ? [SUSTAINABILITY_TAG] : [])
+    ].map(t => String(t).trim()).filter(Boolean);
+    
+    const result = new Set();
+    tags.forEach(t => {
+      const groups = getEquipmentGroups(t);
+      if (groups.length > 0) {
+        groups.forEach(g => result.add(g));
+      } else {
+        result.add(t);
+      }
+    });
+    return Array.from(result);
+  }, []);
 
   const updateMakerspaceSource = useCallback((features) => {
     if (!mapReady || !mapRef.current) return;
@@ -733,7 +988,7 @@ const MapboxBuildings = () => {
                             : 'bg-white border-gray-200 text-gray-700 hover:border-primary-300'
                         }`}
                       >
-                        {s} {countsByTag[s] !== undefined && <span className="ml-1 opacity-60">({countsByTag[s]})</span>}
+                        {s} {(s in groupCounts ? groupCounts[s] : countsByTag[s]) !== undefined && <span className="ml-1 opacity-60">({s in groupCounts ? groupCounts[s] : countsByTag[s]})</span>}
                       </button>
                     ))}
                   </div>
@@ -795,7 +1050,7 @@ const MapboxBuildings = () => {
                                     <span className="text-[11px] font-medium text-gray-700 truncate">{tag}</span>
                                   </div>
                                   <span className="text-[10px] font-semibold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full ml-2 flex-shrink-0 border border-primary-200">
-                                    {countsByTag[tag] || 0}
+                                    {cat === "Equipment" ? (groupCounts[tag] || countsByTag[tag] || 0) : (countsByTag[tag] || 0)}
                                   </span>
                                 </label>
                               ))}
@@ -819,7 +1074,15 @@ const MapboxBuildings = () => {
                     <div className="space-y-3">
                       {filteredMakerspaces.map((m, i) => {
                         const p = m.properties;
-                        const aggMatched = aggregateTagsForMakerspace(p).filter(t => selectedTags.has(t)).slice(0, 6);
+                        const agg = aggregateTagsForMakerspace(p);
+                        // Show only the original tags that match selected filters, not the group names
+                        const aggMatched = (p.tags || [])
+                          .filter(t => {
+                            const group = getEquipmentGroup(String(t).trim());
+                            return selectedTags.has(group || t);
+                          })
+                          .map(t => String(t).trim())
+                          .slice(0, 6);
                         return (
                           <div
                             key={i}
